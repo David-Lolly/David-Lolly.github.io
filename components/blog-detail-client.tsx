@@ -17,7 +17,7 @@ interface Post {
   description?: string
   categories?: string[]
   body: string
-  raw: string // 添加原始内容字段
+  content: string // 原始 Markdown 内容（不含 frontmatter）
   readingTime: string
 }
 
@@ -42,21 +42,17 @@ export function BlogDetailClient({ post, relatedPosts }: BlogDetailClientProps) 
   // 复制全文功能
   const handleCopyContent = async () => {
     try {
-      // 构建完整的文章内容
-      const contentToCopy = `# ${post.title}
-
-${post.description || ''}
-
-**日期**: ${formatDate(post.date)}  
-**分类**: ${post.categories?.join(', ') || '无'}
-
+      // 构建完整的 Markdown 文章内容
+      const frontmatter = `---
+title: ${post.title}
+date: ${post.date}${post.description ? `\ndescription: ${post.description}` : ''}${post.categories && post.categories.length > 0 ? `\ncategories: [${post.categories.join(', ')}]` : ''}${post.image ? `\nimage: ${post.image}` : ''}
 ---
-
-${post.raw || ''}
 `
+      const contentToCopy = frontmatter + '\n' + (post.content || '')
+      
       await navigator.clipboard.writeText(contentToCopy)
       setCopied(true)
-      toast.success("已复制全文")
+      toast.success("已复制 Markdown 原文")
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
       toast.error("复制失败，请重试")

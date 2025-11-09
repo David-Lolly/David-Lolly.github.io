@@ -22,7 +22,7 @@ const posts = defineCollection({
       description: s.string().max(999).optional(),
       categories: s.array(s.string()).default([]),
       body: s.mdx(),
-      raw: s.markdown(), // 添加原始 Markdown 内容
+      content: s.raw(), // 使用 s.raw() 获取原始 Markdown 内容（不包括 frontmatter）
     })
     .transform((data) => ({ ...data, ...computedFields(data) })),
 })

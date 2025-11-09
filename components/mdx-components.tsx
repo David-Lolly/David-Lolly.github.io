@@ -2,7 +2,7 @@ import * as React from "react"
 
 const components = {
   h1: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h1 className="text-4xl font-serif font-bold mt-12 mb-6 text-foreground" style={{ lineHeight: 1.2, color: '#000000' }} {...props}>
+    <h1 className="text-4xl font-serif font-bold mt-12 mb-4 text-foreground" style={{ lineHeight: 1.2, color: '#000000' }} {...props}>
       {children}
     </h1>
   ),
@@ -166,22 +166,60 @@ const components = {
   table: ({ children, ...props }: React.HTMLAttributes<HTMLTableElement>) => {
     const childrenArray = React.Children.toArray(children)
     return (
-      <div className="my-6 w-full overflow-y-auto rounded-lg border">
-        <table className="w-full border-collapse" {...props}>
-          {childrenArray.map((child, index) => {
-            if (React.isValidElement(child)) {
-              return React.cloneElement(child, { key: index } as any)
-            }
-            return child
-          })}
-        </table>
+      <div 
+        className="my-6 w-full overflow-hidden rounded-xl"
+        style={{
+          backgroundColor: 'rgb(var(--color-card))',
+          border: '1px solid rgb(var(--color-border) / 0.1)'
+        }}
+      >
+        <div className="overflow-x-auto">
+          <table className="w-full" style={{ borderCollapse: 'separate', borderSpacing: 0 }} {...props}>
+            {childrenArray.map((child, index) => {
+              if (React.isValidElement(child)) {
+                return React.cloneElement(child, { key: index } as any)
+              }
+              return child
+            })}
+          </table>
+        </div>
       </div>
+    )
+  },
+  thead: ({ children, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) => {
+    const childrenArray = React.Children.toArray(children)
+    return (
+      <thead {...props}>
+        {childrenArray.map((child, index) => {
+          if (React.isValidElement(child)) {
+            return React.cloneElement(child, { key: index } as any)
+          }
+          return child
+        })}
+      </thead>
+    )
+  },
+  tbody: ({ children, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) => {
+    const childrenArray = React.Children.toArray(children)
+    return (
+      <tbody {...props}>
+        {childrenArray.map((child, index) => {
+          if (React.isValidElement(child)) {
+            return React.cloneElement(child, { key: index } as any)
+          }
+          return child
+        })}
+      </tbody>
     )
   },
   tr: ({ children, ...props }: React.HTMLAttributes<HTMLTableRowElement>) => {
     const childrenArray = React.Children.toArray(children)
     return (
-      <tr className="m-0 border-t p-0 even:bg-muted" {...props}>
+      <tr 
+        className="m-0 p-0 transition-colors hover:bg-muted/30"
+        style={{ borderBottom: '1px solid rgb(var(--color-border) / 0.1)' }}
+        {...props}
+      >
         {childrenArray.map((child, index) => {
           if (React.isValidElement(child)) {
             return React.cloneElement(child, { key: index } as any)
@@ -193,10 +231,12 @@ const components = {
   },
   th: ({ children, ...props }: React.HTMLAttributes<HTMLTableCellElement>) => (
     <th
-      className="font-semibold text-left p-3 border-b-2"
+      className="font-bold text-left px-6 py-4 text-sm"
       style={{
-        backgroundColor: 'rgb(var(--color-secondary))',
-        borderColor: 'rgb(var(--color-border))'
+        backgroundColor: 'rgb(var(--color-muted) / 0.3)',
+        color: 'rgb(var(--text-primary))',
+        borderBottom: '2px solid rgb(var(--color-border) / 0.2)',
+        fontWeight: 600
       }}
       {...props}
     >
@@ -205,8 +245,11 @@ const components = {
   ),
   td: ({ children, ...props }: React.HTMLAttributes<HTMLTableCellElement>) => (
     <td
-      className="p-3 border-b"
-      style={{ borderColor: 'rgb(var(--color-border))' }}
+      className="px-6 py-4 text-sm"
+      style={{ 
+        color: 'rgb(var(--text-secondary))',
+        lineHeight: '1.6'
+      }}
       {...props}
     >
       {children}
