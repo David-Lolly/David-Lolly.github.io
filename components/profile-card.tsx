@@ -11,7 +11,7 @@ export function ProfileCard() {
       {/* Avatar */}
       <div className="flex flex-col items-center mb-6">
         <div className="w-32 h-32 rounded-full overflow-hidden mb-4 ring-4 ring-primary/10">
-          <img src="/professional-developer-portrait.png" alt="乐乐博文" className="w-full h-full object-cover" />
+          <img src="/static/images/basic_info/avatar.jpg" alt="乐乐博文" className="w-full h-full object-cover" />
         </div>
         <h2 className="text-2xl font-serif font-bold text-center mb-2">乐乐博文</h2>
         <p className="text-sm text-muted-foreground text-center leading-relaxed">

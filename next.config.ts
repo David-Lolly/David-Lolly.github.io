@@ -1,7 +1,8 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  // 添加空的 turbopack 配置以明确启用 Turbopack
+  turbopack: {},
+}
 
-export default nextConfig;
+export default nextConfig

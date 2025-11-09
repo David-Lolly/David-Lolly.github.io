@@ -1,0 +1,81 @@
+---
+title: AI 聊天机器人
+slug: ai-chatbot
+status: 进行中
+image: /ai-chatbot-interface.png
+description: 基于大语言模型的智能对话系统，支持多轮对话、上下文理解和知识检索。使用 LangChain 和 FastAPI 构建。
+tags: [Python, LangChain, FastAPI, AI]
+github_url: https://github.com/username/ai-chatbot
+demo_url: https://demo.example.com
+stars: 156
+forks: 32
+---
+
+# AI 聊天机器人项目
+
+这是一个基于大语言模型的智能对话系统。
+
+## 项目概述
+
+本项目旨在构建一个功能强大的 AI 聊天机器人，支持：
+
+- 多轮对话管理
+- 上下文理解
+- 知识库检索
+- 个性化回复
+
+## 技术栈
+
+- **后端**: FastAPI
+- **AI 框架**: LangChain
+- **数据库**: PostgreSQL + pgvector
+- **缓存**: Redis
+
+## 核心功能
+
+### 1. 对话管理
+
+```python
+from langchain.memory import ConversationBufferMemory
+from langchain.chains import ConversationChain
+
+memory = ConversationBufferMemory()
+conversation = ConversationChain(
+    llm=llm,
+    memory=memory,
+    verbose=True
+)
+```
+
+### 2. 知识检索
+
+使用向量数据库实现语义搜索：
+
+```python
+from langchain.vectorstores import Chroma
+from langchain.embeddings import OpenAIEmbeddings
+
+vectorstore = Chroma.from_documents(
+    documents=docs,
+    embedding=OpenAIEmbeddings()
+)
+```
+
+## 部署
+
+项目支持 Docker 容器化部署：
+
+```bash
+docker-compose up -d
+```
+
+## 未来计划
+
+- [ ] 支持语音对话
+- [ ] 多语言支持
+- [ ] 集成更多 LLM 模型
+- [ ] 添加情感分析
+
+## 贡献
+
+欢迎提交 Issue 和 Pull Request！

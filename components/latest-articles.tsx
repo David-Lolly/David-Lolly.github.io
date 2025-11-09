@@ -1,40 +1,23 @@
 import { Card } from "@/components/ui/card"
 import { Clock } from "lucide-react"
-
-const latestArticles = [
-  {
-    id: 4,
-    title: "Python 异步编程实践",
-    date: "2025年11月05日",
-  },
-  {
-    id: 5,
-    title: "Go 语言并发模式详解",
-    date: "2025年11月03日",
-  },
-  {
-    id: 6,
-    title: "FastAPI 性能优化技巧",
-    date: "2025年11月01日",
-  },
-  {
-    id: 7,
-    title: "Docker 容器化最佳实践",
-    date: "2025年10月28日",
-  },
-  {
-    id: 8,
-    title: "Kubernetes 入门指南",
-    date: "2025年10月25日",
-  },
-  {
-    id: 9,
-    title: "LangChain 应用开发",
-    date: "2025年10月22日",
-  },
-]
+import { posts } from "#site/content"
 
 export function LatestArticles() {
+  // 获取最新的6篇文章
+  const latestArticles = posts
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 6)
+
+  // 格式化日期
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString("zh-CN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).replace(/\//g, "年").replace(/年(\d+)年/, "年$1月") + "日"
+  }
+
   return (
     <Card className="p-6 sticky top-24 bg-[rgb(250,250,228)]">
       <div className="flex items-center gap-2 mb-4">
@@ -44,12 +27,12 @@ export function LatestArticles() {
 
       <div className="space-y-4">
         {latestArticles.map((article) => (
-          <a key={article.id} href={`/blog/${article.id}`} className="block group">
+          <a key={article.slug} href={`/blog/${article.slug}`} className="block group">
             <div className="border-l-2 border-border hover:border-primary pl-3 py-1 transition-colors">
               <h4 className="text-sm font-medium leading-relaxed group-hover:text-primary transition-colors line-clamp-2 mb-1">
                 {article.title}
               </h4>
-              <p className="text-xs text-muted-foreground">{article.date}</p>
+              <p className="text-xs text-muted-foreground">{formatDate(article.date)}</p>
             </div>
           </a>
         ))}
