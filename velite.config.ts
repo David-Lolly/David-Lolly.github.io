@@ -46,6 +46,7 @@ const projects = defineCollection({
       stars: s.number().default(0),
       forks: s.number().default(0),
       body: s.mdx(),
+      content: s.raw(), // 使用 s.raw() 获取原始 Markdown 内容（不包括 frontmatter）
     })
 })
 
