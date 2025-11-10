@@ -124,8 +124,10 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
     code: ({ inline, className, children, ...props }: ClassAttributes<HTMLElement> & HTMLAttributes<HTMLElement> & ExtraProps & { inline?: boolean }) => {
       const match = /language-(\w+)/.exec(className || '')
       
+      
       // 处理代码字符串，移除首尾空白和统一缩进
       let codeString = String(children).trim()
+      
       
       // 去除每一行的公共缩进
       const lines = codeString.split(/\r?\n/) 
@@ -134,17 +136,20 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
         const indents = lines
           .filter(line => line.trim().length > 0) // 只考虑非空行
           .map(line => {
-            const match = line.match(/^(\s*)/)
-            return match ? match[1].length : 0
+            const matchIndent = line.match(/^(\s*)/)
+            return matchIndent ? matchIndent[1].length : 0
           })
         
         const minIndent = Math.min(...indents)
+      
         
         // 如果存在公共缩进，则移除
         if (minIndent > 0) {
           codeString = lines
             .map(line => line.slice(minIndent))
             .join('\n')
+          
+   
         }
       }
     
@@ -153,6 +158,8 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
       if (!inline && match) {
         // 代码块 - macOS 终端风格
         const language = match[1]
+        
+        
         return (
           <div className="relative group my-6">
             {/* macOS 风格的窗口容器 */}
@@ -224,12 +231,18 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
                     lineHeight: '1.7',
                     backgroundColor: '#2d3748',
                     borderRadius: 0,
+                    textIndent: 0, // 确保没有文本缩进
                   }}
                   codeTagProps={{
                     style: {
                       fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
                       fontSize: '0.875rem',
-                      // whiteSpace: 'pre', // 防止首行缩进问题
+                      padding: 0, // 覆盖全局 .article-content code 的 padding
+                      backgroundColor: 'transparent', // 覆盖全局样式
+                      borderRadius: 0, // 覆盖全局样式
+                      fontWeight: 'normal', // 覆盖全局样式
+                      textIndent: 0, // 确保没有文本缩进
+                      display: 'block', // 确保块级显示
                     }
                   }}
                 >
@@ -294,20 +307,45 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
     ),
 
     // 表格
+    // table: ({ children, ...props }: ClassAttributes<HTMLTableElement> & HTMLAttributes<HTMLTableElement> & ExtraProps) => (
+    //   <div 
+    //     className="my-6 w-full rounded-xl"
+    //     style={{
+    //       backgroundColor: 'rgb(var(--color-card))',
+    //       border: '1px solid rgb(var(--color-border) / 0.1)',
+    //       overflow: 'hidden' // 确保圆角生效
+    //     }}
+    //   >
+    //     <div className="overflow-x-auto">
+    //       <table 
+    //         className="w-full" 
+    //         style={{ 
+    //           borderCollapse: 'collapse', // 改为 collapse，消除单元格间距
+    //           margin: 0,
+    //           padding: 0
+    //         }} 
+    //         {...props}
+    //       >
+    //         {children}
+    //       </table>
+    //     </div>
+    //   </div>
+    // ),
     table: ({ children, ...props }: ClassAttributes<HTMLTableElement> & HTMLAttributes<HTMLTableElement> & ExtraProps) => (
       <div 
-        className="my-6 w-full rounded-xl"
+        className="my-6 w-full rounded-xl" // 保持圆角
         style={{
-          backgroundColor: 'rgb(var(--color-card))',
-          border: '1px solid rgb(var(--color-border) / 0.1)',
-          overflow: 'hidden' // 确保圆角生效
+          backgroundColor: 'rgb(var(--color-secondary))', // 使用比页面背景稍暗的颜色
+          boxShadow: 'var(--shadow-md)', // 添加阴影以“突出”
+          overflow: 'hidden', // 确保圆角内的阴影和内容被正确裁剪
+          border: '1px solid rgb(var(--color-border) / 1)', // 【新增】添加了半透明的边框
         }}
       >
         <div className="overflow-x-auto">
           <table 
             className="w-full" 
             style={{ 
-              borderCollapse: 'collapse', // 改为 collapse，消除单元格间距
+              borderCollapse: 'collapse', 
               margin: 0,
               padding: 0
             }} 
@@ -317,7 +355,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           </table>
         </div>
       </div>
-    ),
+),
 
     // 表格头部
     thead: ({ children, ...props }: ClassAttributes<HTMLTableSectionElement> & HTMLAttributes<HTMLTableSectionElement> & ExtraProps) => (
@@ -362,13 +400,30 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
     ),
 
     // 表头单元格
+    // th: ({ children, ...props }: ClassAttributes<HTMLTableCellElement> & HTMLAttributes<HTMLTableCellElement> & ExtraProps) => (
+    //   <th
+    //     className="font-bold text-left px-6 py-4 text-sm"
+    //     style={{
+    //       // backgroundColor: 'rgb(var(--color-muted) / 0.3)',
+    //       backgroundColor: 'rgb(255,0,0))',
+    //       color: 'rgb(var(--text-primary))',
+    //       borderBottom: '2px solid rgb(var(--color-border) / 0.2)',
+    //       fontWeight: 600,
+    //       margin: 0
+    //     }}
+    //     {...props}
+    //   >
+    //     {children}
+    //   </th>
+    // ),
+
     th: ({ children, ...props }: ClassAttributes<HTMLTableCellElement> & HTMLAttributes<HTMLTableCellElement> & ExtraProps) => (
       <th
         className="font-bold text-left px-6 py-4 text-sm"
         style={{
-          backgroundColor: 'rgb(var(--color-muted) / 0.3)',
-          color: 'rgb(var(--text-primary))',
-          borderBottom: '2px solid rgb(var(--color-border) / 0.2)',
+          backgroundColor: 'rgb(var(--color-muted))', // 使用比表格背景更深的颜色
+          color: 'rgb(var(--foreground-rgb))', // 确保使用主文字颜色
+          borderBottom: '1px solid rgb(var(--color-border),0.2)', // 使用实线边框
           fontWeight: 600,
           margin: 0
         }}
@@ -376,23 +431,38 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
       >
         {children}
       </th>
-    ),
+),
 
     // 表格单元格
+    // td: ({ children, ...props }: ClassAttributes<HTMLTableCellElement> & HTMLAttributes<HTMLTableCellElement> & ExtraProps) => (
+    //   <td
+    //     className="px-6 py-4 text-sm"
+    //     style={{ 
+    //       color: 'rgb(var(--text-secondary))',
+    //       lineHeight: '1.6',
+    //       borderBottom: '1px solid rgb(var(--color-border) / 0.1)',
+    //       margin: 0
+    //     }}
+    //     {...props}
+    //   >
+    //     {children}
+    //   </td>
+    // ),
+
     td: ({ children, ...props }: ClassAttributes<HTMLTableCellElement> & HTMLAttributes<HTMLTableCellElement> & ExtraProps) => (
       <td
         className="px-6 py-4 text-sm"
         style={{ 
-          color: 'rgb(var(--text-secondary))',
+          color: 'rgb(var(--foreground-muted-rgb))', // 使用次要文字颜色
           lineHeight: '1.6',
-          borderBottom: '1px solid rgb(var(--color-border) / 0.1)',
+          borderBottom: '1px solid rgb(var(--color-border) / 0.2)', // 调高边框透明度
           margin: 0
         }}
         {...props}
       >
         {children}
       </td>
-    ),
+),
 
     // 加粗
     strong: ({ children, ...props }: ClassAttributes<HTMLElement> & HTMLAttributes<HTMLElement> & ExtraProps) => (

@@ -97,10 +97,13 @@
 }
 
 @theme inline {
-  --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+  /* --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
     "Noto Color Emoji";
-  --font-serif: "Noto Serif SC", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-serif: "Times New Roman",Times,"Noto Serif SC", ui-serif, Georgia, Cambria,   serif; */
 
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "思源黑体 CN", "Noto Sans SC", "Source Han Sans SC", "Hiragino Sans GB", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+  --font-serif: "Times New Roman", Georgia, ui-serif, Times, "方正小标宋简体", "Source Han Serif SC", "Noto Serif SC", "思源宋体", "STZhongsong", "华文中宋", "SimSun", serif;
+  
   /* Using design proposal colors with proper RGB values */
   --color-background: var(--bg-primary);
   --color-foreground: var(--foreground-rgb);
@@ -224,6 +227,17 @@ h6 {
   font-weight: 500;
 }
 
+/* 确保代码块内的 code 标签不受行内代码样式影响 */
+.article-content pre code,
+.article-content div[class*="language-"] code {
+  padding: 0 !important;
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  font-weight: normal !important;
+  text-indent: 0 !important;
+  display: block !important;
+}
+
 /* Code blocks */
 /* .article-content pre {
   @apply font-mono text-sm mb-6 overflow-x-auto relative;
@@ -303,7 +317,8 @@ h6 {
 
 .article-content th {
   @apply font-semibold text-left p-3 border-b-2;
-  background-color: rgb(var(--color-secondary));
+  background-color: rgb(var(--color-secondary)/ 500);
+  /* background-color: rgb(245,245,213), */
   border-color: rgb(var(--color-border));
 }
 
