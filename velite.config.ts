@@ -50,6 +50,43 @@ const projects = defineCollection({
     })
 })
 
+// 定义 Basic (基本信息) 集合
+const basic = defineCollection({
+  name: 'Basic',
+  pattern: 'basic/**/*.mdx',
+  schema: s
+    .object({
+      type: s.string(), // 'profile' 或 'about'
+      // Profile 字段
+      name: s.string().optional(),
+      avatar: s.string().optional(),
+      position: s.string().optional(),
+      bio: s.string().optional(),
+      location: s.string().optional(),
+      email: s.string().optional(),
+      github: s.string().optional(),
+      twitter: s.string().optional(),
+      linkedin: s.string().optional(),
+      website: s.string().optional(),
+      tech_stack: s.array(s.string()).optional(),
+      // About 字段
+      title: s.string().optional(),
+      slug: s.string().optional(),
+      body: s.mdx(),
+      content: s.raw(), // 原始 Markdown 内容
+    })
+    .transform((data) => {
+      // 清理空字符串和 null 值
+      const cleaned: any = { ...data }
+      Object.keys(cleaned).forEach(key => {
+        if (cleaned[key] === null || cleaned[key] === '') {
+          delete cleaned[key]
+        }
+      })
+      return cleaned
+    })
+})
+
 export default defineConfig({
   root: 'content',
   output: {
@@ -59,7 +96,7 @@ export default defineConfig({
     name: '[name]-[hash:6].[ext]',
     clean: true,
   },
-  collections: { posts, projects },
+  collections: { posts, projects, basic },
   mdx: {
     rehypePlugins: [
       rehypeSlug,
