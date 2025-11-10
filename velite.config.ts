@@ -2,6 +2,8 @@ import { defineConfig, defineCollection, s } from 'velite'
 import rehypeSlug from 'rehype-slug'
 import rehypePrettyCode from 'rehype-pretty-code'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeKatex from 'rehype-katex'
+import remarkMath from 'remark-math'
 import readingTime from 'reading-time'
 
 // 计算阅读时间的辅助函数
@@ -71,7 +73,10 @@ export default defineConfig({
           },
         },
       ],
+      rehypeKatex, // 添加 KaTeX 支持
     ],
-    remarkPlugins: [],
+    remarkPlugins: [
+      remarkMath, // 添加数学公式解析支持
+    ],
   },
 })

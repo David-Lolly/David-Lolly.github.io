@@ -1,4 +1,5 @@
 import * as React from "react"
+import { Copy, Check } from 'lucide-react'
 
 const components = {
   h1: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
@@ -120,20 +121,81 @@ const components = {
     }
 
     return (
-      <div className="relative group">
-        <pre 
-          ref={preRef}
-          className="font-mono text-sm mb-6 overflow-x-auto relative"
-          {...props}
+      <div className="relative group my-6">
+        {/* macOS 风格的窗口容器 */}
+        <div 
+          className="rounded-xl overflow-hidden"
+          style={{
+            backgroundColor: '#2d3748',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1)',
+          }}
         >
-          {children}
-        </pre>
-        <button
-          onClick={handleCopy}
-          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs"
-        >
-          {copied ? '已复制' : '复制'}
-        </button>
+          {/* macOS 窗口头部 - 灰色背景覆盖整个宽度 */}
+          <div 
+            className="flex items-center px-4"
+            style={{
+              backgroundColor: '#3d4754',
+              paddingTop: '0.75rem',    // 可调整：头部上内边距 (默认 0.75rem = 12px)
+              paddingBottom: '0.75rem', // 可调整：头部下内边距 (默认 0.75rem = 12px)
+              width: '100%',            // 灰色背景覆盖整个宽度
+            }}
+          >
+            {/* macOS 三个圆点按钮 */}
+            <div className="flex items-center gap-2">
+              <div 
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: '#ff5f57' }}
+              />
+              <div 
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: '#febc2e' }}
+              />
+              <div 
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: '#28c840' }}
+              />
+            </div>
+          </div>
+
+          {/* 代码内容区域 */}
+          <div className="relative" style={{ backgroundColor: '#2d3748' }}>
+            {/* 复制按钮 - 放在代码块内右上角 */}
+            <button
+              onClick={handleCopy}
+              className="absolute opacity-0 group-hover:opacity-100 transition-all duration-200 p-2 rounded hover:bg-white/10 z-10"
+              style={{
+                top: '0.5rem',   // 可调整：复制按钮距离顶部距离 (默认 0.5rem = 8px)
+                right: '0.75rem', // 可调整：复制按钮距离右侧距离 (默认 0.75rem = 12px)
+                color: '#a0aec0',
+              }}
+              title={copied ? '已复制' : '复制代码'}
+            >
+              {copied ? (
+                <Check size={18} style={{ color: '#28c840' }} />
+              ) : (
+                <Copy size={18} />
+              )}
+            </button>
+
+            <pre 
+              ref={preRef}
+              className="font-mono text-sm overflow-x-auto m-0"
+              style={{
+                paddingTop: '0.75rem',    // 可调整：代码距离头部的距离 (默认 0.75rem = 12px)
+                paddingBottom: '1.25rem', // 可调整：代码底部内边距 (默认 1.25rem = 20px)
+                paddingLeft: '1.5rem',    // 可调整：代码左侧内边距 (默认 1.5rem = 24px)
+                paddingRight: '3.5rem',   // 可调整：代码右侧内边距，为复制按钮留空间 (默认 3.5rem = 56px)
+                backgroundColor: '#2d3748',
+                fontSize: '0.875rem',
+                lineHeight: '1.7',
+                whiteSpace: 'pre', // 防止首行缩进问题
+              }}
+              {...props}
+            >
+              {children}
+            </pre>
+          </div>
+        </div>
       </div>
     )
   },
@@ -170,7 +232,8 @@ const components = {
         className="my-6 w-full overflow-hidden rounded-xl"
         style={{
           backgroundColor: 'rgb(var(--color-card))',
-          border: '1px solid rgb(var(--color-border) / 0.1)'
+          border: '1px solid rgb(var(--color-border) / 0.1)',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1), 0 10px 25px rgba(0, 0, 0, 0.15)',
         }}
       >
         <div className="overflow-x-auto">
@@ -216,7 +279,7 @@ const components = {
     const childrenArray = React.Children.toArray(children)
     return (
       <tr 
-        className="m-0 p-0 transition-colors hover:bg-muted/30"
+        className="m-0 p-0 transition-colors hover:bg-muted/50"
         style={{ borderBottom: '1px solid rgb(var(--color-border) / 0.1)' }}
         {...props}
       >
@@ -233,9 +296,9 @@ const components = {
     <th
       className="font-bold text-left px-6 py-4 text-sm"
       style={{
-        backgroundColor: 'rgb(var(--color-muted) / 0.3)',
+        backgroundColor: 'rgb(var(--color-secondary) / 0.3)',
         color: 'rgb(var(--text-primary))',
-        borderBottom: '2px solid rgb(var(--color-border) / 0.2)',
+        borderBottom: '1px solid rgb(var(--color-border) / 0.2)',
         fontWeight: 600
       }}
       {...props}

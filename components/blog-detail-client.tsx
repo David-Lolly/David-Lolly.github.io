@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Calendar, Clock, ArrowLeft, Copy, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { MDXContent } from "@/components/mdx-components"
+import { MarkdownRenderer } from "@/components/markdown-renderer"
 import { useState } from "react"
 import { toast } from "sonner"
 
@@ -71,9 +71,9 @@ date: ${post.date}${post.description ? `\ndescription: ${post.description}` : ''
       <article>
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            {post.categories && post.categories.length > 0 && (
+            {/* {post.categories && post.categories.length > 0 && (
               <Badge variant="secondary">{post.categories[0]}</Badge>
-            )}
+            )} */}
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
@@ -92,7 +92,7 @@ date: ${post.date}${post.description ? `\ndescription: ${post.description}` : ''
             <p className="text-lg text-muted-foreground leading-relaxed mb-6">{post.description}</p>
           )}
 
-          {post.categories && post.categories.length > 0 && (
+          {/* {post.categories && post.categories.length > 0 && (
             <div className="flex items-center gap-3 mb-8">
               {post.categories.map((category) => (
                 <Badge key={category} variant="outline" className="text-xs">
@@ -100,7 +100,7 @@ date: ${post.date}${post.description ? `\ndescription: ${post.description}` : ''
                 </Badge>
               ))}
             </div>
-          )}
+          )} */}
 
           <Button 
             variant="outline" 
@@ -133,7 +133,7 @@ date: ${post.date}${post.description ? `\ndescription: ${post.description}` : ''
         )}
 
         <div className="article-content leading-relaxed">
-          <MDXContent code={post.body} />
+          <MarkdownRenderer content={post.content} />
         </div>
       </article>
 

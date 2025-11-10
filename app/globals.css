@@ -217,7 +217,7 @@ h6 {
 /* Inline code */
 .article-content code {
   @apply font-mono text-sm;
-  background-color: rgb(var(--color-muted));
+  /* background-color: rgb(var(--color-muted)); */
   color: rgb(var(--text-primary));
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
@@ -225,7 +225,7 @@ h6 {
 }
 
 /* Code blocks */
-.article-content pre {
+/* .article-content pre {
   @apply font-mono text-sm mb-6 overflow-x-auto relative;
   background-color: #000000;
   color: #ffffff;
@@ -239,7 +239,7 @@ h6 {
   @apply bg-transparent p-0;
   color: #ffffff;
   font-weight: 400;
-}
+} */
 
 /* Links */
 .article-content a {
