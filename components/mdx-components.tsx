@@ -1,27 +1,62 @@
+"use client"
+
 import * as React from "react"
 import { Copy, Check } from 'lucide-react'
 
+const toPlainText = (children: React.ReactNode): string => {
+  return React.Children.toArray(children)
+    .map((child) => {
+      if (typeof child === "string") return child
+      if (typeof child === "number") return child.toString()
+      if (React.isValidElement(child) && child.props?.children) {
+        return toPlainText(child.props.children)
+      }
+      return ""
+    })
+    .join(" ")
+}
+
+const generateId = (children: React.ReactNode): string => {
+  return toPlainText(children)
+    .toLowerCase()
+    .replace(/[^\u4e00-\u9fa5a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .trim()
+}
+
 const components = {
-  h1: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h1 className="text-4xl font-serif font-bold mt-12 mb-4 text-foreground" style={{ lineHeight: 1.2, color: '#000000' }} {...props}>
-      {children}
-    </h1>
-  ),
-  h2: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h2 className="text-3xl font-serif font-bold mt-10 mb-5 text-foreground border-b pb-3" style={{ color: '#000000', borderColor: 'rgb(var(--color-border))' }} {...props}>
-      {children}
-    </h2>
-  ),
-  h3: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h3 className="text-2xl font-serif font-bold mt-8 mb-4 text-foreground" style={{ color: '#000000' }} {...props}>
-      {children}
-    </h3>
-  ),
-  h4: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h4 className="text-xl font-serif font-semibold mt-6 mb-3 text-foreground" style={{ color: '#000000' }} {...props}>
-      {children}
-    </h4>
-  ),
+  h1: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
+    const id = generateId(children)
+    return (
+      <h1 id={id} className="text-4xl font-serif font-bold mt-12 mb-4 text-foreground" style={{ lineHeight: 1.2, color: '#000000' }} {...props}>
+        {children}
+      </h1>
+    )
+  },
+  h2: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
+    const id = generateId(children)
+    return (
+      <h2 id={id} className="text-3xl font-serif font-bold mt-10 mb-5 text-foreground border-b pb-3" style={{ color: '#000000', borderColor: 'rgb(var(--color-border))' }} {...props}>
+        {children}
+      </h2>
+    )
+  },
+  h3: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
+    const id = generateId(children)
+    return (
+      <h3 id={id} className="text-2xl font-serif font-bold mt-8 mb-4 text-foreground" style={{ color: '#000000' }} {...props}>
+        {children}
+      </h3>
+    )
+  },
+  h4: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
+    const id = generateId(children)
+    return (
+      <h4 id={id} className="text-xl font-serif font-semibold mt-6 mb-3 text-foreground" style={{ color: '#000000' }} {...props}>
+        {children}
+      </h4>
+    )
+  },
   p: ({ children, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
     <p className="mb-6 leading-relaxed text-foreground" {...props}>
       {children}
@@ -229,15 +264,24 @@ const components = {
     const childrenArray = React.Children.toArray(children)
     return (
       <div 
-        className="my-6 w-full overflow-hidden rounded-xl"
+        className="my-6 w-full rounded-xl"
         style={{
-          backgroundColor: 'rgb(var(--color-card))',
-          border: '1px solid rgb(var(--color-border) / 0.1)',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1), 0 10px 25px rgba(0, 0, 0, 0.15)',
+          backgroundColor: 'rgb(var(--color-secondary))',
+          boxShadow: 'var(--shadow-md)',
+          overflow: 'hidden',
+          border: '1px solid rgb(var(--color-border) / 1)',
         }}
       >
         <div className="overflow-x-auto">
-          <table className="w-full" style={{ borderCollapse: 'separate', borderSpacing: 0 }} {...props}>
+          <table 
+            className="w-full" 
+            style={{ 
+              borderCollapse: 'collapse', 
+              margin: 0,
+              padding: 0
+            }} 
+            {...props}
+          >
             {childrenArray.map((child, index) => {
               if (React.isValidElement(child)) {
                 return React.cloneElement(child, { key: index } as any)
@@ -296,10 +340,11 @@ const components = {
     <th
       className="font-bold text-left px-6 py-4 text-sm"
       style={{
-        backgroundColor: 'rgb(var(--color-secondary) / 0.3)',
-        color: 'rgb(var(--text-primary))',
-        borderBottom: '1px solid rgb(var(--color-border) / 0.2)',
-        fontWeight: 600
+        backgroundColor: 'rgb(var(--color-muted))',
+        color: 'rgb(var(--foreground-rgb))',
+        borderBottom: '1px solid rgb(var(--color-border),0.2)',
+        fontWeight: 600,
+        margin: 0
       }}
       {...props}
     >
@@ -310,8 +355,10 @@ const components = {
     <td
       className="px-6 py-4 text-sm"
       style={{ 
-        color: 'rgb(var(--text-secondary))',
-        lineHeight: '1.6'
+        color: 'rgb(var(--foreground-muted-rgb))',
+        lineHeight: '1.6',
+        borderBottom: '1px solid rgb(var(--color-border) / 0.2)',
+        margin: 0
       }}
       {...props}
     >
@@ -327,6 +374,11 @@ const components = {
     <em className="italic" {...props}>
       {children}
     </em>
+  ),
+  del: ({ children, ...props }: React.HTMLAttributes<HTMLElement>) => (
+    <del className="line-through" {...props}>
+      {children}
+    </del>
   ),
   kbd: ({ children, ...props }: React.HTMLAttributes<HTMLElement>) => (
     <kbd 

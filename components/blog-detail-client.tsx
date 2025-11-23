@@ -3,9 +3,10 @@
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { Calendar, Clock, ArrowLeft, Copy, Check } from "lucide-react"
+import { Calendar, Clock, ArrowLeft, Copy, Check, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { MarkdownRenderer } from "@/components/markdown-renderer"
+import { MDXContent } from "@/components/mdx-components"
+import { GiscusComments } from "@/components/giscus-comments"
 import { useState } from "react"
 import { toast } from "sonner"
 
@@ -133,7 +134,7 @@ date: ${post.date}${post.description ? `\ndescription: ${post.description}` : ''
         )}
 
         <div className="article-content leading-relaxed">
-          <MarkdownRenderer content={post.content} />
+          <MDXContent code={post.body} />
         </div>
       </article>
 
@@ -158,13 +159,25 @@ date: ${post.date}${post.description ? `\ndescription: ${post.description}` : ''
         </>
       )}
 
-      <Separator className="my-12" />
+      {/* 增强的分隔线区域 */}
+      <div className="mt-16 mb-12">
+        <Separator className="h-[2px] bg-[rgb(200,200,180)]" />
+      </div>
 
-      <div>
-        <h2 className="text-2xl font-serif font-bold mb-6">评论区</h2>
-        <Card className="p-8">
-          <p className="text-center text-muted-foreground">评论系统即将上线，敬请期待...</p>
-        </Card>
+      {/* 评论功能区 */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <MessageSquare className="h-5 w-5 text-muted-foreground" />
+          <h2 className="text-xl font-sans font-semibold text-foreground">
+            发表评论
+          </h2>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          欢迎留下你的想法和见解，使用 GitHub 账号登录即可参与讨论
+        </p>
+        <div className="bg-card rounded-lg border border-border/60 p-6">
+          <GiscusComments />
+        </div>
       </div>
     </main>
   )

@@ -68,7 +68,7 @@ export function ProfileCard() {
             </a>
           </Button>
         )}
-        {twitter && (
+        {/* {twitter && (
           <Button variant="ghost" size="icon" className="h-9 w-9" asChild>
             <a href={twitter} target="_blank" rel="noopener noreferrer" aria-label="Twitter">
               <Twitter className="h-4 w-4" />
@@ -81,7 +81,7 @@ export function ProfileCard() {
               <Linkedin className="h-4 w-4" />
             </a>
           </Button>
-        )}
+        )} */}
         {email && (
           <Button variant="ghost" size="icon" className="h-9 w-9" asChild>
             <a href={`mailto:${email}`} aria-label="Email">

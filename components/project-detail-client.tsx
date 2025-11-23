@@ -47,7 +47,7 @@ status: ${project.status}${project.description ? `\ndescription: ${project.descr
       await navigator.clipboard.writeText(contentToCopy)
       setCopied(true)
       toast.success("已复制 Markdown 原文")
-      setTimeout(() => setCopied(false), 2000)
+      setTimeout(() => setCopied(false), 1000)
     } catch (err) {
       toast.error("复制失败，请重试")
     }

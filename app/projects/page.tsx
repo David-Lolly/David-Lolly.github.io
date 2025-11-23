@@ -44,7 +44,11 @@ export default function ProjectsPage() {
               <Badge
                 key={tag}
                 variant={tag === selectedTag ? "default" : "outline"}
-                className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                className={`cursor-pointer transition-colors ${
+                  tag === selectedTag 
+                    ? "bg-[rgb(220,200,100)] text-[rgb(92,64,32)]" 
+                    : ""
+                }`}
                 onClick={() => setSelectedTag(tag)}
               >
                 {tag}

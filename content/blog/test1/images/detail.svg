@@ -1,0 +1,17 @@
+<svg width="640" height="360" viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="360" rx="24" fill="#0f172a" />
+  <g transform="translate(80 70)">
+    <rect width="480" height="220" rx="20" fill="#1d2945" stroke="#38bdf8" stroke-width="2"/>
+    <text x="240" y="48" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="20" fill="#f8fafc">
+      Async Flow
+    </text>
+    <line x1="120" y1="90" x2="360" y2="90" stroke="#38bdf8" stroke-width="2" stroke-dasharray="6 6"/>
+    <circle cx="120" cy="90" r="18" fill="#22c55e"/>
+    <circle cx="240" cy="90" r="18" fill="#fbbf24"/>
+    <circle cx="360" cy="90" r="18" fill="#ef4444"/>
+    <text x="120" y="135" text-anchor="middle" font-size="14" fill="#cbd5f5">事件</text>
+    <text x="240" y="135" text-anchor="middle" font-size="14" fill="#cbd5f5">调度</text>
+    <text x="360" y="135" text-anchor="middle" font-size="14" fill="#cbd5f5">执行</text>
+  </g>
+</svg>
+

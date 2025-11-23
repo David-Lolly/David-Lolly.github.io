@@ -20,12 +20,12 @@ export function LatestArticles() {
 
   return (
     <Card className="p-6 sticky top-24 bg-[rgb(250,250,228)]">
-      <div className="flex items-center gap-2 mb-4">
-        <Clock className="h-5 w-5 text-primary" />
-        <h3 className="text-lg font-serif font-bold">最新文章</h3>
+      <div className="flex items-center gap-2">
+        <Clock className="h-4.5 w-4.5 text-primary" />
+        <h3 className="text-base font-serif font-bold">最新文章</h3>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-2">
         {latestArticles.map((article) => (
           <a key={article.slug} href={`/blog/${article.slug}`} className="block group">
             <div className="border-l-2 border-border hover:border-primary pl-3 py-1 transition-colors">
