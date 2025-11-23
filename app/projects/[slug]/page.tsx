@@ -1,7 +1,7 @@
 import { Header } from "@/components/header"
 import { projects } from "#site/content"
 import { notFound } from "next/navigation"
-import { ProjectDetailClient } from "@/components/project-detail-client"
+import { ProjectDetail } from "@/components/project-detail"
 
 interface ProjectPageProps {
   params: {
@@ -25,17 +25,21 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   // 获取相关项目（同技术栈的其他项目）
-  const relatedProjects = projects
+  const filteredProjects = projects
     .filter((p) => 
       p.slug !== project.slug && 
       p.tags?.some((tag) => project.tags?.includes(tag))
     )
+  
+  // 随机打乱数组并取前 2 个
+  const relatedProjects = filteredProjects
+    .sort(() => Math.random() - 0.5)
     .slice(0, 2)
 
   return (
     <div className="min-h-screen">
       <Header />
-      <ProjectDetailClient 
+      <ProjectDetail 
         project={project} 
         relatedProjects={relatedProjects}
       />

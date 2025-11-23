@@ -178,7 +178,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                 <button
                   key={`${item.type}-${item.slug}-${index}`}
                   onClick={() => handleItemClick(item)}
-                  className="w-full px-6 py-4 hover:bg-[rgb(245,245,213)] transition-colors text-left border-b border-[rgb(229,229,209)] last:border-0"
+                  className="w-full px-6 py-4 text-left border-b border-[rgb(229,229,209)] last:border-0 transition-all duration-200 hover:bg-[rgb(252,252,228)] hover:border-[rgb(210,180,120)] hover:shadow-md cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(210,180,120)] focus-visible:bg-[rgb(252,252,228)]"
                 >
                   <div className="flex items-start gap-4">
                     {/* 图标 */}

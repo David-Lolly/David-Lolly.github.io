@@ -4,7 +4,7 @@ import { Header } from "@/components/header"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { BookOpenIcon, Github, Star, GitFork } from "lucide-react"
+import { BookOpen, Github, Star, GitFork } from "lucide-react"
 import { projects } from "#site/content"
 import { useState, useMemo } from "react"
 
@@ -34,7 +34,7 @@ export default function ProjectsPage() {
 
       <main className="max-w-6xl mx-auto px-6 py-12">
         <div className="mb-12">
-          <h1 className="text-4xl font-serif font-bold mb-4">项目展示</h1>
+          <h1 className="text-4xl font-serif font-bold mb-4">开源项目</h1>
           <p className="text-lg text-muted-foreground leading-relaxed mb-6">
             这里是我参与开发和维护的开源项目，涵盖 AI、云原生、微服务等技术领域
           </p>
@@ -117,7 +117,7 @@ export default function ProjectsPage() {
                   )}
                   <Button variant="outline" size="sm" className="gap-2 flex-1" asChild>
                     <a href={`/projects/${project.slug}`}>
-                      <BookOpenIcon className="h-4 w-4 bg-background" />
+                      <BookOpen className="h-4 w-4 bg-background" />
                       详情
                     </a>
                   </Button>

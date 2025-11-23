@@ -3,10 +3,10 @@ import { Clock } from "lucide-react"
 import { posts } from "#site/content"
 
 export function LatestArticles() {
-  // 获取最新的6篇文章
+  // 获取最新的8篇文章
   const latestArticles = posts
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 6)
+    .slice(0, 8)
 
   // 格式化日期
   const formatDate = (dateString: string) => {

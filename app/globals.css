@@ -213,28 +213,41 @@ h6 {
 }
 
 .article-content li::marker {
-  color: rgb(var(--color-primary));
+  color: #000000;
 }
 
-/* Inline code */
-.article-content code {
+/* Inline code - 只应用于非代码块内的 code */
+.article-content :not(pre) > code {
   @apply font-mono text-sm;
-  /* background-color: rgb(var(--color-muted)); */
+  background-color: rgb(var(--color-muted));
   color: rgb(var(--text-primary));
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
   font-weight: 500;
 }
 
-/* 确保代码块内的 code 标签不受行内代码样式影响 */
-.article-content pre code,
-.article-content div[class*="language-"] code {
-  padding: 0 !important;
-  background-color: transparent !important;
-  border-radius: 0 !important;
-  font-weight: normal !important;
-  text-indent: 0 !important;
-  display: block !important;
+/* 完全重置代码块样式，让 mdx-components 完全控制 */
+.article-content pre {
+  all: revert;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  font-size: inherit;
+  line-height: inherit;
+  overflow: visible;
+}
+
+.article-content pre code {
+  all: revert;
+  display: block;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border-radius: 0;
+  font-weight: normal;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 /* Code blocks */

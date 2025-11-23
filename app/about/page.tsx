@@ -1,7 +1,7 @@
 import { Header } from "@/components/header"
 import { basic } from "#site/content"
 import { notFound } from "next/navigation"
-import { MarkdownRenderer } from "@/components/markdown-renderer"
+import { MDXContent } from "@/components/mdx-components"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
@@ -34,7 +34,11 @@ export default function AboutPage() {
           </div>
 
           <div className="article-content leading-relaxed">
-            <MarkdownRenderer content={about.content || ""} />
+            {about.body ? (
+              <MDXContent code={about.body} />
+            ) : (
+              <div className="text-muted-foreground">暂无内容</div>
+            )}
           </div>
         </article>
       </main>

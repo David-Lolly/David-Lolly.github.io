@@ -55,6 +55,7 @@ const posts = defineCollection({
       image: s.string().optional(),
       description: s.string().max(999).optional(),
       categories: s.array(s.string()).default([]),
+      featured: s.boolean().default(false),
       body: s.mdx(),
       content: s.raw(), // 使用 s.raw() 获取原始 Markdown 内容（不包括 frontmatter）
     })
@@ -132,7 +133,14 @@ export default defineConfig({
   mdx: {
     rehypePlugins: [
       rehypeSlug,
-      [rehypePrettyCode, { theme: 'github-dark' }],
+      [
+        rehypePrettyCode,
+        {
+          theme: 'github-dark',
+          keepBackground: false, // 不保留主题背景，使用自定义样式
+          defaultLang: 'plaintext',
+        }
+      ],
       [
         rehypeAutolinkHeadings,
         {

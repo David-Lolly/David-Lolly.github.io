@@ -89,7 +89,7 @@ const components = {
     )
   },
   li: ({ children, ...props }: React.HTMLAttributes<HTMLLIElement>) => (
-    <li className="leading-relaxed text-foreground" style={{ paddingLeft: '0.5rem' }} {...props}>
+    <li className="leading-relaxed text-foreground marker:text-black" style={{ paddingLeft: '0.5rem' }} {...props}>
       {children}
     </li>
   ),
@@ -116,7 +116,17 @@ const components = {
       // 代码块内的 <code>：交给 rehype-pretty-code 的内联样式与主题处理，不再自定义颜色
       return (
         <code
-          className="font-mono text-sm bg-transparent p-0"
+          className="font-mono text-sm"
+          style={{
+            fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+            fontSize: '0.875rem',
+            padding: 0,
+            backgroundColor: 'transparent',
+            borderRadius: 0,
+            fontWeight: 'normal',
+            textIndent: 0,
+            display: 'block',
+          }}
           {...props}
         >
           {children}
@@ -214,8 +224,9 @@ const components = {
 
             <pre 
               ref={preRef}
-              className="font-mono text-sm overflow-x-auto m-0"
+              className="font-mono text-sm overflow-x-auto"
               style={{
+                margin: 0,
                 paddingTop: '0.75rem',    // 可调整：代码距离头部的距离 (默认 0.75rem = 12px)
                 paddingBottom: '1.25rem', // 可调整：代码底部内边距 (默认 1.25rem = 20px)
                 paddingLeft: '1.5rem',    // 可调整：代码左侧内边距 (默认 1.5rem = 24px)
@@ -223,7 +234,8 @@ const components = {
                 backgroundColor: '#2d3748',
                 fontSize: '0.875rem',
                 lineHeight: '1.7',
-                whiteSpace: 'pre', // 防止首行缩进问题
+                borderRadius: 0,
+                textIndent: 0,
               }}
               {...props}
             >

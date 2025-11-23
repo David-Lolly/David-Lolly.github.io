@@ -1,13 +1,19 @@
-"use client"
-
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { ArrowLeft, Github, ExternalLink, Star, GitFork, Copy, Check } from "lucide-react"
+import {
+  ArrowLeft,
+  Github,
+  ExternalLink,
+  Star,
+  GitFork,
+  MessageSquare,
+} from "lucide-react"
+
 import { Button } from "@/components/ui/button"
-import { MarkdownRenderer } from "@/components/markdown-renderer"
-import { useState } from "react"
-import { toast } from "sonner"
+import { GiscusComments } from "@/components/giscus-comments"
+import { CopyMarkdownButton } from "@/components/copy-markdown-button"
+import { MDXContent } from "@/components/mdx-components"
 
 interface Project {
   title: string
@@ -21,37 +27,37 @@ interface Project {
   stars: number
   forks: number
   body: string
-  content: string // 原始 Markdown 内容（不含 frontmatter）
+  content: string
 }
 
-interface ProjectDetailClientProps {
+interface ProjectDetailProps {
   project: Project
   relatedProjects: Project[]
 }
 
-export function ProjectDetailClient({ project, relatedProjects }: ProjectDetailClientProps) {
-  const [copied, setCopied] = useState(false)
+const buildMarkdownPayload = (project: Project) => {
+  const metadata = [
+    `title: ${project.title}`,
+    `slug: ${project.slug}`,
+    `status: ${project.status}`,
+    project.description ? `description: ${project.description}` : null,
+    project.tags && project.tags.length > 0
+      ? `tags: [${project.tags.join(", ")}]`
+      : null,
+    project.image ? `image: ${project.image}` : null,
+    project.github_url ? `github_url: ${project.github_url}` : null,
+    project.demo_url ? `demo_url: ${project.demo_url}` : null,
+    project.stars > 0 ? `stars: ${project.stars}` : null,
+    project.forks > 0 ? `forks: ${project.forks}` : null,
+  ]
+    .filter(Boolean)
+    .join("\n")
 
-  // 复制全文功能
-  const handleCopyContent = async () => {
-    try {
-      // 构建完整的 Markdown 项目内容
-      const frontmatter = `---
-title: ${project.title}
-slug: ${project.slug}
-status: ${project.status}${project.description ? `\ndescription: ${project.description}` : ''}${project.tags && project.tags.length > 0 ? `\ntags: [${project.tags.join(', ')}]` : ''}${project.image ? `\nimage: ${project.image}` : ''}${project.github_url ? `\ngithub_url: ${project.github_url}` : ''}${project.demo_url ? `\ndemo_url: ${project.demo_url}` : ''}${project.stars > 0 ? `\nstars: ${project.stars}` : ''}${project.forks > 0 ? `\nforks: ${project.forks}` : ''}
----
-`
-      const contentToCopy = frontmatter + '\n' + (project.content || '')
-      
-      await navigator.clipboard.writeText(contentToCopy)
-      setCopied(true)
-      toast.success("已复制 Markdown 原文")
-      setTimeout(() => setCopied(false), 1000)
-    } catch (err) {
-      toast.error("复制失败，请重试")
-    }
-  }
+  return `---\n${metadata}\n---\n\n${project.content || ""}`
+}
+
+export function ProjectDetail({ project, relatedProjects }: ProjectDetailProps) {
+  const markdownPayload = buildMarkdownPayload(project)
 
   return (
     <main className="max-w-4xl mx-auto px-6 py-12">
@@ -106,10 +112,14 @@ status: ${project.status}${project.description ? `\ndescription: ${project.descr
             </div>
           </div>
 
-          <h1 className="text-4xl font-serif font-bold mb-4 leading-tight">{project.title}</h1>
+          <h1 className="text-4xl font-serif font-bold mb-4 leading-tight">
+            {project.title}
+          </h1>
 
           {project.description && (
-            <p className="text-lg text-muted-foreground leading-relaxed mb-6">{project.description}</p>
+            <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+              {project.description}
+            </p>
           )}
 
           {project.tags && project.tags.length > 0 && (
@@ -122,24 +132,7 @@ status: ${project.status}${project.description ? `\ndescription: ${project.descr
             </div>
           )}
 
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="gap-2 bg-transparent"
-            onClick={handleCopyContent}
-          >
-            {copied ? (
-              <>
-                <Check className="h-4 w-4" />
-                已复制
-              </>
-            ) : (
-              <>
-                <Copy className="h-4 w-4" />
-                复制全文
-              </>
-            )}
-          </Button>
+          <CopyMarkdownButton content={markdownPayload} className="gap-2 bg-transparent" />
         </div>
 
         {project.image && (
@@ -153,7 +146,7 @@ status: ${project.status}${project.description ? `\ndescription: ${project.descr
         )}
 
         <div className="article-content leading-relaxed">
-          <MarkdownRenderer content={project.content} />
+          <MDXContent code={project.body} />
         </div>
       </article>
 
@@ -170,11 +163,16 @@ status: ${project.status}${project.description ? `\ndescription: ${project.descr
                       <h3 className="font-serif font-bold group-hover:text-primary transition-colors">
                         {proj.title}
                       </h3>
-                      <Badge variant={proj.status === "已完成" ? "default" : "secondary"} className="text-xs">
+                      <Badge
+                        variant={proj.status === "已完成" ? "default" : "secondary"}
+                        className="text-xs"
+                      >
                         {proj.status}
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2">{proj.description}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {proj.description}
+                    </p>
                     {proj.tags && proj.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-3">
                         {proj.tags.slice(0, 3).map((tag) => (
@@ -192,14 +190,26 @@ status: ${project.status}${project.description ? `\ndescription: ${project.descr
         </>
       )}
 
-      <Separator className="my-12" />
+      <div className="mt-16 mb-12">
+        <Separator className="h-[2px] bg-[rgb(200,200,180)]" />
+      </div>
 
-      <div>
-        <h2 className="text-2xl font-serif font-bold mb-6">评论区</h2>
-        <Card className="p-8">
-          <p className="text-center text-muted-foreground">评论系统即将上线，敬请期待...</p>
-        </Card>
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <MessageSquare className="h-5 w-5 text-muted-foreground" />
+          <h2 className="text-xl font-sans font-semibold text-foreground">
+            发表评论
+          </h2>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          欢迎留下你的想法和见解，使用 GitHub 账号登录即可参与讨论
+        </p>
+        <div className="bg-card rounded-lg border border-border/60 p-6">
+          <GiscusComments />
+        </div>
       </div>
     </main>
   )
 }
+
+

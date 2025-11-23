@@ -2,8 +2,9 @@ import { Sparkles } from "lucide-react"
 import { posts } from "#site/content"
 
 export function FeaturedArticles() {
-  // 获取最新的8篇文章
+  // 仅展示 frontmatter 中标记为 featured 的文章，默认最多 8 篇
   const featuredArticles = posts
+    .filter((post) => post.featured)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 8)
 
@@ -21,7 +22,7 @@ export function FeaturedArticles() {
     <div>
       <div className="flex items-center gap-2 mb-6">
         <Sparkles className="h-5 w-5 text-primary" />
-        <h2 className="text-2xl font-serif font-bold">精选博客</h2>
+        <h2 className="text-2xl font-serif font-bold">精选文章</h2>
       </div>
 
       <ul className="space-y-1.5 list-none">

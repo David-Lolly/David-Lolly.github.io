@@ -1,12 +1,9 @@
 "use client"
 
-import { useTheme } from "next-themes"
 import Giscus from "@giscus/react"
 
 export function GiscusComments() {
-  const { theme, resolvedTheme } = useTheme()
-  
-  const giscusTheme = resolvedTheme === "dark" ? "dark" : "light"
+  const giscusTheme = "light"
 
   return (
     <div className="mt-8">
