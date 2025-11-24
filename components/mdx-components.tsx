@@ -1,15 +1,21 @@
 "use client"
 
 import * as React from "react"
+import { Fragment, jsx, jsxs } from "react/jsx-runtime"
 import { Copy, Check } from 'lucide-react'
+
+type ElementWithChildren = React.ReactElement<{ children?: React.ReactNode }>
 
 const toPlainText = (children: React.ReactNode): string => {
   return React.Children.toArray(children)
     .map((child) => {
       if (typeof child === "string") return child
       if (typeof child === "number") return child.toString()
-      if (React.isValidElement(child) && child.props?.children) {
-        return toPlainText(child.props.children)
+      if (React.isValidElement(child)) {
+        const element = child as ElementWithChildren
+        if (element.props?.children) {
+          return toPlainText(element.props.children)
+        }
       }
       return ""
     })
@@ -423,9 +429,9 @@ export function MDXContent({ code }: { code: string }) {
       `)
       
       const result = fn({
-        Fragment: React.Fragment,
-        jsx: React.createElement,
-        jsxs: React.createElement,
+        Fragment,
+        jsx,
+        jsxs,
       })
       
       return result.default

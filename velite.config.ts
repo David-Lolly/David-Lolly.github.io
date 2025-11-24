@@ -10,6 +10,10 @@ const BLOG_ROOT = 'content/blog'
 const STATIC_ROOT = 'public/static'
 const STATIC_BLOG_DIR = 'public/static/blog'
 const STATIC_BLOG_BASE = '/static/blog'
+const STATIC_BASE = '/static/'
+const ASSET_CACHE_DIR = '.velite/assets-cache'
+const ASSET_CACHE_BASE = '/_velite_cache_/'
+const ASSET_PATH_SUFFIX_PATTERN = /[^\s"'`)]+/
 const HASHED_FILENAME_REGEX_SEGMENT = '[a-zA-Z0-9]{6}'
 
 const escapeRegExp = (value: string) =>
@@ -40,7 +44,7 @@ const isRelativePath = (value?: string): value is string =>
 
 // 计算阅读时间的辅助函数
 const computedFields = <T extends { body: string }>(data: T) => ({
-  readingTime: readingTime(data.body).text,
+  readingTime: readingTime(data.body, { wordsPerMinute: 300 }).text,
 })
 
 // 定义 Post (博客) 集合
@@ -124,8 +128,8 @@ export default defineConfig({
   root: 'content',
   output: {
     data: '.velite',
-    assets: 'public/static',
-    base: '/static/',
+    assets: ASSET_CACHE_DIR,
+    base: ASSET_CACHE_BASE,
     name: '[name]-[hash:6].[ext]',
     clean: true,
   },
@@ -221,7 +225,7 @@ export default defineConfig({
               const baseNamePattern = escapeRegExp(asset.baseName)
               const extPattern = escapeRegExp(asset.ext)
               const hashedAssetRegex = new RegExp(
-                `/static/${baseNamePattern}-${HASHED_FILENAME_REGEX_SEGMENT}${extPattern}`,
+                `${escapeRegExp(ASSET_CACHE_BASE)}${baseNamePattern}-${HASHED_FILENAME_REGEX_SEGMENT}${extPattern}`,
                 'g'
               )
               post.body = post.body.replace(hashedAssetRegex, asset.publicPath)
@@ -231,16 +235,32 @@ export default defineConfig({
           }
         }
 
-        // 如果正文仍包含 /static/ 根路径图片（例如非相对路径），额外复制并重写到 slug 目录
+        // 如果正文仍包含 Velite 输出或 /static/ 根路径图片（例如非相对路径），额外复制并重写到 slug 目录
         if (typeof post.body === 'string') {
-          const staticAssetRegex = /\/static\/[^\s"'`)]+/g
-          const matches = post.body.match(staticAssetRegex) || []
+          const assetSources = [
+            { base: ASSET_CACHE_BASE, root: ASSET_CACHE_DIR },
+            { base: STATIC_BASE, root: STATIC_ROOT },
+          ]
 
-          for (const assetPath of matches) {
+          const collected = new Set<string>()
+
+          for (const { base } of assetSources) {
+            const regex = new RegExp(
+              `${escapeRegExp(base)}${ASSET_PATH_SUFFIX_PATTERN.source}`,
+              'g'
+            )
+            const matches = post.body.match(regex) || []
+            matches.forEach((match: string) => collected.add(match))
+          }
+
+          for (const assetPath of collected) {
             if (assetPath.startsWith(`${STATIC_BLOG_BASE}/${post.slug}/`)) continue
 
-            const relativeAsset = assetPath.replace(/^\/static\/+/, '')
-            const sourcePath = path.join(process.cwd(), STATIC_ROOT, relativeAsset)
+            const sourceConfig = assetSources.find(({ base }) => assetPath.startsWith(base))
+            if (!sourceConfig) continue
+
+            const relativeAsset = assetPath.slice(sourceConfig.base.length)
+            const sourcePath = path.join(process.cwd(), sourceConfig.root, relativeAsset)
             const fileName = path.basename(relativeAsset)
 
             try {
@@ -296,5 +316,6 @@ export default defineConfig({
     )
     
     console.log(`✅ 已生成搜索索引，包含 ${searchIndex.length} 个条目`)
+    console.log('ℹ️ 资源缓存位于 .velite/assets-cache，可在构建后按需删除')
   },
 })

@@ -148,7 +148,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-black/70 hover:text-black hover:bg-black/5 rounded-full h-8 w-8"
               >
                 <Image 
-                  src="/static/images/icon/叉.svg" 
+                  src="icon/叉.svg" 
                   alt="清空" 
                   width={20} 
                   height={20}
