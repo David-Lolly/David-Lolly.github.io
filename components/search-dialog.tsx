@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Fuse from "fuse.js"
 import { useRouter } from "next/navigation"
-import Image from "next/image"
 
 interface SearchItem {
   title: string
@@ -145,15 +144,21 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                 variant="ghost"
                 size="icon"
                 onClick={() => setQuery("")}
+                aria-label="清空搜索"
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-black/70 hover:text-black hover:bg-black/5 rounded-full h-8 w-8"
               >
-                <Image 
-                  src="icon/叉.svg" 
-                  alt="清空" 
-                  width={20} 
+                <svg
+                  viewBox="0 0 1024 1024"
+                  width={20}
                   height={20}
                   className="opacity-70 hover:opacity-100"
-                />
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M557.3 512l329.3-329.4a32 32 0 1 0-45.2-45.2L512 466.7 182.6 137.4a32 32 0 1 0-45.2 45.2L466.7 512 137.4 841.4a31.9 31.9 0 0 0 0 45.2 31.9 31.9 0 0 0 45.2 0L512 557.3l329.4 329.3a31.9 31.9 0 0 0 45.2 0 31.9 31.9 0 0 0 0-45.2z"
+                    fill="currentColor"
+                  />
+                </svg>
               </Button>
             )}
           </div>
