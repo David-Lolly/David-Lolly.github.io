@@ -10,35 +10,9 @@
     ]
   },
   {
-    "title": "AI 聊天机器人",
-    "description": "基于大语言模型的智能对话系统，支持多轮对话、上下文理解和知识检索。使用 LangChain 和 FastAPI 构建。",
-    "date": "2025-11-30T10:18:55.180Z",
-    "slug": "ai-chatbot",
-    "type": "project",
-    "tags": [
-      "Python",
-      "LangChain",
-      "FastAPI",
-      "AI"
-    ]
-  },
-  {
-    "title": "test",
-    "description": "基于大语言模型的智能对话系统，支持多轮对话、上下文理解和知识检索。使用 LangChain 和 FastAPI 构建。",
-    "date": "2025-11-30T10:18:55.180Z",
-    "slug": "test",
-    "type": "project",
-    "tags": [
-      "Python",
-      "LangChain",
-      "FastAPI",
-      "AI"
-    ]
-  },
-  {
     "title": "TinyAISearch",
-    "description": "基于大语言模型的智能对话系统，支持多轮对话、上下文理解和知识检索。使用 LangChain 和 FastAPI 构建。",
-    "date": "2025-11-30T10:18:55.180Z",
+    "description": "TinyAISearch 是一个轻量但强大的 AI 搜索项目，为你完整揭示从智能搜索规划、网页爬取、内容召回到流式问答的 RAG 全链路。",
+    "date": "2025-11-30T12:36:58.352Z",
     "slug": "tiny-ai-search",
     "type": "project",
     "tags": [
