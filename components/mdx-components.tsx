@@ -280,19 +280,33 @@ const components = {
       </div>
     )
   },
-  a: ({ children, href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
-    <a
-      href={href}
-      className="font-medium underline decoration-2 underline-offset-4 transition-colors"
-      style={{
-        color: 'rgb(var(--color-primary))',
-        textDecorationColor: 'rgb(var(--color-primary) / 0.3)'
-      }}
-      {...props}
-    >
-      {children}
-    </a>
-  ),
+  a: ({
+    children,
+    href = "",
+    rel,
+    target,
+    ...props
+  }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+    const staysInPage = href.startsWith("#")
+    const finalTarget = staysInPage ? target : target ?? "_blank"
+    const finalRel = staysInPage ? rel : rel ?? "noopener noreferrer"
+
+    return (
+      <a
+        href={href}
+        target={finalTarget}
+        rel={finalRel}
+        className="font-medium underline decoration-2 underline-offset-4 transition-colors"
+        style={{
+          color: 'rgb(var(--color-primary))',
+          textDecorationColor: 'rgb(var(--color-primary) / 0.3)'
+        }}
+        {...props}
+      >
+        {children}
+      </a>
+    )
+  },
   img: ({ alt, src, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => (
     // eslint-disable-next-line @next/next/no-img-element
     <img 
