@@ -7,9 +7,12 @@ import remarkMath from 'remark-math'
 import readingTime from 'reading-time'
 
 const BLOG_ROOT = 'content/blog'
+const PROJECT_ROOT = 'content/projects'
 const STATIC_ROOT = 'public/static'
 const STATIC_BLOG_DIR = 'public/static/blog'
 const STATIC_BLOG_BASE = '/static/blog'
+const STATIC_PROJECT_DIR = 'public/static/project'
+const STATIC_PROJECT_BASE = '/static/project'
 const STATIC_BASE = '/static/'
 const ASSET_CACHE_DIR = '.velite/assets-cache'
 const ASSET_CACHE_BASE = '/_velite_cache_/'
@@ -74,6 +77,7 @@ const projects = defineCollection({
     .object({
       title: s.string().max(99),
       slug: s.slug('project'),
+      date: s.isodate(), // 添加日期字段
       status: s.string().default('进行中'),
       image: s.string().optional(),
       description: s.string().max(999).optional(),
@@ -85,6 +89,7 @@ const projects = defineCollection({
       body: s.mdx(),
       content: s.raw(), // 使用 s.raw() 获取原始 Markdown 内容（不包括 frontmatter）
     })
+    .transform((data) => ({ ...data, ...computedFields(data) }))
 })
 
 // 定义 Basic (基本信息) 集合
@@ -168,79 +173,89 @@ export default defineConfig({
     const { createHash } = await import('crypto')
 
     const posts = data.posts || []
+    const projects = data.projects || []
 
     const copyRelativeAsset = async (
       slug: string,
-      postDir: string,
+      entryDir: string,
       relativePath: string,
-      cache: Map<string, { publicPath: string; baseName: string; ext: string }>
+      cache: Map<string, { publicPath: string; baseName: string; ext: string }>,
+      staticDir: string,
+      staticBase: string
     ) => {
       const normalized = relativePath.replace(/\\/g, '/')
       if (cache.has(normalized)) {
         return cache.get(normalized)!
       }
 
-      const absolutePath = path.resolve(postDir, normalized)
+      const absolutePath = path.resolve(entryDir, normalized)
       const fileBuffer = await fs.readFile(absolutePath)
       const hash = createHash('sha1').update(fileBuffer).digest('hex').slice(0, 8)
       const ext = path.extname(absolutePath)
       const baseName = path.basename(absolutePath, ext)
-      const destDir = path.join(process.cwd(), STATIC_BLOG_DIR, slug)
+      const destDir = path.join(process.cwd(), staticDir, slug)
       await fs.mkdir(destDir, { recursive: true })
       const fileName = `${baseName}-${hash}${ext}`
       const destPath = path.join(destDir, fileName)
       await fs.writeFile(destPath, fileBuffer)
-      const publicPath = `${STATIC_BLOG_BASE}/${slug}/${fileName}`.replace(/\\/g, '/')
+      const publicPath = `${staticBase}/${slug}/${fileName}`.replace(/\\/g, '/')
 
       const assetInfo = { publicPath, baseName, ext }
       cache.set(normalized, assetInfo)
       return assetInfo
     }
 
-    await Promise.all(
-      posts.map(async (post: any) => {
-        if (!post?.slug) return
+    const processCollectionAssets = async (
+      entries: any[],
+      {
+        rootDir,
+        staticDir,
+        staticBase,
+        label,
+      }: { rootDir: string; staticDir: string; staticBase: string; label: string }
+    ) => {
+      const assetSources = [
+        { base: ASSET_CACHE_BASE, root: ASSET_CACHE_DIR },
+        { base: STATIC_BASE, root: STATIC_ROOT },
+      ]
 
-        const postDir = path.join(process.cwd(), BLOG_ROOT, post.slug)
-        const cache = new Map<string, { publicPath: string; baseName: string; ext: string }>()
+      await Promise.all(
+        entries.map(async (entry: any) => {
+          if (!entry?.slug) return
 
-        // 处理封面
-        if (isRelativePath(post.image)) {
-          try {
-            const asset = await copyRelativeAsset(post.slug, postDir, post.image, cache)
-            post.image = asset.publicPath
-          } catch (error) {
-            console.warn(`⚠️  无法解析文章 ${post.slug} 的封面 ${post.image}:`, (error as Error).message)
-          }
-        }
+          const entryDir = path.join(process.cwd(), rootDir, entry.slug)
+          const cache = new Map<string, { publicPath: string; baseName: string; ext: string }>()
 
-        // 处理正文图片
-        const inlineAssets = extractRelativeImagePaths(post.content)
-
-        for (const relativePath of inlineAssets) {
-          try {
-            const asset = await copyRelativeAsset(post.slug, postDir, relativePath, cache)
-
-            if (typeof post.body === 'string') {
-              const baseNamePattern = escapeRegExp(asset.baseName)
-              const extPattern = escapeRegExp(asset.ext)
-              const hashedAssetRegex = new RegExp(
-                `${escapeRegExp(ASSET_CACHE_BASE)}${baseNamePattern}-${HASHED_FILENAME_REGEX_SEGMENT}${extPattern}`,
-                'g'
-              )
-              post.body = post.body.replace(hashedAssetRegex, asset.publicPath)
+          if (isRelativePath(entry.image)) {
+            try {
+              const asset = await copyRelativeAsset(entry.slug, entryDir, entry.image, cache, staticDir, staticBase)
+              entry.image = asset.publicPath
+            } catch (error) {
+              console.warn(`⚠️  无法解析${label} ${entry.slug} 的封面 ${entry.image}:`, (error as Error).message)
             }
-          } catch (error) {
-            console.warn(`⚠️  无法解析文章 ${post.slug} 的正文图片 ${relativePath}:`, (error as Error).message)
           }
-        }
 
-        // 如果正文仍包含 Velite 输出或 /static/ 根路径图片（例如非相对路径），额外复制并重写到 slug 目录
-        if (typeof post.body === 'string') {
-          const assetSources = [
-            { base: ASSET_CACHE_BASE, root: ASSET_CACHE_DIR },
-            { base: STATIC_BASE, root: STATIC_ROOT },
-          ]
+          const inlineAssets = extractRelativeImagePaths(entry.content)
+
+          for (const relativePath of inlineAssets) {
+            try {
+              const asset = await copyRelativeAsset(entry.slug, entryDir, relativePath, cache, staticDir, staticBase)
+
+              if (typeof entry.body === 'string') {
+                const baseNamePattern = escapeRegExp(asset.baseName)
+                const extPattern = escapeRegExp(asset.ext)
+                const hashedAssetRegex = new RegExp(
+                  `${escapeRegExp(ASSET_CACHE_BASE)}${baseNamePattern}-${HASHED_FILENAME_REGEX_SEGMENT}${extPattern}`,
+                  'g'
+                )
+                entry.body = entry.body.replace(hashedAssetRegex, asset.publicPath)
+              }
+            } catch (error) {
+              console.warn(`⚠️  无法解析${label} ${entry.slug} 的正文图片 ${relativePath}:`, (error as Error).message)
+            }
+          }
+
+          if (typeof entry.body !== 'string') return
 
           const collected = new Set<string>()
 
@@ -249,12 +264,12 @@ export default defineConfig({
               `${escapeRegExp(base)}${ASSET_PATH_SUFFIX_PATTERN.source}`,
               'g'
             )
-            const matches = post.body.match(regex) || []
+            const matches = entry.body.match(regex) || []
             matches.forEach((match: string) => collected.add(match))
           }
 
           for (const assetPath of collected) {
-            if (assetPath.startsWith(`${STATIC_BLOG_BASE}/${post.slug}/`)) continue
+            if (assetPath.startsWith(`${staticBase}/${entry.slug}/`)) continue
 
             const sourceConfig = assetSources.find(({ base }) => assetPath.startsWith(base))
             if (!sourceConfig) continue
@@ -265,20 +280,35 @@ export default defineConfig({
 
             try {
               const buffer = await fs.readFile(sourcePath)
-              const destDir = path.join(process.cwd(), STATIC_BLOG_DIR, post.slug)
+              const destDir = path.join(process.cwd(), staticDir, entry.slug)
               await fs.mkdir(destDir, { recursive: true })
               const destPath = path.join(destDir, fileName)
               await fs.writeFile(destPath, buffer)
 
-              const publicPath = `${STATIC_BLOG_BASE}/${post.slug}/${fileName}`.replace(/\\/g, '/')
-              post.body = post.body.split(assetPath).join(publicPath)
+              const publicPath = `${staticBase}/${entry.slug}/${fileName}`.replace(/\\/g, '/')
+              entry.body = entry.body.split(assetPath).join(publicPath)
             } catch (error) {
-              console.warn(`⚠️  无法复制文章 ${post.slug} 的资源 ${assetPath}:`, (error as Error).message)
+              console.warn(`⚠️  无法复制${label} ${entry.slug} 的资源 ${assetPath}:`, (error as Error).message)
             }
           }
-        }
-      })
-    )
+        })
+      )
+    }
+
+    await Promise.all([
+      processCollectionAssets(posts, {
+        rootDir: BLOG_ROOT,
+        staticDir: STATIC_BLOG_DIR,
+        staticBase: STATIC_BLOG_BASE,
+        label: '文章',
+      }),
+      processCollectionAssets(projects, {
+        rootDir: PROJECT_ROOT,
+        staticDir: STATIC_PROJECT_DIR,
+        staticBase: STATIC_PROJECT_BASE,
+        label: '项目',
+      }),
+    ])
   },
   // 构建完成后生成搜索索引
   complete: async (data) => {

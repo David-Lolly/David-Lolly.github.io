@@ -1,19 +1,21 @@
 ---
-title: 项目测试
-slug: project-test
+title: TinyAISearch
+slug: tiny-ai-search
+date: 2025-11-30
 status: 进行中
 image: https://th.bing.com/th/id/OIP.l7xiwb3Lt6F5k5aW490_YAHaEO?w=283&h=180&c=7&r=0&o=7&cb=ucfimgc2&dpr=2&pid=1.7&rm=3
 description: 基于大语言模型的智能对话系统，支持多轮对话、上下文理解和知识检索。使用 LangChain 和 FastAPI 构建。
 tags: [Python, LangChain, FastAPI, AI]
 github_url: https://github.com/username/ai-chatbot
 demo_url: https://demo.example.com
-stars: 156
+stars: 159
 forks: 32
 ---
 
 
+
+
 # TinyAISearch
-[ 简体中文 | [English](README_EN.md) ]
 
 
 **TinyAISearch** 是一个轻量级的 AI 搜索项目，它实现了从 **搜索关键词分析**、**网页爬取**、**内容召回** 到 **流式回答** 的完整 RAG 流程。
@@ -241,7 +243,7 @@ B: Google 连接失败，API Key和CSE是否填写正确，查看是否开启代
     1.  **多路查询生成**: 基于用户原始问题，由 LLM 生成多个衍生问题。
     2.  **多路召回**: 同时使用 **相似度检索** 和 **BM25 稀疏检索** 对所有问题进行召回。
     3.  **RRF 融合**: 使用 **倒数排序融合 (Reciprocal Rank Fusion)** 算法合并多路召回结果，提升查准率。
-    <br>
+    <br/>
     <img src="./images/multi_query_retrieval.png"  width="900" />
 </details>
 
@@ -281,7 +283,7 @@ V2 模式模拟了人类的搜索行为，以网页为单位进行召回，旨�
 
 ## 文件结构
 
-```text
+```sh
 TinyAISearch/
 ├─ AISearchServer.py             #  FastAPI 后端主入口
 ├─ requirements.txt              #  Python 依赖列表

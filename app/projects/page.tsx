@@ -4,7 +4,7 @@ import { Header } from "@/components/header"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { BookOpen, Github, Star, GitFork } from "lucide-react"
+import { BookOpen, Github, Star, GitFork, Calendar } from "lucide-react"
 import { projects } from "#site/content"
 import { useState, useMemo } from "react"
 
@@ -20,13 +20,55 @@ export default function ProjectsPage() {
     return ["全部", ...Array.from(tagSet).sort()]
   }, [])
 
-  // 过滤项目
+  // 过滤和排序项目
   const filteredProjects = useMemo(() => {
-    if (selectedTag === "全部") {
-      return projects
-    }
-    return projects.filter((project) => project.tags?.includes(selectedTag))
+    const filtered = selectedTag === "全部" 
+      ? projects 
+      : projects.filter((project) => project.tags?.includes(selectedTag))
+    
+    // 智能排序：
+    // 1. 按 status 排序（已完成 > 进行中 > 其他）
+    // 2. 按日期降序排序（最新的在前）
+    // 3. 按 stars 降序排序
+    // 4. 按 forks 降序排序
+    return filtered.sort((a, b) => {
+      // 1. 按状态排序
+      const statusOrder: Record<string, number> = {
+        '已完成': 1,
+        '进行中': 2,
+      }
+      const statusA = statusOrder[a.status] || 999
+      const statusB = statusOrder[b.status] || 999
+      if (statusA !== statusB) {
+        return statusA - statusB
+      }
+      
+      // 2. 按日期排序（最新的在前）
+      const dateA = new Date(a.date).getTime()
+      const dateB = new Date(b.date).getTime()
+      if (dateA !== dateB) {
+        return dateB - dateA
+      }
+      
+      // 3. 按 stars 排序
+      if (a.stars !== b.stars) {
+        return b.stars - a.stars
+      }
+      
+      // 4. 按 forks 排序
+      return b.forks - a.forks
+    })
   }, [selectedTag])
+
+  // 格式化日期
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString("zh-CN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).replace(/\//g, "年").replace(/年(\d+)年/, "年$1月") + "日"
+  }
 
   return (
     <div className="min-h-screen">
@@ -104,6 +146,13 @@ export default function ProjectsPage() {
                       {tag}
                     </Badge>
                   ))}
+                </div>
+
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Calendar className="h-3.5 w-3.5" />
+                    <span>{formatDate(project.date)}</span>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-2">
