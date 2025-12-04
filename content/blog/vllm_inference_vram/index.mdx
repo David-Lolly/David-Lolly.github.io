@@ -1,0 +1,174 @@
+---
+title: vllm模型推理显存计算与优化
+slug: vllm_inference_vram
+featured: true
+date: 2025-12-04
+image: ./images/cover.png
+description: vLLM 显存去哪了？从理论估算到日志分析的深度指南 (以 Qwen3-Next 80B MoE 为例)
+categories: [模型推理]
+---
+
+# vLLM 显存去哪了？从理论估算到日志分析的深度指南 (以 Qwen3-Next 80B MoE 为例)
+
+在部署大模型（LLM）时，显存（VRAM）永远是最大的瓶颈。很多工程师在计算“我能跑多大并发”时，往往只凭感觉，导致上线后频频 OOM（显存溢出）或者资源严重浪费。
+
+本文将以 **Qwen3-Next 80B MoE** 模型在 **8卡 A100 (40GB)** 环境下的部署为例，带你打通从 **“理论计算”** 到 **“日志核查”** 的全流程。
+
+## 0\. 环境与模型配置
+
+  * **硬件**：8 x A100 (40GB)
+  * **部署方式**：vLLM, Tensor Parallel (TP) = 8
+  * **模型关键参数** (来自 `config.json`)：
+      * `num_hidden_layers`: 48
+      * `num_key_value_heads`: 2 (GQA)
+      * `hidden_size`: 2048
+      * `linear_key_head_dim`: 128 (Key的维度)
+      * `head_dim`: 256 (注意：这是一个配置陷阱，后面会提到)
+      * `torch_dtype`: bfloat16 (2 Bytes)
+
+**启动命令**：
+```sh
+docker run --gpus all --rm \
+  --ulimit memlock=-1 --ulimit stack=67108864 --shm-size 64g \
+  -p 8018:8018 \
+  -v /opt/models/Qwen3-Next:/opt/models/Qwen3-Next:ro \
+  vllm/vllm-openai:latest \
+  --model /opt/models/Qwen3-Next \
+  --served-model-name Qwen3-Next \
+  --tensor-parallel-size 8 \
+  --host 0.0.0.0 \
+  --port 8018 \
+  --dtype float16 \
+  --max-num-seqs 64 \
+  --max-model-len 8192 \
+  --gpu-memory-utilization 0.90
+```
+-----
+
+## 1\. 第一步：理论估算
+
+显存主要被三大部分瓜分：**模型权重 (Weights)**、**KV Cache (上下文记忆)**、**激活与系统开销 (Activation & Overhead)**。
+
+### 1.1 模型权重：MoE 的特殊性
+
+Qwen3-Next 是 MoE 架构，参数总量约 80B (800亿)。
+
+  * **总权重大小**：$80 \times 10^9 \times 2 \text{ Bytes} \approx 160 \text{ GB}$。
+  * **TP=8 分摊**：在理想情况下，每张卡分摊 $160 / 8 = 20 \text{ GB}$。
+  * **修正**：考虑到非切分层（LayerNorm, Embedding等）的复制，实际每张卡占用约 **21\~22 GB**。
+
+### 1.2 KV Cache：单 Token 成本计算
+
+这是并发计算的核心。公式如下：
+
+$$
+\text{Size}_{\text{token}} = 2 (\text{K+V}) \times \text{Layers} \times \text{Heads}_{\text{GPU}} \times \text{Dim} \times \text{Size}_{\text{dtype}}
+$$
+
+**关键参数推导：**
+
+  * **Heads per GPU**：模型总 KV Heads 为 2，TP 为 8。因为 $2 < 8$，vLLM 无法切分，**被迫在每张卡上复制完整的 KV Heads**。因此，`Heads_per_GPU = 1`。
+  * **Dim (陷阱)**：通常 `Dim = Hidden / Heads = 128`。按此计算：
+    $$2 \times 48 \times 1 \times 128 \times 2 = \mathbf{24 \text{ KB}}$$
+
+**初步结论**：每张卡 40GB，扣除权重 22GB 和预留，剩约 16GB。
+理论总容量 = $16 \text{ GB} / 24 \text{ KB} \approx \mathbf{69.9 \text{ 万 Tokens}}$。
+
+
+
+## 2\. 第二步：实战核查（日志分析）
+
+理论计算往往存在偏差，**日志才是真理**。启动 vLLM 后，请紧盯前 30 秒的输出。
+
+### 2.1 关键日志解读
+
+以下是该模型实际启动时的精简日志：
+
+```sh
+(Worker_TP0 pid=316) INFO 12-02 19:47:40 [gpu_model_runner.py:2392] Model loading took 18.6821 GiB and 56.032140 seconds
+(Worker_TP7 pid=323) INFO 12-02 19:48:47 [gpu_worker.py:298] Available KV cache memory: 16.43 GiB
+(EngineCore_DP0 pid=215) INFO 12-02 19:48:47 [kv_cache_utils.py:1028] GPU KV cache size: 359,424 tokens
+(EngineCore_DP0 pid=215) INFO 12-02 19:48:47 [kv_cache_utils.py:1032] Maximum concurrency for 8,192 tokens per request: 166.43x
+(Worker_TP3 pid=319) INFO 12-02 19:49:06 [gpu_model_runner.py:3118] Graph capturing finished in 19 secs, took 0.68 GiB
+(Worker_TP3 pid=319) INFO 12-02 19:49:06 [gpu_worker.py:391] Free memory on device (38.9/39.39 GiB) on startup. Desired GPU memory utilization is (0.9, 35.45 GiB). Actual usage is 18.68 GiB for weight, 0.14 GiB for peak activation, 0.2 GiB for non-torch memory, and 0.68 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=16745302425` to fit into requested memory, or `--kv-cache-memory=20447424512` to fully utilize gpu memory. Current kv cache memory in use is 17636592025 bytes.
+(APIServer pid=1) INFO 12-02 19:49:08 [loggers.py:142] Engine 000: vllm cache_config_info with initialization after num_gpu_blocks is: 9962
+(APIServer pid=1) INFO 12-02 19:49:08 [serving_completion.py:76] Using default completion sampling params from model: {'temperature': 0.7, 'top_k': 20, 'top_p': 0.8}
+```
+
+**重点关注：**
+* **Model Weight Size (模型权重大小)**: `18.68 GiB`
+    * 加载该模型静态权重实际占用的显存大小。
+* **KV Cache Memory (KV Cache 显存)**: `~16.43 GiB` (或日志中的 Current kv cache memory in use is 17636592025 bytes.)
+    * vLLM 预留用于存储上下文（Context）推理中间状态的显存，这部分显存大小直接决定了支持的上下文长度和并发量。
+* **GPU Memory Utilization (显存利用率)**: `0.9` (90%)
+    * 系统目标显存占用率。vLLM 默认会尝试占用 90% 的可用显存（其中一部分给权重，剩余的大部分给 KV Cache）。
+* **Graph Capturing Memory**: `0.68 GiB`
+    * CUDA Graph 优化所消耗的显存。
+
+### 2. 容量与并发 (Capacity & Concurrency)
+* **GPU KV Cache Size (总 Token 容量)**: `359,424 tokens`
+    * 当前显存配置下，GPU 一次性最多能容纳的 Token 总数（包括所有并发请求的 prompt 和 output）。
+* **Max Concurrency (理论最大并发)**: `~166.43x`
+    * 按照每个请求 8192 tokens (8k) 上下文计算，理论上系统能同时处理约 166 个并发请求。
+
+### 3. 推理默认参数 (Default Sampling Params)
+* **Temperature**: `0.7`
+* **Top_k**: `20`
+* **Top_p**: `0.8`
+    * 如果 API 请求中未指定采样参数，模型将使用这套默认配置（偏向于一定的创造性，但通过 top_k/p 限制了极端胡言乱语）。
+
+
+### 2.2 数据对比与“破案”
+
+我们发现了一个巨大的出入：
+
+  * **日志显示的可用显存**：`16.43 GiB` (与预估的 16GB 相符)
+  * **日志显示的 Token 容量**：`359,424 tokens`
+  * **理论计算的 Token 容量**：`699,000 tokens`
+
+**为什么少了一半？**
+检查 `config.json` 发现，虽然 `linear_key_head_dim` 是 128，但 vLLM 实际读取并分配显存使用的是 **`head_dim: 256`**。这导致每个 Token 的显存占用翻倍。
+
+**修正后的计算验证：**
+$$2 \times 48 \text{ (Layers)} \times 1 \text{ (Head)} \times \mathbf{256} \text{ (Real Dim)} \times 2 \text{ (BF16)} = \mathbf{48 \text{ KB}}$$
+
+$$
+\text{总容量} = \frac{16.42 \times 1024^3 \text{ Bytes}}{49,152 \text{ Bytes}} \approx \mathbf{358,600 \text{ Tokens}}
+$$
+
+结果与日志的 `359,424` 完美吻合（误差 \< 0.2%）。
+
+
+
+## 3\. 第三步：如何设置并发 (Batch & Length)
+
+既然我们知道了系统总共只有 **36万 Token** 的“弹药库”，我们就需要根据**业务场景**设置 `max_model_len` 和 `max_num_seqs`，防止 OOM。
+
+**计算公式：**
+
+$$
+\text{Max Concurrent Requests} \approx \frac{\text{Total Token Capacity}}{\text{Max Model Len}}
+$$
+
+### 场景 A：超长文档分析 (32k Context)
+
+  * **配置**：`--max-model-len 32768`
+  * **最大并发计算**：$360,000 / 32,768 \approx 10.9$
+  * **建议设置**：`--max-num-seqs 10` (或者保守设为 8)
+    > **警示**：如果这里你按默认设为 256，一旦请求变长，显存瞬间击穿。
+
+### 场景 B：日常对话/RAG (8k Context)
+
+  * **配置**：`--max-model-len 8192`
+  * **最大并发计算**：$360,000 / 8,192 \approx 43.9$
+  * **建议设置**：`--max-num-seqs 40`
+
+
+## 4\. 总结：避坑指南
+
+1.  **权重是大头**：80B MoE 模型即便在 8 卡 A100 上，权重也会吃掉 50% 以上的显存（约 19-20GB/卡）。
+2.  **警惕 TP 与 KV Heads 的关系**：当 `KV Heads < TP Size` 时，vLLM 会复制 KV 数据到每张卡。
+3.  **Head Dim 的陷阱**：不要只看 Hidden Size 除以 Heads，务必检查 config 中的 `head_dim` 字段，它决定了真实的显存分配。
+4.  **相信日志**：以 vLLM 启动时的 `GPU KV cache size` 日志为最终依据来倒推并发限制。
+
+通过以上步骤，你可以精确控制 vLLM 的显存红线，榨干硬件性能。

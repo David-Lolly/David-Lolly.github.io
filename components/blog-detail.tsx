@@ -99,11 +99,11 @@ export function BlogDetail({ post, prevPost, nextPost }: BlogDetailProps) {
         </div>
 
         {post.image && (
-          <div className="aspect-video w-full mb-8 rounded-lg overflow-hidden bg-muted">
+          <div className="w-full h-[420px] mb-8 rounded-lg bg-muted flex items-center justify-center p-2">
             <img
               src={post.image}
               alt={post.title}
-              className="w-full h-full object-cover"
+              className="max-h-full max-w-full w-auto object-contain"
             />
           </div>
         )}
