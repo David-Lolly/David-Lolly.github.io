@@ -11,8 +11,10 @@ export const metadata: Metadata = {
     google: [
       "ZJDzikFmXYVXlN1tam8o8ksafNEEijMOw7dEps_oW0I",
       "tb5SEzjyVP1xHwIrbvSN90BS5dQtQAqn_PzLN3zjI8M"
-    ]
-    
+    ],
+    other: {
+      "baidu-site-verification": "codeva-G4kFwFkkNI",
+    },
   },
 };
 
