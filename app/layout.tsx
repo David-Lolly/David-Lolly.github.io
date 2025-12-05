@@ -4,11 +4,15 @@ import "katex/dist/katex.min.css";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://david-lolly.github.io'),
+  metadataBase: new URL('https://www.davidxiong.site'),
   title: "熊乐乐のBlog",
   description: "熊乐乐的个人博客",
   verification: {
-    google: "ZJDzikFmXYVXlN1tam8o8ksafNEEijMOw7dEps_oW0I",
+    google: [
+      "ZJDzikFmXYVXlN1tam8o8ksafNEEijMOw7dEps_oW0I",
+      "tb5SEzjyVP1xHwIrbvSN90BS5dQtQAqn_PzLN3zjI8M"
+    ]
+    
   },
 };
 
