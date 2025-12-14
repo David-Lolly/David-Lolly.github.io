@@ -46,9 +46,15 @@ const isRelativePath = (value?: string): value is string =>
   typeof value === 'string' && (value.startsWith('./') || value.startsWith('../'))
 
 // 计算阅读时间的辅助函数
-const computedFields = <T extends { body: string }>(data: T) => ({
-  readingTime: readingTime(data.body, { wordsPerMinute: 300 }).text,
-})
+const computedFields = <T extends { body: string }>(data: T) => {
+  const reading = readingTime(data.body, { wordsPerMinute: 300 })
+  // 限制最大阅读时间为15分钟
+  const minutes = Math.min(Math.ceil(reading.minutes), 15)
+  const text = minutes === 1 ? '1 min read' : `${minutes} min read`
+  return {
+    readingTime: text,
+  }
+}
 
 // 定义 Post (博客) 集合
 const posts = defineCollection({
@@ -314,7 +320,7 @@ export default defineConfig({
   complete: async (data) => {
     const fs = await import('fs/promises')
     const path = await import('path')
-    
+
     // 构建搜索索引数据
     const searchIndex = [
       // 博客文章
@@ -336,7 +342,7 @@ export default defineConfig({
         tags: project.tags || [],
       })),
     ]
-    
+
     // 写入搜索索引文件到 public 目录
     const publicDir = path.join(process.cwd(), 'public')
     await fs.mkdir(publicDir, { recursive: true })
@@ -344,7 +350,7 @@ export default defineConfig({
       path.join(publicDir, 'search.json'),
       JSON.stringify(searchIndex, null, 2)
     )
-    
+
     console.log(`✅ 已生成搜索索引，包含 ${searchIndex.length} 个条目`)
     console.log('ℹ️ 资源缓存位于 .velite/assets-cache，可在构建后按需删除')
   },
