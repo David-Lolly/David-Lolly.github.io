@@ -43,3 +43,6 @@ next-env.d.ts
 # velite
 .velite
 /AIDocs/
+logs
+.kiro/
+.opencode

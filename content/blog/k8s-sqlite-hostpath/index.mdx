@@ -1,0 +1,79 @@
+---
+title: K8s 挂载 SQLite 单文件踩坑记
+slug: k8s-sqlite-hostpath
+featured: true
+date: 2026-03-15
+image: ./images/cover.jpg
+description: 在 Kubernetes 环境中挂载 SQLite 单文件时连续遭遇两个经典陷阱
+categories: [DevOps]
+---
+
+## 背景
+
+在 Kubernetes 环境中更新微服务（`mosaic-server`），为了避免 Pod 重启导致 SQLite 数据库文件（`/app/mosaic.db`）丢失，决定采用 `hostPath` 模式将其单文件挂载到宿主机的 `/host/path/tools/mosaic/` 目录下。在此过程中连续遭遇两个经典陷阱，特此记录。
+
+---
+
+## 踩坑一：Pod 挂起，卡在 `ContainerCreating`
+
+### 现象
+
+修改 Deployment 配置并 `apply` 后，新 Pod 迟迟无法启动，长时间卡在 `ContainerCreating` 阶段。
+
+通过 `kubectl describe pod` 发现底层事件报错：
+
+```c
+MountVolume.SetUp failed... no such file or directory
+```
+
+### 根因
+
+虽然 YAML 中配置了 `HostPathType: FileOrCreate`，但 Kubernetes **不具备自动递归创建父目录的能力**。由于宿主机上根本不存在 `/host/path/tools/mosaic/` 这个目录链，导致挂载动作直接失败并阻塞了容器创建。
+
+### 修复方案
+
+登录调度所在的宿主机，手动创建完整的父目录链，并创建一个空文件作为占位符让 Kubernetes 能够找到它。
+
+```bash
+mkdir -p /host/path/tools/mosaic/
+touch /host/path/tools/mosaic/mosaic.db
+```
+
+---
+
+## 踩坑二：程序崩溃，陷入 `CrashLoopBackOff`
+
+### 现象
+
+在宿主机补齐目录和占位文件后，挂载成功，Pod 状态发生扭转。但容器刚启动就变为 `Error`，并迅速进入 `CrashLoopBackOff` 无限重启循环。
+
+### 根因
+
+为了解决挂载问题，刚才使用 `touch` 创建的是一个 **0 字节的空文件**。当业务程序启动并尝试连接该 SQLite 数据库时，因为文件格式不合法（非标准 DB 文件），导致程序初始化抛错并直接崩溃退出。
+
+### 修复方案
+
+利用 Kubernetes 滚动更新期间"旧 Pod 不会立即销毁"的保护机制，从仍在提供服务的旧 Pod 中把健康的数据库文件抽出来，覆盖掉宿主机上的 0 字节文件，并强制重启异常的新 Pod。
+
+```bash
+# 1. 从存活的老 Pod 中提取真实数据，覆盖宿主机的损坏/空文件
+kubectl cp aipts/<老Pod名称>:/app/mosaic.db /host/path/tools/mosaic/mosaic.db
+
+# 2. 删除陷入重启循环的新 Pod，触发 Kubernetes 重新调度
+kubectl delete pod <新Pod名称> -n aipts
+```
+
+---
+
+## 核心总结 & 避坑指南
+
+- **先建目录，再做挂载**
+    
+    使用 `hostPath` 挂载特定目录或单文件前，务必保证宿主机的**绝对路径已经存在**。
+    
+- **警惕"假文件"陷阱**
+    
+    对于含有特定结构的数据文件（如 SQLite、配置文件等），**切忌为了应付挂载而 `touch` 一个空文件交差**——程序会教你做人。
+    
+    正确的做法是：**提前放置好初始化数据文件**，确保其格式合法、内容有效。
+    

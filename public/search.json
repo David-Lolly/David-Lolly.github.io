@@ -10,6 +10,16 @@
     ]
   },
   {
+    "title": "从原理到实战的 JWT 鉴权指南",
+    "description": "从原理到实战的 JWT 鉴权指南",
+    "date": "2025-12-27T00:00:00.000Z",
+    "slug": "jwt",
+    "type": "blog",
+    "categories": [
+      "Web开发"
+    ]
+  },
+  {
     "title": "端口映射：Empty reply from server",
     "description": "Xshell端口映射报错：Empty reply from server的排查指南。",
     "date": "2025-12-03T00:00:00.000Z",
@@ -30,13 +40,13 @@
     ]
   },
   {
-    "title": "从原理到实战的 JWT 鉴权全指南",
-    "description": "从原理到实战的 JWT 鉴权全指南",
-    "date": "2025-12-27T00:00:00.000Z",
-    "slug": "jwt",
+    "title": "K8s 挂载 SQLite 单文件踩坑记",
+    "description": "在 Kubernetes 环境中挂载 SQLite 单文件时连续遭遇两个经典陷阱",
+    "date": "2026-03-15T00:00:00.000Z",
+    "slug": "k8s-sqlite-hostpath",
     "type": "blog",
     "categories": [
-      "Web开发"
+      "DevOps"
     ]
   },
   {
@@ -52,7 +62,7 @@
   {
     "title": "TinyAISearch",
     "description": "TinyAISearch 是一个轻量但强大的 AI 搜索项目，为你完整揭示从智能搜索规划、网页爬取、内容召回到流式问答的 RAG 全链路。",
-    "date": "2025-12-27T09:14:15.144Z",
+    "date": "2026-03-15T08:32:22.140Z",
     "slug": "tiny-ai-search",
     "type": "project",
     "tags": [
