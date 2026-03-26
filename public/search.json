@@ -1,5 +1,15 @@
 [
   {
+    "title": "AI 编程工具时代的 Skills 实践指南",
+    "description": "在 Claude Code、Codex 等 AI 编程工具兴起的时代，如何通过 Skills 最大化发挥个人能力，建立可复用、可分享的标准化工作流程。",
+    "date": "2026-03-26T00:00:00.000Z",
+    "slug": "ai-programming-tools-skills",
+    "type": "blog",
+    "categories": [
+      "AI实践"
+    ]
+  },
+  {
     "title": "Linux系统服务器上安装Clash代理",
     "description": "在Linux系统服务器上安装Clash代理服务指南。",
     "date": "2025-11-30T00:00:00.000Z",
@@ -7,16 +17,6 @@
     "type": "blog",
     "categories": [
       "Linux系统"
-    ]
-  },
-  {
-    "title": "从原理到实战的 JWT 鉴权指南",
-    "description": "从原理到实战的 JWT 鉴权指南",
-    "date": "2025-12-27T00:00:00.000Z",
-    "slug": "jwt",
-    "type": "blog",
-    "categories": [
-      "Web开发"
     ]
   },
   {
@@ -40,6 +40,16 @@
     ]
   },
   {
+    "title": "从原理到实战的 JWT 鉴权指南",
+    "description": "从原理到实战的 JWT 鉴权指南",
+    "date": "2025-12-27T00:00:00.000Z",
+    "slug": "jwt",
+    "type": "blog",
+    "categories": [
+      "Web开发"
+    ]
+  },
+  {
     "title": "K8s 挂载 SQLite 单文件踩坑记",
     "description": "在 Kubernetes 环境中挂载 SQLite 单文件时连续遭遇两个经典陷阱",
     "date": "2026-03-15T00:00:00.000Z",
@@ -47,6 +57,16 @@
     "type": "blog",
     "categories": [
       "DevOps"
+    ]
+  },
+  {
+    "title": "Tmux 常用操作指南",
+    "description": "详细介绍 tmux 的会话管理、窗口管理、面板管理等常用操作，包含实用的快捷键指南。",
+    "date": "2026-03-15T00:00:00.000Z",
+    "slug": "tmux-cheat-sheet",
+    "type": "blog",
+    "categories": [
+      "工具"
     ]
   },
   {
@@ -62,7 +82,7 @@
   {
     "title": "TinyAISearch",
     "description": "TinyAISearch 是一个轻量但强大的 AI 搜索项目，为你完整揭示从智能搜索规划、网页爬取、内容召回到流式问答的 RAG 全链路。",
-    "date": "2026-03-15T08:32:22.140Z",
+    "date": "2026-03-26T13:02:05.020Z",
     "slug": "tiny-ai-search",
     "type": "project",
     "tags": [

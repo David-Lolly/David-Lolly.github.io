@@ -1,0 +1,51 @@
+---
+title: AI 编程工具时代的 Skills 实践指南
+slug: ai-programming-tools-skills
+date: 2026-03-26
+image: ./images/cover.jpg
+description: 在 Claude Code、Codex 等 AI 编程工具兴起的时代，如何通过 Skills 最大化发挥个人能力，建立可复用、可分享的标准化工作流程。
+categories: [AI实践]
+featured: false
+---
+
+随着 Claude Code、Codex 等 AI 编程工具的兴起，我相信使用过的朋友多少都是有点小小震撼的。在这种 AI 工具如此强大的时代，我们怎么把自己的能力、经验最大化地发挥出来？我想 Skills 是当前一个相当不错的答案，而且这个东西长期积累下来是非常恐怖的。
+
+当前能够使用好 AI 已经不像最开始那样需要苦苦写提示词，这个东西在当前这个时间点的价值正在被逐渐抹平。说了这么多，什么是 Skills，以及我们应该怎么写 Skills 呢？
+
+为了让没有接触过的朋友对 Skills 有个基础概念，我还是决定简单介绍一下。Skills 就是一个技能的使用说明书，并且以一段简要、准确的形式加载到 AI 的初始上下文中。也就是说，在我们打开 AI 编程工具的时候它就已经加载完成了，后续 AI 会根据对话来决定是否需要用到某个 Skills。如果需要用到这个 skill，就去看看完整的说明。这个过程就好像我们看论文会先看看摘要，再决定要不要完整地看这篇论文。通过这种方式，就省下了大量的 token，避免一开始啥都没干，上下文就被 Skills 占了很多——这也就是大家唾弃 MCP 的原因所在。
+
+那么 Skills 什么时候写，怎么写呢？
+
+我个人认为，如果一件事情你充分做了两三次，那么你就可以考虑这件事是否可以写成 Skills 了。如果这件事太过于简单，简单几步就搞定，你可以直接写在类似 AGENT.md 中。对于需要多步骤、稍微复杂一点的事情，就可以写成 Skills 沉淀下来。不光便于自己后续处理相同的事情，你还可以把这个 skill 分享给其他同事，让整个团队在处理相同的事情时都能够采用这一套标准化流程，大大提高解决相同事情的效率。
+
+分享一个我自己写 Skills 的例子。这几天公司的项目中来了一批数据，这批数据缺少了某些字段，需要我们来补充缺失的字段。第一批来的有一千多个需要补充的数据，领导明确告诉我们后续还会增加。这时候我还没有想到要写成 Skills，我就打算写个数据处理脚本自己使用。脚本使用完后，我就没管了。
+
+过了两天，突然来了三万多个需要补充的数据，这时候我就隐约有感觉需要把这套数据处理的流程标准化。
+
+我考虑到数据处理的完整流程要正确，并且要能够实现增量处理——之前处理过的数据，这次就不要重复处理，不然重复调用大模型补全，Token 成本直接飞起。说干就干，我先把脚本完善了，确保脚本是正确无误的，自己跑完这三万个新增的数据。跑完之后就开始将这些沉淀为 Skill。
+
+考虑到要和同事分享，我首先需要移除脚本中硬编码的路径、大模型调用 base url、api key 这些信息，把大模型调用的 base url、api key 这些内容写在 .env 文件中，便于其他同事配置。至于 Skill 文档中的描述，让 AI 把之前的数据处理的流程总结成文档，足够清晰、流程正确即可，确保 AI 能够根据文档描述正确完成数据处理的流程。
+
+完整的 Skills 目录如下：
+
+```c
+incremental-processing/
+├── README.md              # 给其他同事看，让其对 Skills 有个基本了解，以及 .env 怎么配置
+├── SKILL.md               # AI 编程工具会自动加载文档顶部的 description，需要使用这个 skill 时会阅读整个文档
+├── .env.example           # 模型调用信息配置
+├── src/                   # 数据处理脚本
+│   ├── bootstrap_processing_state.py
+│   ├── common.py
+│   ├── extract_pocs.py
+│   ├── fill_missing_fields_with_llm.py
+│   ├── generate_normalized_pocs.py
+│   ├── map_to_poc_records.py
+│   ├── run_pipeline.py
+│   ├── select_incremental_targets.py
+│   ├── update_processing_state.py
+│   ├── validate_writeback.py
+│   └── write_back_to_source_files.py
+└── state/                 # 已经处理过的数据在此做个记录，后续不再重复处理，直接跳过
+    ├── processing_state.json
+    └── history/
+```
