@@ -40,11 +40,28 @@ content/
 ---
 title: 文章标题
 slug: url-slug   # 英文短横线分隔
-date: 2026-03-15
+date: YYYY-MM-DD
 image: ./images/cover.jpg
 description: 一句话描述
-categories: [分类1, 分类2]
+categories: [分类 1, 分类 2]
 featured: false
+---
+```
+
+**项目 (Project) 必需字段：**
+```yaml
+---
+title: 项目标题
+slug: project-slug
+date: YYYY-MM-DD
+status: 进行中  # 或 "已完成"
+image: ./images/cover.png
+description: 项目简介
+tags: [技术栈 1, 技术栈 2]
+github_url: https://github.com/xxx/xxx
+demo_url: https://xxx.com
+stars: 0
+forks: 0
 ---
 ```
 
@@ -144,7 +161,11 @@ AI 自动检查正文中是否包含以下敏感信息：
 
 **注意：没有封面图片会导致预览时 404 错误，所以必须先处理封面再进行预览！**
 
+**⚠️ 再次确认：在开始本地预览之前，必须确认封面图片已经提供或用户确认跳过！**
+
 ### 步骤 6: 本地预览
+
+**⚠️ 在启动预览之前，再次确认封面图片已处理！**
 
 1. 运行 `npm run dev` 启动开发服务器
 2. 告知用户访问 http://localhost:3000 预览效果
@@ -184,7 +205,7 @@ GitHub Actions 会自动构建部署。
 - **⚠️ 元数据必须在创建文件之前生成并确认**
 - **⚠️ 敏感信息检查由 AI 自动执行，替换后需用户确认**
 - **⚠️ 敏感信息检查必须在本地预览之前完成**
-- **⚠️ 封面图片必须在本地预览之前提供**
+- **⚠️ 封面图片必须在本地预览之前提供，预览前务必再次确认**
 - **⚠️ 推送前必须获得用户的明确确认，绝对禁止自动推送**
 - 本地预览命令：`npm run dev`
 - 静态导出预览命令：`npx serve out`
