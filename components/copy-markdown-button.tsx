@@ -22,10 +22,14 @@ export function CopyMarkdownButton({
     try {
       await navigator.clipboard.writeText(content)
       setCopied(true)
-      toast.success("已复制 Markdown 原文")
+      toast.success("已复制 Markdown 原文", {
+        duration: 1000
+      })
       setTimeout(() => setCopied(false), 1000)
     } catch (error) {
-      toast.error("复制失败，请重试")
+      toast.error("复制失败，请重试", {
+        duration: 1000
+      })
     }
   }
 

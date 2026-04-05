@@ -7,27 +7,27 @@ import { basic } from "#site/content"
 export function ProfileCard() {
   // 从配置文件中获取 profile 信息
   const profile = basic.find((item) => item.type === 'profile')
-  
+
   // 如果没有配置文件，使用默认值
   if (!profile) {
     return null
   }
 
-  const { 
-    name, 
-    avatar, 
-    position, 
-    bio, 
-    email, 
-    github, 
-    twitter, 
-    linkedin, 
+  const {
+    name,
+    avatar,
+    position,
+    bio,
+    email,
+    github,
+    twitter,
+    linkedin,
     website,
-    tech_stack 
+    tech_stack
   } = profile
 
   return (
-    <Card className="p-6 sticky top-24 bg-[rgb(250,250,228)]">
+    <Card className="p-6 sticky top-24 bg-[rgb(250,250,228)] dark:bg-[rgb(24,24,27)]">
       {/* Avatar */}
       <div className="flex flex-col items-center mb-6">
         <div className="w-32 h-32 rounded-full overflow-hidden mb-4 ring-4 ring-primary/10">

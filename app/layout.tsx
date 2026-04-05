@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "katex/dist/katex.min.css";
 import { Toaster } from "sonner";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.davidxiong.site'),
@@ -24,10 +25,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" suppressHydrationWarning>
       <body className="antialiased">
-        {children}
-        <Toaster richColors position="top-center" />
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
+          {children}
+          <Toaster richColors position="top-center" />
+        </ThemeProvider>
       </body>
     </html>
   );

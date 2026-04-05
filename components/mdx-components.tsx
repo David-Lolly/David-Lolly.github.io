@@ -39,7 +39,7 @@ const components = {
   h1: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
     const id = generateId(children)
     return (
-      <h1 id={id} className="text-4xl font-serif font-bold mt-12 mb-4 text-foreground" style={{ lineHeight: 1.2, color: '#000000' }} {...props}>
+      <h1 id={id} className="text-4xl font-serif font-bold mt-12 mb-4 text-foreground" style={{ lineHeight: 1.2, color: 'rgb(var(--foreground-rgb))' }} {...props}>
         {children}
       </h1>
     )
@@ -47,7 +47,7 @@ const components = {
   h2: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
     const id = generateId(children)
     return (
-      <h2 id={id} className="text-3xl font-serif font-bold mt-10 mb-5 text-foreground border-b pb-3" style={{ color: '#000000', borderColor: 'rgb(var(--color-border))' }} {...props}>
+      <h2 id={id} className="text-3xl font-serif font-bold mt-10 mb-5 text-foreground border-b pb-3" style={{ color: 'rgb(var(--foreground-rgb))', borderColor: 'rgb(var(--border))' }} {...props}>
         {children}
       </h2>
     )
@@ -55,7 +55,7 @@ const components = {
   h3: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
     const id = generateId(children)
     return (
-      <h3 id={id} className="text-2xl font-serif font-bold mt-8 mb-4 text-foreground" style={{ color: '#000000' }} {...props}>
+      <h3 id={id} className="text-2xl font-serif font-bold mt-8 mb-4 text-foreground" style={{ color: 'rgb(var(--foreground-rgb))' }} {...props}>
         {children}
       </h3>
     )
@@ -63,7 +63,7 @@ const components = {
   h4: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
     const id = generateId(children)
     return (
-      <h4 id={id} className="text-xl font-serif font-semibold mt-6 mb-3 text-foreground" style={{ color: '#000000' }} {...props}>
+      <h4 id={id} className="text-xl font-serif font-semibold mt-6 mb-3 text-foreground" style={{ color: 'rgb(var(--foreground-rgb))' }} {...props}>
         {children}
       </h4>
     )
@@ -100,20 +100,20 @@ const components = {
     )
   },
   li: ({ children, ...props }: React.HTMLAttributes<HTMLLIElement>) => (
-    <li className="leading-relaxed text-foreground marker:text-black" style={{ paddingLeft: '0.5rem' }} {...props}>
+    <li className="leading-relaxed text-foreground marker:text-[rgb(var(--foreground-rgb))]" style={{ paddingLeft: '0.5rem' }} {...props}>
       {children}
     </li>
   ),
   blockquote: ({ children, ...props }: React.HTMLAttributes<HTMLQuoteElement>) => (
-    <blockquote 
-      className="my-6 pl-5 italic" 
-      style={{ 
+    <blockquote
+      className="my-6 pl-5 italic"
+      style={{
         borderLeft: '4px solid rgb(var(--color-primary))',
         backgroundColor: 'rgb(var(--color-muted) / 0.5)',
         padding: '1rem 1.25rem',
         borderRadius: '0 var(--radius-button) var(--radius-button) 0',
-        color: 'rgb(var(--text-secondary))'
-      }} 
+        color: 'rgb(var(--foreground-muted-rgb))'
+      }}
       {...props}
     >
       {children}
@@ -154,7 +154,7 @@ const components = {
         className="font-mono text-sm"
         style={{
           backgroundColor: 'rgb(var(--color-muted))',
-          color: 'rgb(var(--text-primary))',
+          color: 'rgb(var(--foreground-rgb))',
           padding: '0.125rem 0.375rem',
           borderRadius: '0.25rem',
           fontWeight: 500
@@ -168,7 +168,7 @@ const components = {
   pre: ({ children, ...props }: React.HTMLAttributes<HTMLPreElement>) => {
     const [copied, setCopied] = React.useState(false)
     const preRef = React.useRef<HTMLPreElement>(null)
-    
+
     const handleCopy = () => {
       if (preRef.current) {
         // 获取 pre 标签内的纯文本内容
@@ -182,7 +182,7 @@ const components = {
     return (
       <div className="relative group my-6">
         {/* macOS 风格的窗口容器 */}
-        <div 
+        <div
           className="rounded-xl"
           style={{
             backgroundColor: '#2d3748',
@@ -191,7 +191,7 @@ const components = {
           }}
         >
           {/* macOS 窗口头部 - 灰色背景覆盖整个宽度 */}
-          <div 
+          <div
             className="flex items-center px-4"
             style={{
               backgroundColor: '#3d4754',
@@ -204,15 +204,15 @@ const components = {
           >
             {/* macOS 三个圆点按钮 */}
             <div className="flex items-center gap-2">
-              <div 
+              <div
                 className="w-3 h-3 rounded-full"
                 style={{ backgroundColor: '#ff5f57' }}
               />
-              <div 
+              <div
                 className="w-3 h-3 rounded-full"
                 style={{ backgroundColor: '#febc2e' }}
               />
-              <div 
+              <div
                 className="w-3 h-3 rounded-full"
                 style={{ backgroundColor: '#28c840' }}
               />
@@ -220,7 +220,7 @@ const components = {
           </div>
 
           {/* 代码内容区域的包装容器 */}
-          <div className="relative" style={{ 
+          <div className="relative" style={{
             backgroundColor: '#2d3748',
             borderBottomLeftRadius: '0.75rem',
             borderBottomRightRadius: '0.75rem',
@@ -244,9 +244,9 @@ const components = {
             </button>
 
             {/* 可滚动的代码内容 */}
-            <div 
-              className="code-scroll" 
-              style={{ 
+            <div
+              className="code-scroll"
+              style={{
                 overflow: 'auto',
                 maxHeight: CODE_BLOCK_MAX_HEIGHT,
                 scrollbarGutter: 'stable',
@@ -255,7 +255,7 @@ const components = {
               }}
             >
               <CodeBlockContext.Provider value={true}>
-                <pre 
+                <pre
                   ref={preRef}
                   className="font-mono text-sm"
                   style={{
@@ -310,37 +310,37 @@ const components = {
   },
   img: ({ alt, src, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => (
     // eslint-disable-next-line @next/next/no-img-element
-    <img 
-      alt={alt} 
-      src={src} 
-      className="rounded-lg my-6 w-full" 
+    <img
+      alt={alt}
+      src={src}
+      className="rounded-lg my-6 w-full"
       style={{ boxShadow: 'var(--shadow-md)' }}
-      {...props} 
+      {...props}
     />
   ),
   hr: ({ ...props }: React.HTMLAttributes<HTMLHRElement>) => (
-    <hr className="my-8" style={{ borderColor: 'rgb(var(--color-border))' }} {...props} />
+    <hr className="my-8" style={{ borderColor: 'rgb(var(--border))' }} {...props} />
   ),
   table: ({ children, ...props }: React.HTMLAttributes<HTMLTableElement>) => {
     const childrenArray = React.Children.toArray(children)
     return (
-      <div 
+      <div
         className="my-6 w-full rounded-xl"
         style={{
           backgroundColor: 'rgb(var(--color-secondary))',
           boxShadow: 'var(--shadow-md)',
           overflow: 'hidden',
-          border: '1px solid rgb(var(--color-border) / 1)',
+          border: '1px solid rgb(var(--border) / 1)',
         }}
       >
         <div className="overflow-x-auto">
-          <table 
-            className="w-full" 
-            style={{ 
-              borderCollapse: 'collapse', 
+          <table
+            className="w-full"
+            style={{
+              borderCollapse: 'collapse',
               margin: 0,
               padding: 0
-            }} 
+            }}
             {...props}
           >
             {childrenArray.map((child, index) => {
@@ -383,9 +383,9 @@ const components = {
   tr: ({ children, ...props }: React.HTMLAttributes<HTMLTableRowElement>) => {
     const childrenArray = React.Children.toArray(children)
     return (
-      <tr 
+      <tr
         className="m-0 p-0 transition-colors hover:bg-muted/50"
-        style={{ borderBottom: '1px solid rgb(var(--color-border) / 0.1)' }}
+        style={{ borderBottom: '1px solid rgb(var(--border) / 0.1)' }}
         {...props}
       >
         {childrenArray.map((child, index) => {
@@ -403,7 +403,7 @@ const components = {
       style={{
         backgroundColor: 'rgb(var(--color-muted))',
         color: 'rgb(var(--foreground-rgb))',
-        borderBottom: '1px solid rgb(var(--color-border),0.2)',
+        borderBottom: '1px solid rgb(var(--border) / 0.2)',
         fontWeight: 600,
         margin: 0
       }}
@@ -415,10 +415,10 @@ const components = {
   td: ({ children, ...props }: React.HTMLAttributes<HTMLTableCellElement>) => (
     <td
       className="px-6 py-4 text-sm"
-      style={{ 
+      style={{
         color: 'rgb(var(--foreground-muted-rgb))',
         lineHeight: '1.6',
-        borderBottom: '1px solid rgb(var(--color-border) / 0.2)',
+        borderBottom: '1px solid rgb(var(--border) / 0.2)',
         margin: 0
       }}
       {...props}
@@ -442,12 +442,12 @@ const components = {
     </del>
   ),
   kbd: ({ children, ...props }: React.HTMLAttributes<HTMLElement>) => (
-    <kbd 
+    <kbd
       className="font-mono text-sm px-2 py-1 rounded"
       style={{
         backgroundColor: 'rgb(var(--color-muted))',
-        border: '1px solid rgb(var(--color-border))',
-        boxShadow: '0 1px 0 rgb(var(--color-border))'
+        border: '1px solid rgb(var(--border))',
+        boxShadow: '0 1px 0 rgb(var(--border))'
       }}
       {...props}
     >
@@ -463,20 +463,20 @@ export function MDXContent({ code }: { code: string }) {
       // const{Fragment,jsx,jsxs}=arguments[0];
       // function _createMdxContent(r){...}
       // return{default:function(n={}){...}}
-      
+
       // 创建一个包装函数来执行 MDX 代码
       const fn = new Function(`
         const {Fragment, jsx, jsxs} = arguments[0];
         ${code}
         return { default: _createMdxContent };
       `)
-      
+
       const result = fn({
         Fragment,
         jsx,
         jsxs,
       })
-      
+
       return result.default
     } catch (error) {
       console.error('MDX 渲染错误:', error)

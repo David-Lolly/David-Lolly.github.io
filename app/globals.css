@@ -6,14 +6,22 @@
 :root {
   /* Updated color system to match design proposal with warm beige palette */
   /* Main colors - Warm beige theme */
-  --bg-primary: 245 245 213; /* Page background - warm beige */
-  --bg-card: 250 250 228; /* Lighter beige for all cards (profile, latest articles, blog cards) */
+  --bg-primary: 245 245 213;
+  /* Page background - warm beige */
+  --bg-card: 250 250 228;
+  /* Lighter beige for all cards (profile, latest articles, blog cards) */
   /* Consolidate foreground system: use one semantic pair --foreground / --foreground-muted */
-  --foreground-rgb: 34 34 34; /* unified primary text */
-  --foreground-muted-rgb: 115 115 115; /* unified secondary text */
-  --accent-blue: 37 99 235; /* Blue accent - links and buttons */
-  --accent-yellow: 234 179 8; /* Yellow accent - tags and highlights */
-  --border: 229 229 209; /* Border - light beige-gray */
+  --foreground-rgb: 34 34 34;
+  /* unified primary text */
+  --foreground-muted-rgb: 115 115 115;
+  /* unified secondary text */
+  --accent-blue: 37 99 235;
+  /* Blue accent - links and buttons */
+  --accent-yellow: 234 179 8;
+  /* Yellow accent - tags and highlights */
+  --border: 229 229 209;
+  --border-color: oklch(0.922 0 0);
+  /* Border - light beige-gray */
 
   /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -42,7 +50,7 @@
   --accent-foreground: rgb(var(--foreground-rgb));
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
+  --border: 229 229 209;
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
@@ -62,6 +70,12 @@
 }
 
 .dark {
+  --bg-primary: 0 0 0;
+  --bg-card: 24 24 27;
+  --foreground-rgb: 244 246 249;
+  --foreground-muted-rgb: 148 163 184;
+  --border: 63 63 70;
+  --border-color: oklch(0.269 0 0);
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.145 0 0);
@@ -78,7 +92,7 @@
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.396 0.141 25.723);
   --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
+  --border: 63 63 70;
   --input: oklch(0.269 0 0);
   --ring: oklch(0.439 0 0);
   --chart-1: oklch(0.488 0.243 264.376);
@@ -107,11 +121,12 @@
   /* Using design proposal colors with proper RGB values */
   --color-background: var(--bg-primary);
   --color-foreground: var(--foreground-rgb);
-  --color-card: var(--bg-card); /* All cards use rgb(250, 250, 228) */
+  --color-card: var(--bg-card);
+  /* All cards use rgb(250, 250, 228) */
   --color-card-foreground: var(--foreground-rgb);
   --color-popover: var(--bg-card);
   --color-popover-foreground: var(--foreground-rgb);
-  --color-primary: var(--accent-blue);
+  --color-primary: var(--foreground-rgb);
   --color-primary-foreground: 255 255 255;
   --color-secondary: 240 240 215;
   --color-secondary-foreground: var(--foreground-rgb);
@@ -121,8 +136,8 @@
   --color-accent-foreground: 255 255 255;
   --color-destructive: 220 38 38;
   --color-destructive-foreground: 255 255 255;
-  --color-border: var(--border);
-  --color-input: var(--border);
+  --color-border: var(--border-color);
+  --color-input: var(--border-color);
   --color-ring: var(--accent-blue);
   --radius: var(--radius-card);
   --radius-sm: var(--radius-button);
@@ -143,6 +158,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -192,7 +208,7 @@ h6 {
 }
 
 .article-content p {
-  @apply font-serif  leading-relaxed text-foreground;
+  @apply font-serif leading-relaxed text-foreground;
 }
 
 .article-content ul,
@@ -207,6 +223,7 @@ h6 {
 .article-content ol {
   @apply list-decimal;
 }
+
 .article-content li {
   @apply leading-relaxed text-foreground;
   padding-left: 0.5rem;
@@ -217,10 +234,10 @@ h6 {
 }
 
 /* Inline code - 只应用于非代码块内的 code */
-.article-content :not(pre) > code {
+.article-content :not(pre)>code {
   @apply font-mono text-sm;
   background-color: rgb(var(--color-muted));
-  color: rgb(var(--text-primary));
+  color: rgb(var(--foreground-rgb));
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
   font-weight: 500;
@@ -297,7 +314,7 @@ h6 {
   width: max-content;
 }
 
-.article-content figure[data-rehype-pretty-code-figure] [data-line] > span {
+.article-content figure[data-rehype-pretty-code-figure] [data-line]>span {
   flex: 0 0 auto;
   white-space: pre;
 }
@@ -339,8 +356,10 @@ h6 {
 .article-content h4 a,
 .article-content h5 a,
 .article-content h6 a {
-  color: inherit !important; /* inherit the heading's black color */
-  text-decoration: none !important; /* remove underline from anchor wrapping heading text */
+  color: inherit !important;
+  /* inherit the heading's black color */
+  text-decoration: none !important;
+  /* remove underline from anchor wrapping heading text */
   font-weight: inherit;
 }
 
@@ -361,7 +380,7 @@ h6 {
   background-color: rgb(var(--color-muted) / 0.5);
   padding: 1rem 1.25rem;
   border-radius: 0 var(--radius-button) var(--radius-button) 0;
-  color: rgb(var(--text-secondary));
+  color: rgb(var(--foreground-muted-rgb));
 }
 
 .article-content blockquote p {
@@ -383,12 +402,12 @@ h6 {
   @apply font-semibold text-left p-3 border-b-2;
   background-color: rgb(var(--color-secondary)/ 500);
   /* background-color: rgb(245,245,213), */
-  border-color: rgb(var(--color-border));
+  border-color: rgb(var(--border));
 }
 
 .article-content td {
   @apply p-3 border-b;
-  border-color: rgb(var(--color-border));
+  border-color: rgb(var(--border));
 }
 
 .article-content tr:last-child td {
@@ -398,7 +417,7 @@ h6 {
 /* Horizontal rule */
 .article-content hr {
   @apply my-8;
-  border-color: rgb(var(--color-border));
+  border-color: rgb(var(--border));
 }
 
 /* Strong and emphasis */
@@ -414,8 +433,8 @@ h6 {
 .article-content kbd {
   @apply font-mono text-sm px-2 py-1 rounded;
   background-color: rgb(var(--color-muted));
-  border: 1px solid rgb(var(--color-border));
-  box-shadow: 0 1px 0 rgb(var(--color-border));
+  border: 1px solid rgb(var(--border));
+  box-shadow: 0 1px 0 rgb(var(--border));
 }
 
 /* Giscus 评论系统样式 - 适配博客主题 */
@@ -468,6 +487,52 @@ h6 {
 .dark .giscus .gsc-comment-box,
 .dark .giscus .gsc-comment,
 .dark .giscus .gsc-reply-box {
-  background-color: oklch(0.145 0 0) !important;
-  border-color: oklch(0.269 0 0) !important;
+  background-color: rgb(24, 24, 27) !important;
+  border-color: rgb(63, 63, 70) !important;
+}
+
+.dark .article-content h1,
+.dark .article-content h2,
+.dark .article-content h3,
+.dark .article-content h4,
+.dark .article-content li::marker {
+  color: rgb(var(--foreground-rgb));
+}
+
+/* 深色模式下覆盖 muted 色板，修复行内代码发黄问题 */
+.dark {
+  --color-muted: 39 39 42;
+  --color-secondary: 39 39 42;
+}
+
+/* 深色模式下增强行内代码与键位标签可读性 */
+.dark .article-content :not(pre)>code,
+.dark .article-content kbd {
+  background-color: rgb(var(--color-muted));
+  color: rgb(var(--foreground-rgb));
+  border: 1px solid rgb(63 63 70);
+}
+
+/* 深色模式下优化嵌套列表缩进层级与间距 */
+.dark .article-content li>ul,
+.dark .article-content li>ol {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  margin-left: 1.25rem;
+}
+
+.dark .article-content ul ul {
+  list-style-type: circle;
+}
+
+.dark .article-content ul ul ul {
+  list-style-type: square;
+}
+
+.dark .article-content ol ol {
+  list-style-type: lower-alpha;
+}
+
+.dark .article-content ol ol ol {
+  list-style-type: lower-roman;
 }

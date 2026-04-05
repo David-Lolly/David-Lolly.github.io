@@ -191,7 +191,7 @@ export function ProjectDetail({ project, relatedProjects }: ProjectDetailProps) 
       )}
 
       <div className="mt-16 mb-12">
-        <Separator className="h-[2px] bg-[rgb(200,200,180)]" />
+        <Separator className="h-[2px] bg-[rgb(200,200,180)] dark:bg-[rgb(63,63,70)]" />
       </div>
 
       <div className="space-y-4">

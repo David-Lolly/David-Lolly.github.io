@@ -4,12 +4,40 @@ import { Header } from "@/components/header"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { BookOpen, Github, Star, GitFork, Calendar } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { BookOpen, Github, Star, GitFork, Calendar, Search, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react"
 import { projects } from "#site/content"
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect, useRef } from "react"
 
 export default function ProjectsPage() {
   const [selectedTag, setSelectedTag] = useState<string>("全部")
+  const [searchQuery, setSearchQuery] = useState<string>("")
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [itemsPerPage, setItemsPerPage] = useState<number>(12)
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false)
+      }
+    }
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsDropdownOpen(false)
+      }
+    }
+
+    document.addEventListener("pointerdown", handleClickOutside)
+    window.addEventListener("keydown", handleEscape)
+
+    return () => {
+      document.removeEventListener("pointerdown", handleClickOutside)
+      window.removeEventListener("keydown", handleEscape)
+    }
+  }, [])
 
   // 获取所有技术栈标签
   const allTags = useMemo(() => {
@@ -22,10 +50,14 @@ export default function ProjectsPage() {
 
   // 过滤和排序项目
   const filteredProjects = useMemo(() => {
-    const filtered = selectedTag === "全部" 
-      ? projects 
+    let filtered = selectedTag === "全部"
+      ? projects
       : projects.filter((project) => project.tags?.includes(selectedTag))
-    
+
+    if (searchQuery) {
+      filtered = filtered.filter(project => project.title.toLowerCase().includes(searchQuery.toLowerCase()))
+    }
+
     // 智能排序：
     // 1. 按 status 排序（已完成 > 进行中 > 其他）
     // 2. 按日期降序排序（最新的在前）
@@ -42,23 +74,38 @@ export default function ProjectsPage() {
       if (statusA !== statusB) {
         return statusA - statusB
       }
-      
+
       // 2. 按日期排序（最新的在前）
       const dateA = new Date(a.date).getTime()
       const dateB = new Date(b.date).getTime()
       if (dateA !== dateB) {
         return dateB - dateA
       }
-      
+
       // 3. 按 stars 排序
       if (a.stars !== b.stars) {
         return b.stars - a.stars
       }
-      
+
       // 4. 按 forks 排序
       return b.forks - a.forks
     })
-  }, [selectedTag])
+  }, [selectedTag, searchQuery])
+
+  // 分页逻辑
+  const totalPages = Math.ceil(filteredProjects.length / itemsPerPage)
+  const currentProjects = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage
+    return filteredProjects.slice(startIndex, startIndex + itemsPerPage)
+  }, [filteredProjects, currentPage, itemsPerPage])
+
+  // 处理页码变化
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
 
   // 格式化日期
   const formatDate = (dateString: string) => {
@@ -81,17 +128,75 @@ export default function ProjectsPage() {
             这里是我参与开发和维护的开源项目，涵盖 AI、云原生、微服务等技术领域
           </p>
 
+          <div className="mb-8 flex flex-col sm:flex-row justify-between gap-4">
+            <div className="relative max-w-md w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="搜索项目名称..."
+                className="pl-10 bg-card"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value)
+                  setCurrentPage(1)
+                }}
+              />
+            </div>
+
+            <div className="flex items-center gap-3 relative z-30">
+              <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">每页显示:</span>
+              <div ref={dropdownRef} className="relative flex items-center">
+                <button
+                  type="button"
+                  className="flex items-center cursor-pointer min-w-[72px] justify-between bg-card/60 backdrop-blur-md px-4 py-2 rounded-md border border-border shadow-sm transition-colors hover:bg-card/80"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  aria-expanded={isDropdownOpen}
+                  aria-label="选择每页显示数量"
+                >
+                  <span className="text-sm font-semibold text-foreground pr-2">{itemsPerPage} 项</span>
+                  <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} />
+                </button>
+
+                {isDropdownOpen && (
+                  <div className="absolute top-[calc(100%+0.5rem)] right-0 w-28 rounded-md border border-border bg-card/60 backdrop-blur-md shadow-xl z-[70] py-1 overflow-hidden">
+                    {[12, 24, 36, 48, 60, 120].map((num) => (
+                      <div
+                        key={num}
+                        className={`px-4 py-2 text-sm cursor-pointer transition-colors group relative ${itemsPerPage === num
+                          ? 'font-bold text-foreground bg-black/5 dark:bg-white/10'
+                          : 'font-medium text-foreground/85 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/10'
+                          }`}
+                        onClick={() => {
+                          setItemsPerPage(num)
+                          setCurrentPage(1)
+                          setIsDropdownOpen(false)
+                        }}
+                      >
+                        <span className="relative inline-block">
+                          {num} 项
+                          <span className="absolute left-0 -bottom-1 w-full h-[2px] bg-black dark:bg-white scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full"></span>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
           <div className="flex flex-wrap gap-2">
             {allTags.map((tag) => (
               <Badge
                 key={tag}
                 variant={tag === selectedTag ? "default" : "outline"}
-                className={`cursor-pointer transition-colors ${
-                  tag === selectedTag 
-                    ? "bg-[rgb(220,200,100)] text-[rgb(92,64,32)]" 
-                    : ""
-                }`}
-                onClick={() => setSelectedTag(tag)}
+                className={`cursor-pointer transition-colors ${tag === selectedTag
+                  ? "bg-[rgb(220,200,100)] text-[rgb(92,64,32)]"
+                  : ""
+                  }`}
+                onClick={() => {
+                  setSelectedTag(tag)
+                  setCurrentPage(1)
+                }}
               >
                 {tag}
               </Badge>
@@ -100,8 +205,8 @@ export default function ProjectsPage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {filteredProjects.map((project) => (
-            <Card key={project.slug} className="overflow-hidden hover:shadow-lg transition-shadow group bg-[rgba(250,250,227,1)]">
+          {currentProjects.map((project) => (
+            <Card key={project.slug} className="overflow-hidden hover:shadow-lg transition-shadow group bg-[rgba(250,250,227,1)] dark:bg-[rgb(24,24,27)]">
               <div className="h-48 overflow-hidden bg-muted">
                 <img
                   src={project.image || "/placeholder.svg"}
@@ -142,7 +247,7 @@ export default function ProjectsPage() {
 
                 <div className="flex flex-wrap gap-2 mb-4">
                   {project.tags?.map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs text-[rgba(133,78,15,1)]">
+                    <Badge key={tag} variant="outline" className="text-xs text-[rgba(133,78,15,1)] dark:text-[rgb(251,191,36)]">
                       {tag}
                     </Badge>
                   ))}
@@ -175,6 +280,44 @@ export default function ProjectsPage() {
             </Card>
           ))}
         </div>
+
+        {totalPages > 1 && (
+          <div className="mt-12 flex justify-center items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="h-8 w-8"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handlePageChange(page)}
+                  className={`h-8 w-8 p-0 ${currentPage === page ? "bg-primary text-primary-foreground font-bold" : "font-medium"}`}
+                >
+                  {page}
+                </Button>
+              ))}
+            </div>
+
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="h-8 w-8"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
 
         {filteredProjects.length === 0 && (
           <div className="text-center py-12">

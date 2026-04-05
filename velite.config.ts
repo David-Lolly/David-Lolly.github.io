@@ -135,6 +135,21 @@ const basic = defineCollection({
     })
 })
 
+// 定义 Thought (游思) 集合
+const thoughts = defineCollection({
+  name: 'Thought',
+  pattern: 'thought/index.yml',
+  schema: s
+    .object({
+      items: s.array(s.object({
+        date: s.string(),
+        tag: s.string(),
+        note: s.string().optional(),
+        content: s.string(),
+      }))
+    })
+})
+
 export default defineConfig({
   root: 'content',
   output: {
@@ -144,7 +159,7 @@ export default defineConfig({
     name: '[name]-[hash:6].[ext]',
     clean: true,
   },
-  collections: { posts, projects, basic },
+  collections: { posts, projects, basic, thoughts },
   mdx: {
     rehypePlugins: [
       rehypeSlug,

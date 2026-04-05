@@ -118,16 +118,16 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl p-0 gap-0 bg-[rgb(240,240,215)] border-[rgb(229,229,209)] shadow-2xl">
+      <DialogContent className="max-w-3xl p-0 gap-0 bg-[rgb(240,240,215)] dark:bg-[rgb(40,40,40)] border-[rgb(229,229,209)] dark:border-[rgb(60,60,60)] shadow-2xl transition-colors">
         <DialogHeader className="sr-only">
           <DialogTitle>搜索博客和项目</DialogTitle>
           <DialogDescription>输入关键词搜索博客文章和项目</DialogDescription>
         </DialogHeader>
 
         {/* 搜索输入框 */}
-        <div className="px-8 pt-6 pb-4 border-b border-[rgb(229,229,209)]">
+        <div className="px-8 pt-6 pb-4 border-b border-[rgb(229,229,209)] dark:border-[rgb(60,60,60)] transition-colors">
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-black/60">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-black/60 dark:text-white/60 transition-colors">
               <Search className="w-5 h-5" />
             </span>
             <Input
@@ -136,7 +136,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="h-12 pl-10 pr-24 rounded-full bg-[rgb(235,235,210)] border border-[rgb(229,229,209)] shadow-sm text-lg text-black placeholder:text-black/50 font-sans focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none" // <-- 修改点：移除了 focus 效果
+              className="h-12 pl-10 pr-24 rounded-full bg-[rgb(235,235,210)] dark:bg-[rgb(50,50,50)] border border-[rgb(229,229,209)] dark:border-[rgb(60,60,60)] shadow-sm text-lg text-black dark:text-white placeholder:text-black/50 dark:placeholder:text-white/50 font-sans focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none transition-colors" // <-- 修改点：移除了 focus 效果
               autoFocus
             />
             {query && (
@@ -145,13 +145,13 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                 size="icon"
                 onClick={() => setQuery("")}
                 aria-label="清空搜索"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-black/70 hover:text-black hover:bg-black/5 rounded-full h-8 w-8"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 rounded-full h-8 w-8 transition-colors"
               >
                 <svg
                   viewBox="0 0 1024 1024"
                   width={20}
                   height={20}
-                  className="opacity-70 hover:opacity-100"
+                  className="opacity-70 hover:opacity-100 transition-opacity"
                   aria-hidden="true"
                 >
                   <path
@@ -168,14 +168,14 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
         <div className="max-h-[65vh] overflow-y-auto">
           {isLoading ? (
             <div className="px-6 py-16 text-center">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-black/30"></div>
-              <p className="mt-3 text-sm text-black/60">加载中...</p>
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-black/30 dark:border-white/30"></div>
+              <p className="mt-3 text-sm text-black/60 dark:text-white/60 transition-colors">加载中...</p>
             </div>
           ) : query && searchResults.length === 0 ? (
             <div className="px-6 py-16 text-center">
-              <Search className="w-16 h-16 mx-auto mb-4 text-black/20" />
-              <p className="text-base text-black/70 font-medium">未找到相关结果</p>
-              <p className="text-sm text-black/50 mt-2">试试其他关键词</p>
+              <Search className="w-16 h-16 mx-auto mb-4 text-black/20 dark:text-white/20 transition-colors" />
+              <p className="text-base text-black/70 dark:text-white/70 font-medium transition-colors">未找到相关结果</p>
+              <p className="text-sm text-black/50 dark:text-white/50 mt-2 transition-colors">试试其他关键词</p>
             </div>
           ) : query && searchResults.length > 0 ? (
             <div className="py-2">
@@ -183,39 +183,39 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                 <button
                   key={`${item.type}-${item.slug}-${index}`}
                   onClick={() => handleItemClick(item)}
-                  className="w-full px-6 py-4 text-left border-b border-[rgb(229,229,209)] last:border-0 transition-all duration-200 hover:bg-[rgb(252,252,228)] hover:border-[rgb(210,180,120)] hover:shadow-md cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(210,180,120)] focus-visible:bg-[rgb(252,252,228)]"
+                  className="w-full px-6 py-4 text-left border-b border-[rgb(229,229,209)] dark:border-[rgb(60,60,60)] last:border-0 transition-all duration-200 hover:bg-[rgb(252,252,228)] dark:hover:bg-[rgb(55,55,55)] hover:border-[rgb(210,180,120)] dark:hover:border-[rgb(180,150,90)] hover:shadow-md cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(210,180,120)] dark:focus-visible:ring-[rgb(180,150,90)] focus-visible:bg-[rgb(252,252,228)] dark:focus-visible:bg-[rgb(55,55,55)] group"
                 >
                   <div className="flex items-start gap-4">
                     {/* 图标 */}
                     <div className="flex-shrink-0 mt-0.5">
                       {item.type === "blog" ? (
-                        <BookOpen className="w-5 h-5 text-black" />
+                        <BookOpen className="w-5 h-5 text-black dark:text-white transition-colors group-hover:text-primary dark:group-hover:text-primary" />
                       ) : (
-                        <Github className="w-5 h-5 text-black" />
+                        <Github className="w-5 h-5 text-black dark:text-white transition-colors group-hover:text-primary dark:group-hover:text-primary" />
                       )}
                     </div>
 
                     {/* 内容 */}
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-serif font-bold text-black text-lg mb-2 line-clamp-1">
+                      <h3 className="font-serif font-bold text-black dark:text-white text-lg mb-2 line-clamp-1 transition-colors group-hover:text-primary dark:group-hover:text-primary">
                         {item.title}
                       </h3>
 
                       {item.description && (
-                        <p className="text-sm text-black/60 leading-relaxed mb-3 line-clamp-2">
+                        <p className="text-sm text-black/60 dark:text-white/60 leading-relaxed mb-3 line-clamp-2 transition-colors">
                           {item.description}
                         </p>
                       )}
 
-                      <div className="flex items-center gap-3 text-xs">
-                        <span className="text-black/50">{formatDate(item.date)}</span>
+                      <div className="flex items-center gap-3 text-xs flex-wrap">
+                        <span className="text-black/50 dark:text-white/50 transition-colors">{formatDate(item.date)}</span>
 
                         {item.categories && item.categories.length > 0 && (
                           <div className="flex gap-1.5">
                             {item.categories.slice(0, 2).map((category) => (
                               <span
                                 key={category}
-                                className="inline-block px-2.5 py-1 text-xs font-semibold bg-accent-yellow/30 text-[rgb(133,77,14)] rounded border border-accent-yellow/40"
+                                className="inline-block px-2.5 py-1 text-xs font-semibold bg-accent-yellow/30 dark:bg-accent-yellow/20 text-[rgb(133,77,14)] dark:text-[rgb(230,180,100)] rounded border border-accent-yellow/40 dark:border-accent-yellow/30 transition-colors"
                               >
                                 {category}
                               </span>
@@ -228,7 +228,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                             {item.tags.slice(0, 2).map((tag) => (
                               <span
                                 key={tag}
-                                className="inline-block px-2.5 py-1 text-xs font-semibold bg-accent-yellow/30 text-[rgb(133,77,14)] rounded border border-accent-yellow/40"
+                                className="inline-block px-2.5 py-1 text-xs font-semibold bg-accent-yellow/30 dark:bg-accent-yellow/20 text-[rgb(133,77,14)] dark:text-[rgb(230,180,100)] rounded border border-accent-yellow/40 dark:border-accent-yellow/30 transition-colors"
                               >
                                 {tag}
                               </span>
@@ -243,11 +243,11 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
             </div>
           ) : (
             <div className="px-6 py-20 text-center space-y-3">
-              <p className="text-base text-black/80 font-medium">点击对话框外部空白关闭搜索</p>
-              <div className="flex items-center justify-center gap-2 text-sm text-black/70">
-                <kbd className="px-2 py-1 rounded border border-[rgb(229,229,209)] bg-[rgb(235,235,210)]">Ctrl</kbd>
+              <p className="text-base text-black/80 dark:text-white/80 font-medium transition-colors">点击对话框外部空白关闭搜索</p>
+              <div className="flex items-center justify-center gap-2 text-sm text-black/70 dark:text-white/70 transition-colors">
+                <kbd className="px-2 py-1 rounded border border-[rgb(229,229,209)] dark:border-[rgb(60,60,60)] bg-[rgb(235,235,210)] dark:bg-[rgb(50,50,50)] transition-colors">Ctrl</kbd>
                 <span>+</span>
-                <kbd className="px-2 py-1 rounded border border-[rgb(229,229,209)] bg-[rgb(235,235,210)]">K</kbd>
+                <kbd className="px-2 py-1 rounded border border-[rgb(229,229,209)] dark:border-[rgb(60,60,60)] bg-[rgb(235,235,210)] dark:bg-[rgb(50,50,50)] transition-colors">K</kbd>
                 <span>快速打开搜索</span>
               </div>
             </div>
