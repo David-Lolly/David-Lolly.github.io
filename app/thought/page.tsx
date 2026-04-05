@@ -568,6 +568,7 @@ export default function YousiUniverse() {
     .font-mono { font-family: ui-monospace, SFMono-Regular, monospace; }
   `;
 
+    const isNight = resolvedTheme === 'dark';
     const isCurrentlyAuto = playMode === MODE_AUTO;
 
     return (
@@ -590,24 +591,46 @@ export default function YousiUniverse() {
             <main className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 pt-[80px]">
                 <div className="w-full max-w-3xl h-[70%] px-8 relative flex flex-col justify-center">
 
-                    <div className="absolute top-0 right-8 pointer-events-auto">
+                    <div className="absolute top-0 right-8 pointer-events-auto select-none">
                         <div className="flex items-center gap-3 relative">
-                            {/* 去除了提示弹窗，仅保留按钮和状态文字 */}
+                            {/* 去除了原生提示弹窗，改用自定义精美气泡 Tooltip */}
                             <div
                                 onClick={handleTogglePlay}
-                                className={`flex items-center gap-1.5 cursor-pointer transition-all hover:text-[var(--text-main)] ${isCurrentlyAuto
-                                        ? 'opacity-100 animate-slow-pulse text-[var(--text-main)]'
-                                        : 'opacity-60 text-[var(--text-sub)] hover:opacity-100'
+                                className={`group relative flex items-center gap-1.5 cursor-pointer transition-all hover:text-[var(--text-main)] ${isCurrentlyAuto
+                                    ? 'opacity-100 animate-slow-pulse text-[var(--text-main)]'
+                                    : 'opacity-60 text-[var(--text-sub)] hover:opacity-100'
                                     }`}
-                                title="切换自动巡航"
                             >
                                 {isCurrentlyAuto ? <IconPause /> : <IconPlay />}
                                 <span className="text-xs font-mono tracking-widest">{isCurrentlyAuto ? '自动巡航' : '星轨悬停'}</span>
+
+                                {/* ========================================= */}
+                                {/* 新增：精美的自定义悬停气泡 Tooltip           */}
+                                {/* ========================================= */}
+                                <div 
+                                    className="absolute top-full left-1/2 -translate-x-1/2 mt-2.5 px-3 py-1.5 rounded-md text-[10px] font-mono whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-all duration-300 shadow-md backdrop-blur-md border z-50 -translate-y-1 group-hover:translate-y-0"
+                                    style={{ 
+                                        backgroundColor: isNight ? 'rgba(15, 23, 42, 0.85)' : 'rgba(250, 250, 228, 0.95)', 
+                                        borderColor: 'var(--border-color)', 
+                                        color: 'var(--text-main)' 
+                                    }}
+                                >
+                                    {isCurrentlyAuto ? '点击强制悬停星轨' : '点击恢复自动巡航'}
+                                    
+                                    {/* 指向按钮向上的小三角形 */}
+                                    <div 
+                                        className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent"
+                                        style={{ borderBottomColor: 'var(--border-color)' }}
+                                    ></div>
+                                </div>
                             </div>
 
                             <div className="w-[1px] h-3 bg-[var(--border-color)]"></div>
 
-                            <div className={`text-[var(--text-sub)] text-xs font-mono tracking-widest flex items-center gap-1 ${showHint ? 'opacity-100' : 'opacity-60'}`}>
+                            <div className={`text-xs font-mono tracking-widest flex items-center gap-1 transition-all ${!isCurrentlyAuto
+                                    ? 'text-[var(--text-main)] opacity-100'
+                                    : `text-[var(--text-sub)] ${showHint ? 'opacity-100' : 'opacity-60'}`
+                                }`}>
                                 <span className={isCurrentlyAuto ? "" : "animate-bounce"}>↓</span> 滚动穿梭
                             </div>
                         </div>
