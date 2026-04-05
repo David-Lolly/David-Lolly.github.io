@@ -5,12 +5,35 @@ import { thoughts } from "#site/content";
 import { useTheme } from "next-themes";
 import { Header } from "@/components/header";
 
+const IconPlay = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+    </svg>
+);
+
+const IconPause = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>
+    </svg>
+);
+
+const MODE_AUTO = 'AUTO';
+const MODE_TEMP_PAUSE = 'TEMP_PAUSE';
+const MODE_FORCE_PAUSE = 'FORCE_PAUSE';
+
 export default function YousiUniverse() {
     const { theme, resolvedTheme, setTheme } = useTheme();
     // 强制使用 resolvedTheme 绕过水合状态的延迟，或者让 client render 循环自己取
     // 为了防止 canvas 背景闪烁，我们尽量在绘制循环去读取 html 的 class，但其实 resolvedTheme 是可以的，只不过刚开始可能是 undefined/light。
     // 但是这里用 resolvedTheme 让 React 层面能在 client 切换。
     const [activeIndex, setActiveIndex] = useState(0);
+
+    // 核心：三态播放模式
+    const [playMode, setPlayMode] = useState(MODE_AUTO);
+    const playModeRef = useRef(MODE_AUTO);
+    const resumeTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+    const [showHint, setShowHint] = useState(true);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -41,6 +64,12 @@ export default function YousiUniverse() {
     const activeIndexRef = useRef(0);
     const starsRef = useRef<any[]>([]);
     const meteorsRef = useRef<any[]>([]); // 新增：流星系统
+
+    // 初始化引导定时器：8秒后自动消失
+    useEffect(() => {
+        const hintTimer = setTimeout(() => setShowHint(false), 8000);
+        return () => clearTimeout(hintTimer);
+    }, []);
 
     useEffect(() => {
         // 主题切换依靠 Navbar和next-themes 控制，画板依靠每帧获取 .dark 样式
@@ -87,21 +116,26 @@ export default function YousiUniverse() {
                 canvas.height = height;
             }
 
+            const totalNodes = thoughtsData.length > 0 ? thoughtsData.length : 1;
+            const segmentAngle = 360 / totalNodes;
+
+            // 核心物理修改：确保每条感悟之间精确消耗 6 秒 (假设 60 FPS，6秒 = 360帧)
+            physics.current.idleSpeed = segmentAngle / (6 * 60);
+
             // --- 全局物理与时间更新 ---
             // 计算当前真实角度与目标节点的差值
             const diff = physics.current.targetAngle - physics.current.currentAngle;
 
             if (Math.abs(diff) > 0.05) {
                 // 用户发生滚动，平滑且精准地穿梭到目标角度
-                physics.current.currentAngle += diff * 0.06;
+                physics.current.currentAngle += diff * 0.08;
             } else {
-                // 闲置状态下，整个宇宙保持极慢的自然自转
-                physics.current.targetAngle += physics.current.idleSpeed;
+                // 只有在完全 AUTO 模式下，时间才自动流淌
+                if (playModeRef.current === MODE_AUTO) {
+                    physics.current.targetAngle += physics.current.idleSpeed;
+                }
                 physics.current.currentAngle = physics.current.targetAngle;
             }
-
-            const totalNodes = thoughtsData.length > 0 ? thoughtsData.length : 1;
-            const segmentAngle = 360 / totalNodes;
 
             // 根据当前真实角度计算聚焦的活跃卡片索引
             const normalizedAngle = ((physics.current.currentAngle % 360) + 360) % 360;
@@ -412,9 +446,33 @@ export default function YousiUniverse() {
         return () => cancelAnimationFrame(animationFrameId);
     }, [thoughtsData]);
 
+    // --- 交互处理：手工干预机制 ---
+    const handleUserIntervention = () => {
+        if (showHint) setShowHint(false);
+
+        // 如果当前不是“强制暂停”状态，说明它是隐式意图，开启 30 秒倒计时
+        if (playModeRef.current !== MODE_FORCE_PAUSE) {
+            setPlayMode(MODE_TEMP_PAUSE);
+            playModeRef.current = MODE_TEMP_PAUSE;
+
+            // 清除并重启 30 秒恢复计时器
+            if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+            resumeTimerRef.current = setTimeout(() => {
+                // 30秒无操作后，如果状态仍然是临时悬停，则自动恢复巡航
+                if (playModeRef.current === MODE_TEMP_PAUSE) {
+                    setPlayMode(MODE_AUTO);
+                    playModeRef.current = MODE_AUTO;
+                }
+            }, 30000);
+        }
+    };
+
     // --- 交互处理：滚动直接跳跃节点 (Stepper逻辑) ---
     const handleScroll = (e: React.WheelEvent) => {
         if (isScrollingRef.current || thoughtsData.length === 0) return;
+
+        // 触发隐式接管（附带 30s 恢复逻辑）
+        handleUserIntervention();
 
         const segmentAngle = 360 / thoughtsData.length;
         // 寻找当前最靠近的轨道节点基准
@@ -443,7 +501,25 @@ export default function YousiUniverse() {
         if (thoughtsData.length === 0) return;
         const deltaY = touchStartY.current - e.changedTouches[0].clientY;
         if (Math.abs(deltaY) > 40) {
+            handleUserIntervention();
             handleScroll({ deltaY: deltaY } as any);
+        }
+    };
+
+    // --- UI 按钮强制控制 ---
+    const handleTogglePlay = () => {
+        if (showHint) setShowHint(false);
+
+        if (playModeRef.current === MODE_AUTO || playModeRef.current === MODE_TEMP_PAUSE) {
+            // 只要是播放或者隐式暂停，点击按钮统一变成【绝对强制暂停】，杀死定时器
+            setPlayMode(MODE_FORCE_PAUSE);
+            playModeRef.current = MODE_FORCE_PAUSE;
+            if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+        } else {
+            // 从强制暂停中恢复播放
+            setPlayMode(MODE_AUTO);
+            playModeRef.current = MODE_AUTO;
+            if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
         }
     };
 
@@ -479,9 +555,20 @@ export default function YousiUniverse() {
       overflow: hidden;
     }
 
+    /* 自定义呼吸动画：更慢更柔和 */
+    @keyframes slowPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .animate-slow-pulse {
+      animation: slowPulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
     .font-serif { font-family: "Times New Roman", Georgia, "Source Han Serif SC", "Noto Serif SC", serif; }
     .font-mono { font-family: ui-monospace, SFMono-Regular, monospace; }
   `;
+
+    const isCurrentlyAuto = playMode === MODE_AUTO;
 
     return (
         <div
@@ -503,8 +590,27 @@ export default function YousiUniverse() {
             <main className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 pt-[80px]">
                 <div className="w-full max-w-3xl h-[70%] px-8 relative flex flex-col justify-center">
 
-                    <div className="absolute top-0 right-8 text-[var(--text-sub)] text-xs font-mono tracking-widest opacity-60 flex items-center gap-2">
-                        <span className="animate-pulse">↓</span> 滚动星轨 · 穿梭时间
+                    <div className="absolute top-0 right-8 pointer-events-auto">
+                        <div className="flex items-center gap-3 relative">
+                            {/* 去除了提示弹窗，仅保留按钮和状态文字 */}
+                            <div
+                                onClick={handleTogglePlay}
+                                className={`flex items-center gap-1.5 cursor-pointer transition-all hover:text-[var(--text-main)] ${isCurrentlyAuto
+                                        ? 'opacity-100 animate-slow-pulse text-[var(--text-main)]'
+                                        : 'opacity-60 text-[var(--text-sub)] hover:opacity-100'
+                                    }`}
+                                title="切换自动巡航"
+                            >
+                                {isCurrentlyAuto ? <IconPause /> : <IconPlay />}
+                                <span className="text-xs font-mono tracking-widest">{isCurrentlyAuto ? '自动巡航' : '星轨悬停'}</span>
+                            </div>
+
+                            <div className="w-[1px] h-3 bg-[var(--border-color)]"></div>
+
+                            <div className={`text-[var(--text-sub)] text-xs font-mono tracking-widest flex items-center gap-1 ${showHint ? 'opacity-100' : 'opacity-60'}`}>
+                                <span className={isCurrentlyAuto ? "" : "animate-bounce"}>↓</span> 滚动穿梭
+                            </div>
+                        </div>
                     </div>
 
                     {thoughtsData.length === 0 ? (
