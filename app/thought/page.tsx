@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { thoughts } from "#site/content";
-import { useTheme } from "next-themes";
 import { Header } from "@/components/header";
 
 const IconPlay = () => (
@@ -22,10 +21,6 @@ const MODE_TEMP_PAUSE = 'TEMP_PAUSE';
 const MODE_FORCE_PAUSE = 'FORCE_PAUSE';
 
 export default function YousiUniverse() {
-    const { theme, resolvedTheme, setTheme } = useTheme();
-    // 强制使用 resolvedTheme 绕过水合状态的延迟，或者让 client render 循环自己取
-    // 为了防止 canvas 背景闪烁，我们尽量在绘制循环去读取 html 的 class，但其实 resolvedTheme 是可以的，只不过刚开始可能是 undefined/light。
-    // 但是这里用 resolvedTheme 让 React 层面能在 client 切换。
     const [activeIndex, setActiveIndex] = useState(0);
 
     // 核心：三态播放模式
@@ -38,18 +33,29 @@ export default function YousiUniverse() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // 渲染并解析 Velite 数据源，按日期降序排列
+    // 渲染并解析 Velite 数据源，按日期降序排列，固定将"欢迎光临"置顶
     const thoughtsData = React.useMemo(() => {
         const data = thoughts[0]?.items || [];
-        return [...data]
-            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-            .map((t, idx) => ({
-                id: idx + 1,
-                content: t.content.trim(),
-                date: t.date.replace(/-/g, '/').substring(0, 10),
-                tag: t.tag,
-                note: t.note || ""
-            }));
+
+        // 1. 分离问候语和其他游思
+        const greetings = data.filter(t => t.tag === '欢迎光临');
+        const others = data.filter(t => t.tag !== '欢迎光临');
+
+        // 2. 将普通游思按日期降序排列（最新在前）
+        const sortedOthers = [...others].sort((a, b) =>
+            new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+
+        // 3. 将问候语置顶拼接
+        const combined = [...greetings, ...sortedOthers];
+
+        return combined.map((t, idx) => ({
+            id: idx + 1,
+            content: t.content.trim(),
+            date: t.date.replace(/-/g, '/').substring(0, 10),
+            tag: t.tag,
+            note: t.note || ""
+        }));
     }, []);
 
     // 物理引擎状态：重构为统一目标缓动系统
@@ -58,7 +64,7 @@ export default function YousiUniverse() {
         currentAngle: 0,   // 当前实际渲染的角度 (宇宙全局时间基准)
         idleSpeed: 0.05    // 闲置状态下的自然流逝速度
     });
-    const isScrollingRef = useRef(false);
+    const manualSteeringUntilRef = useRef(0);
     const touchStartY = useRef(0);
 
     const activeIndexRef = useRef(0);
@@ -70,10 +76,6 @@ export default function YousiUniverse() {
         const hintTimer = setTimeout(() => setShowHint(false), 8000);
         return () => clearTimeout(hintTimer);
     }, []);
-
-    useEffect(() => {
-        // 主题切换依靠 Navbar和next-themes 控制，画板依靠每帧获取 .dark 样式
-    }, [resolvedTheme]);
 
     // 初始化星星与流星
     useEffect(() => {
@@ -97,6 +99,8 @@ export default function YousiUniverse() {
         if (!ctx) return;
         let animationFrameId: number;
 
+        let lastTime = 0;
+
         // 辅助工具：在圆内裁剪绘制，防止溢出边缘
         const drawClip = (x: number, y: number, r: number, drawInner: () => void) => {
             ctx.save();
@@ -107,8 +111,14 @@ export default function YousiUniverse() {
             ctx.restore();
         };
 
-        const render = () => {
+        const render = (timestamp: number) => {
             if (!containerRef.current || !canvas) return;
+
+            // 计算时间间隔 deltaTime，单位为秒，防止高刷屏导致物理加速
+            if (!lastTime) lastTime = timestamp;
+            const deltaTime = (timestamp - lastTime) / 1000;
+            lastTime = timestamp;
+
             const width = containerRef.current.clientWidth;
             const height = containerRef.current.clientHeight;
             if (canvas.width !== width || canvas.height !== height) {
@@ -119,28 +129,32 @@ export default function YousiUniverse() {
             const totalNodes = thoughtsData.length > 0 ? thoughtsData.length : 1;
             const segmentAngle = 360 / totalNodes;
 
-            // 核心物理修改：确保每条感悟之间精确消耗 6 秒 (假设 60 FPS，6秒 = 360帧)
-            physics.current.idleSpeed = segmentAngle / (6 * 60);
+            // 核心物理修改：确保每条感悟之间精确消耗 6 秒
+            // 速度 = 每秒转动的角度
+            physics.current.idleSpeed = segmentAngle / 6;
 
             // --- 全局物理与时间更新 ---
             // 计算当前真实角度与目标节点的差值
             const diff = physics.current.targetAngle - physics.current.currentAngle;
+            const isManualSteering = performance.now() < manualSteeringUntilRef.current;
 
             if (Math.abs(diff) > 0.05) {
-                // 用户发生滚动，平滑且精准地穿梭到目标角度
-                physics.current.currentAngle += diff * 0.08;
+                // 手动滚动阶段提高跟随速度，保证交互即时响应
+                const followRate = isManualSteering ? 16 : 5;
+                const followAlpha = Math.min(1, deltaTime * followRate);
+                physics.current.currentAngle += diff * followAlpha;
             } else {
                 // 只有在完全 AUTO 模式下，时间才自动流淌
                 if (playModeRef.current === MODE_AUTO) {
-                    physics.current.targetAngle += physics.current.idleSpeed;
+                    physics.current.targetAngle += physics.current.idleSpeed * deltaTime;
                 }
                 physics.current.currentAngle = physics.current.targetAngle;
             }
 
-            // 根据当前真实角度计算聚焦的活跃卡片索引
-            const normalizedAngle = ((physics.current.currentAngle % 360) + 360) % 360;
-            const offsetAngle = (normalizedAngle + segmentAngle / 2) % 360;
-            const newIndex = Math.floor(offsetAngle / segmentAngle) % totalNodes;
+            // 手动滚动时按目标角度立刻切换文案；自动巡航时按真实角度切换
+            const angleForIndex = isManualSteering ? physics.current.targetAngle : physics.current.currentAngle;
+            const normalizedAngle = ((angleForIndex % 360) + 360) % 360;
+            const newIndex = Math.floor(normalizedAngle / segmentAngle) % totalNodes;
 
             if (newIndex !== activeIndexRef.current) {
                 activeIndexRef.current = newIndex;
@@ -441,7 +455,7 @@ export default function YousiUniverse() {
             animationFrameId = requestAnimationFrame(render);
         };
 
-        render();
+        animationFrameId = requestAnimationFrame(render);
 
         return () => cancelAnimationFrame(animationFrameId);
     }, [thoughtsData]);
@@ -469,7 +483,8 @@ export default function YousiUniverse() {
 
     // --- 交互处理：滚动直接跳跃节点 (Stepper逻辑) ---
     const handleScroll = (e: React.WheelEvent) => {
-        if (isScrollingRef.current || thoughtsData.length === 0) return;
+        if (thoughtsData.length === 0) return;
+        if (Math.abs(e.deltaY) < 2) return;
 
         // 触发隐式接管（附带 30s 恢复逻辑）
         handleUserIntervention();
@@ -477,19 +492,18 @@ export default function YousiUniverse() {
         const segmentAngle = 360 / thoughtsData.length;
         // 寻找当前最靠近的轨道节点基准
         const currentSegment = Math.round(physics.current.targetAngle / segmentAngle);
+        const direction = e.deltaY > 0 ? 1 : -1;
+        const nextSegment = currentSegment + direction;
 
-        if (e.deltaY > 0) {
-            physics.current.targetAngle = (currentSegment + 1) * segmentAngle;
-        } else if (e.deltaY < 0) {
-            physics.current.targetAngle = (currentSegment - 1) * segmentAngle;
-        }
+        physics.current.targetAngle = nextSegment * segmentAngle;
+        manualSteeringUntilRef.current = performance.now() + 650;
 
-        if (e.deltaY !== 0) {
-            isScrollingRef.current = true;
-            // 节流控制，等待时间穿梭动画平稳后解锁
-            setTimeout(() => {
-                isScrollingRef.current = false;
-            }, 600);
+        // 手动滚动时立即同步文本索引，避免“滚轮后长时间不切换”的迟滞感
+        const total = thoughtsData.length;
+        const nextIndex = ((nextSegment % total) + total) % total;
+        if (nextIndex !== activeIndexRef.current) {
+            activeIndexRef.current = nextIndex;
+            setActiveIndex(nextIndex);
         }
     };
 
@@ -530,6 +544,7 @@ export default function YousiUniverse() {
       --text-main: rgb(34, 34, 34);
       --text-sub: rgb(115, 115, 115);
       --border-color: rgb(229, 229, 209);
+        --tooltip-bg: rgba(250, 250, 228, 0.95);
       --accent-blue: rgb(37, 99, 235);
       --accent-yellow: rgb(234, 179, 8);
       --nav-bg: rgba(245, 245, 213, 0.8);
@@ -543,6 +558,7 @@ export default function YousiUniverse() {
       --text-main: #F4F6F9;
       --text-sub: #94A3B8;
       --border-color: rgba(255, 255, 255, 0.1);
+        --tooltip-bg: rgba(15, 23, 42, 0.85);
       --accent-blue: #60A5FA;
       --accent-yellow: #FBBF24;
       --nav-bg: rgba(5, 8, 16, 0.8);
@@ -568,7 +584,6 @@ export default function YousiUniverse() {
     .font-mono { font-family: ui-monospace, SFMono-Regular, monospace; }
   `;
 
-    const isNight = resolvedTheme === 'dark';
     const isCurrentlyAuto = playMode === MODE_AUTO;
 
     return (
@@ -607,18 +622,18 @@ export default function YousiUniverse() {
                                 {/* ========================================= */}
                                 {/* 新增：精美的自定义悬停气泡 Tooltip           */}
                                 {/* ========================================= */}
-                                <div 
+                                <div
                                     className="absolute top-full left-1/2 -translate-x-1/2 mt-2.5 px-3 py-1.5 rounded-md text-[10px] font-mono whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-all duration-300 shadow-md backdrop-blur-md border z-50 -translate-y-1 group-hover:translate-y-0"
-                                    style={{ 
-                                        backgroundColor: isNight ? 'rgba(15, 23, 42, 0.85)' : 'rgba(250, 250, 228, 0.95)', 
-                                        borderColor: 'var(--border-color)', 
-                                        color: 'var(--text-main)' 
+                                    style={{
+                                        backgroundColor: 'var(--tooltip-bg)',
+                                        borderColor: 'var(--border-color)',
+                                        color: 'var(--text-main)'
                                     }}
                                 >
                                     {isCurrentlyAuto ? '点击强制悬停星轨' : '点击恢复自动巡航'}
-                                    
+
                                     {/* 指向按钮向上的小三角形 */}
-                                    <div 
+                                    <div
                                         className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent"
                                         style={{ borderBottomColor: 'var(--border-color)' }}
                                     ></div>
@@ -628,8 +643,8 @@ export default function YousiUniverse() {
                             <div className="w-[1px] h-3 bg-[var(--border-color)]"></div>
 
                             <div className={`text-xs font-mono tracking-widest flex items-center gap-1 transition-all ${!isCurrentlyAuto
-                                    ? 'text-[var(--text-main)] opacity-100'
-                                    : `text-[var(--text-sub)] ${showHint ? 'opacity-100' : 'opacity-60'}`
+                                ? 'text-[var(--text-main)] opacity-100'
+                                : `text-[var(--text-sub)] ${showHint ? 'opacity-100' : 'opacity-60'}`
                                 }`}>
                                 <span className={isCurrentlyAuto ? "" : "animate-bounce"}>↓</span> 滚动穿梭
                             </div>
