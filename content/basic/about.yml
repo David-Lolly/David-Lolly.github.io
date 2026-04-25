@@ -1,0 +1,161 @@
+profile:
+  name: "乐乐"
+  title: "AI 应用开发 / RAG / 网络安全研发"
+  intro: "一名关注 AI 应用、检索增强生成、网络安全工具与工程化落地的计算机方向开发者。喜欢把技术想法做成可以运行、可以展示、可以持续迭代的项目。"
+  email: "lelexiongl@gmail.com"
+  github: "David-Lolly"
+  website: "www.xionglele.com"
+  avatar:
+    src: "/images/about/avatar.jpg"
+    alt: "乐乐的个人照片"
+    caption: "个人照片"
+    type: "avatar"
+    label: "个人照片"
+
+metrics:
+  - label: "Open Source"
+    value: "2"
+    desc: "个人开源项目"
+  - label: "GitHub Stars"
+    value: "108"
+    desc: "TinyAISearch + VIewRAG"
+  - label: "Awards"
+    value: "5+"
+    desc: "国家级 / 省级 / 区域赛"
+  - label: "Experience"
+    value: "3"
+    desc: "企业开发与研发经历"
+
+focus:
+  - "RAG"
+  - "AI Search"
+  - "Security"
+  - "Open Source"
+  - "Engineering"
+
+featuredAchievementId: "challenge-cup-2024"
+
+projects:
+  - id: "tiny-ai-search"
+    name: "TinyAISearch"
+    stars: 86
+    desc: "轻量级 AI 搜索项目，探索搜索、问答与大模型应用结合。"
+    tags:
+      - "AI Search"
+      - "LLM"
+      - "Open Source"
+    image:
+      src: "/images/about/projects/tiny-ai-search.png"
+      alt: "TinyAISearch 项目截图"
+      caption: "TinyAISearch 项目首页 / GitHub 截图"
+      type: "screenshot"
+      label: "项目截图"
+
+  - id: "view-rag"
+    name: "VIewRAG"
+    stars: 22
+    desc: "围绕 RAG 应用构建的个人开源项目，关注文档处理、检索增强与生成式问答体验。"
+    tags:
+      - "RAG"
+      - "Document QA"
+      - "Visualization"
+    image:
+      src: "/images/about/projects/view-rag.png"
+      alt: "VIewRAG 项目截图"
+      caption: "VIewRAG 项目首页 / GitHub 截图"
+      type: "screenshot"
+      label: "项目截图"
+
+timeline:
+  - id: "nsg-2025"
+    dateText: "2025.03 - 至今"
+    sortDate: "9999-12"
+    group: "至今"
+    type: "工作"
+    title: "绿盟科技集团股份有限公司 · 研发工程师"
+    desc: "主要业务：网络安全。持续参与网络安全方向研发。"
+    important: true
+    images: []
+
+  - id: "view-rag-2026"
+    dateText: "2026.02"
+    sortDate: "2026-02"
+    group: "2026"
+    type: "开源"
+    title: "第二个个人开源项目 VIewRAG"
+    desc: "当前获得 22 Stars，围绕 RAG 应用进行探索。"
+    important: true
+    images:
+      - src: "/images/about/projects/view-rag.png"
+        alt: "VIewRAG 项目截图"
+        caption: "VIewRAG 项目首页 / GitHub 截图"
+        type: "screenshot"
+        label: "项目截图"
+
+  - id: "ai-computing-2025"
+    dateText: "2025.07 - 2026.01"
+    sortDate: "2026-01"
+    group: "2026"
+    type: "工作"
+    title: "武汉光谷爱计算有限公司 · 开发工程师"
+    desc: "湖北科投集团子公司，参与武汉超算中心和武汉人工智能计算中心相关业务开发。"
+    images: []
+
+  - id: "challenge-cup-2024"
+    dateText: "2024.11"
+    sortDate: "2024-11"
+    group: "2024"
+    type: "竞赛"
+    title: "挑战杯“揭榜挂帅”专项赛国家级特等奖"
+    desc: "发榜单位：华为技术有限公司。本科阶段最具代表性的竞赛经历之一。"
+    featured: true
+    important: true
+    images:
+      - src: "/images/about/certificates/2024-11-challenge-cup.jpg"
+        alt: "挑战杯揭榜挂帅专项赛国家级特等奖证书"
+        caption: "第十九届“挑战杯”全国大学生课外学术科技作品竞赛“揭榜挂帅”专项赛特等奖证书。"
+        type: "certificate"
+        label: "国家级特等奖"
+
+  - id: "smart-manufacturing-2024"
+    dateText: "2024.08"
+    sortDate: "2024-08"
+    group: "2024"
+    type: "竞赛"
+    title: "智能制造大赛国家级二等奖"
+    desc: "将 AI 能力与智能制造场景结合，完成国家级竞赛项目。"
+    important: true
+    images:
+      - src: "/images/about/certificates/2024-08-smart-manufacturing.jpg"
+        alt: "智能制造大赛国家级二等奖证书"
+        caption: "2024年中国大学生机械工程创新创意大赛智能制造赛工业人工智能方向二等奖证书。"
+        type: "certificate"
+        label: "国家级二等奖"
+
+  - id: "computer-design-2024"
+    dateText: "2024.06"
+    sortDate: "2024-06"
+    group: "2024"
+    type: "竞赛"
+    title: "计算机设计大赛人工智能赛道省级二等奖"
+    desc: "进一步积累 AI 项目设计、实现与展示经验。"
+    images:
+      - src: "/images/about/certificates/2024-06-computer-design.png"
+        alt: "计算机设计大赛中南地区赛二等奖证书"
+        caption: "第十七届中国大学生计算机设计大赛中南地区赛二等奖证书。"
+        type: "certificate"
+        label: "设计大赛二等奖"
+
+  - id: "xinchuang-2024"
+    dateText: "2024.05"
+    sortDate: "2024-05"
+    group: "2024"
+    type: "竞赛"
+    title: "信创大赛人工智能赛道省级二等奖"
+    desc: "围绕人工智能应用方向完成竞赛实践。"
+    images:
+      - src: "/images/about/certificates/2024-05-xinchuang.jpg"
+        alt: "信创大赛人工智能赛道银奖证书"
+        caption: "第三届湖北省大学生信创大赛“普开数据”人工智能赛道银奖证书。"
+        type: "certificate"
+        label: "信创银奖"
