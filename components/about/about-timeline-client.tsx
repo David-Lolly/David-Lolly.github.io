@@ -39,6 +39,7 @@ export function AboutTimelineClient({ data }: AboutTimelineClientProps) {
             profile={data.profile}
             metrics={data.metrics}
             focus={data.focus}
+            currentStatus={data.timeline?.[0]}
             onOpenImage={setModalImage}
           />
 

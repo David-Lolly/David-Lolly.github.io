@@ -83,13 +83,13 @@ timeline:
     sortDate: "2026-02"
     group: "2026"
     type: "开源"
-    title: "第二个个人开源项目 VIewRAG"
+    title: "第二个个人开源项目 ViewRAG"
     desc: "当前获得 22 Stars，围绕 RAG 应用进行探索。"
     important: true
     images:
       - src: "/images/about/project/viewrag.png"
-        alt: "VIewRAG 项目截图"
-        caption: "VIewRAG 项目首页 / GitHub 截图。"
+        alt: "ViewRAG 项目截图"
+        caption: "ViewRAG 项目首页 / GitHub 截图。"
         type: "screenshot"
         label: "项目截图"
 

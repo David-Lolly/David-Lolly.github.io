@@ -45,8 +45,8 @@ export function AboutTimeline({ timeline, onOpenImage }: AboutTimelineProps) {
           <section key={year} className="grid gap-6 md:grid-cols-[8rem_1fr]">
             <div>
               <div
-                className="sticky top-40 font-serif text-5xl font-black leading-none tracking-[-0.06em] text-stone-900/20 md:text-right"
-                style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", Times, serif' }}
+                className="sticky top-40 text-5xl font-black leading-none tracking-[-0.06em] text-stone-900/20 md:text-right"
+                style={{ fontFamily: "var(--font-numeric-serif)" }}
               >
                 {year}
               </div>

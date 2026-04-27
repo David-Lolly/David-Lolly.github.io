@@ -44,7 +44,7 @@ export function Header() {
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <a href="/" className="text-2xl font-serif font-bold text-primary hover:text-primary/80 transition-colors">
+            <a href="/" className="text-2xl font-serif font-semibold text-primary hover:text-primary/80 transition-colors">
               乐乐の博客空间
             </a>
 

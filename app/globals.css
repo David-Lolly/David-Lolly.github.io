@@ -111,12 +111,10 @@
 }
 
 @theme inline {
-  /* --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "Noto Color Emoji";
-  --font-serif: "Times New Roman",Times,"Noto Serif SC", ui-serif, Georgia, Cambria,   serif; */
-
-  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "思源黑体 CN", "Noto Sans SC", "Source Han Sans SC", "Hiragino Sans GB", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
-  --font-serif: "Times New Roman", Georgia, ui-serif, Times, "方正小标宋简体", "Source Han Serif SC", "Noto Serif SC", "思源宋体", "STZhongsong", "华文中宋", "SimSun", serif;
+  --font-sans: var(--font-sans-en), var(--font-sans-sc);
+  --font-serif: "Times New Roman", "方正小标宋简体", "FZ XiaoBiaoSong-B05S", var(--font-serif-sc);
+  --font-numeric-serif: Georgia, "Times New Roman", "方正小标宋简体", "FZ XiaoBiaoSong-B05S", var(--font-serif-sc);
+  --font-mono: var(--font-sans-en), var(--font-sans-sc);
 
   /* Using design proposal colors with proper RGB values */
   --color-background: var(--bg-primary);
@@ -166,8 +164,15 @@
 
 body {
   font-family: var(--font-sans);
+  font-synthesis: none;
+  font-synthesis-weight: none;
   background-color: rgb(var(--color-background));
   color: rgb(var(--color-foreground));
+}
+
+.font-serif {
+  font-synthesis: none;
+  font-synthesis-weight: none;
 }
 
 h1,
@@ -263,7 +268,7 @@ h6 {
   background: transparent;
   border-radius: 0;
   font-weight: normal;
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: var(--font-mono);
 }
 
 /* 代码块滚动条（纵向、横向共用） */

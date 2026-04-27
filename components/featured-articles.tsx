@@ -22,7 +22,7 @@ export function FeaturedArticles() {
     <div>
       <div className="flex items-center gap-2 mb-6">
         <Sparkles className="h-5 w-5 text-primary" />
-        <h2 className="text-2xl font-serif font-bold">精选文章</h2>
+        <h2 className="text-2xl font-serif font-semibold">精选文章</h2>
       </div>
 
       <ul className="space-y-1.5 list-none">
@@ -30,13 +30,13 @@ export function FeaturedArticles() {
           <li key={article.slug} className="group">
             <div className="flex items-baseline gap-3 py-1.5">
               <span className="text-muted-foreground flex-shrink-0 font-bold text-base">•</span>
-              <time className="text-sm text-muted-foreground whitespace-nowrap flex-shrink-0 font-medium font-serif">
+              <time className="text-sm text-muted-foreground whitespace-nowrap flex-shrink-0 font-normal font-serif">
                 {formatDate(article.date)}
               </time>
               <span className="text-muted-foreground flex-shrink-0 font-extrabold text-xl">»</span>
               <a
                 href={`/blog/${article.slug}`}
-                className="text-base font-serif font-medium hover:text-primary transition-colors leading-relaxed underline text-justify"
+                className="text-base font-serif font-normal hover:text-primary transition-colors leading-relaxed underline text-justify"
               >
                 {article.title}
               </a>
@@ -50,7 +50,7 @@ export function FeaturedArticles() {
           <span className="text-muted-foreground flex-shrink-0 font-bold text-base">•</span>
           <a 
             href="/blog" 
-            className="text-base font-serif font-bold text-primary hover:text-primary/70 transition-colors"
+            className="text-base font-serif font-medium text-primary hover:text-primary/70 transition-colors"
           >
             更多文章......
           </a>

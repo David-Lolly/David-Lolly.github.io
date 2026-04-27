@@ -129,7 +129,7 @@ const components = {
           className="font-mono text-sm"
           style={{
             ...(inlineStyles || {}),
-            fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+            fontFamily: 'var(--font-mono)',
             fontSize: '0.875rem',
             backgroundColor: 'transparent',
             borderRadius: 0,

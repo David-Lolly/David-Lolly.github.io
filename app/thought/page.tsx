@@ -580,8 +580,8 @@ export default function YousiUniverse() {
       animation: slowPulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
 
-    .font-serif { font-family: "Times New Roman", Georgia, "Source Han Serif SC", "Noto Serif SC", serif; }
-    .font-mono { font-family: ui-monospace, SFMono-Regular, monospace; }
+    .font-serif { font-family: var(--font-serif); }
+    .font-mono { font-family: var(--font-mono); }
   `;
 
     const isCurrentlyAuto = playMode === MODE_AUTO;
@@ -617,7 +617,7 @@ export default function YousiUniverse() {
                                     }`}
                             >
                                 {isCurrentlyAuto ? <IconPause /> : <IconPlay />}
-                                <span className="text-xs font-mono tracking-widest">{isCurrentlyAuto ? '自动巡航' : '星轨悬停'}</span>
+                                <span className="text-xs font-serif font-semibold tracking-[0.12em]">{isCurrentlyAuto ? '自动巡航' : '星轨悬停'}</span>
 
                                 {/* ========================================= */}
                                 {/* 新增：精美的自定义悬停气泡 Tooltip           */}
@@ -642,7 +642,7 @@ export default function YousiUniverse() {
 
                             <div className="w-[1px] h-3 bg-[var(--border-color)]"></div>
 
-                            <div className={`text-xs font-mono tracking-widest flex items-center gap-1 transition-all ${!isCurrentlyAuto
+                            <div className={`text-xs font-serif font-semibold tracking-[0.12em] flex items-center gap-1 transition-all ${!isCurrentlyAuto
                                 ? 'text-[var(--text-main)] opacity-100'
                                 : `text-[var(--text-sub)] ${showHint ? 'opacity-100' : 'opacity-60'}`
                                 }`}>

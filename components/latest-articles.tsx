@@ -22,7 +22,7 @@ export function LatestArticles() {
     <Card className="p-6 sticky top-24 bg-[rgb(250,250,228)] dark:bg-[rgb(24,24,27)]">
       <div className="flex items-center gap-2">
         <Clock className="h-4.5 w-4.5 text-primary" />
-        <h3 className="text-base font-serif font-bold">最新文章</h3>
+        <h3 className="text-base font-serif font-semibold">最新文章</h3>
       </div>
 
       <div className="space-y-2">
