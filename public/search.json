@@ -20,26 +20,6 @@
     ]
   },
   {
-    "title": "从原理到实战的 JWT 鉴权指南",
-    "description": "从原理到实战的 JWT 鉴权指南",
-    "date": "2025-12-27T00:00:00.000Z",
-    "slug": "jwt",
-    "type": "blog",
-    "categories": [
-      "Web开发"
-    ]
-  },
-  {
-    "title": "端口映射：Empty reply from server",
-    "description": "Xshell端口映射报错：Empty reply from server的排查指南。",
-    "date": "2025-12-03T00:00:00.000Z",
-    "slug": "empty_reply_from_server",
-    "type": "blog",
-    "categories": [
-      "故障排查"
-    ]
-  },
-  {
     "title": "K8s 挂载 SQLite 单文件踩坑记",
     "description": "在 Kubernetes 环境中挂载 SQLite 单文件时连续遭遇两个经典陷阱",
     "date": "2026-03-18T00:00:00.000Z",
@@ -60,13 +40,33 @@
     ]
   },
   {
+    "title": "端口映射：Empty reply from server",
+    "description": "Xshell端口映射报错：Empty reply from server的排查指南。",
+    "date": "2025-12-03T00:00:00.000Z",
+    "slug": "empty_reply_from_server",
+    "type": "blog",
+    "categories": [
+      "故障排查"
+    ]
+  },
+  {
+    "title": "从原理到实战的 JWT 鉴权指南",
+    "description": "从原理到实战的 JWT 鉴权指南",
+    "date": "2025-12-27T00:00:00.000Z",
+    "slug": "jwt",
+    "type": "blog",
+    "categories": [
+      "Web开发"
+    ]
+  },
+  {
     "title": "我是怎么降低论文的AIGC率",
     "description": "分享使用AI辅助降低论文AIGC率的实操经验和完整提示词",
     "date": "2026-04-24T00:00:00.000Z",
     "slug": "reduce-paper-aigc-rate",
     "type": "blog",
     "categories": [
-      "AI",
+      "AI实践",
       "论文写作"
     ]
   },
@@ -93,7 +93,7 @@
   {
     "title": "TinyAISearch",
     "description": "TinyAISearch 是一个轻量但强大的 AI 搜索项目，为你完整揭示从智能搜索规划、网页爬取、内容召回到流式问答的 RAG 全链路。",
-    "date": "2026-04-25T12:33:48.012Z",
+    "date": "2026-04-27T12:41:44.945Z",
     "slug": "tiny-ai-search",
     "type": "project",
     "tags": [
@@ -106,7 +106,7 @@
   {
     "title": "ViewRAG - PDF 智能解析与图文并茂问答系统",
     "description": "基于 RAG 的 PDF 智能解析系统，支持图片和表格精准召回、引用溯源、图文并茂问答",
-    "date": "2026-04-25T12:33:48.012Z",
+    "date": "2026-04-27T12:41:44.945Z",
     "slug": "viewrag-pdf-rag",
     "type": "project",
     "tags": [

@@ -1,0 +1,239 @@
+﻿profile:
+  name: "乐乐"
+  title: "AI 应用开发 / RAG / 网络安全研发"
+  intro: "一名关注 AI 应用、检索增强生成、网络安全工具与工程化落地的计算机方向开发者。喜欢把技术想法做成可以运行、可以展示、可以持续迭代的项目。"
+  email: "lelexiongl@gmail.com"
+  github: "David-Lolly"
+  website: "www.davidxiong.com"
+  avatar:
+    src: "/images/about/avatar.jpeg"
+    alt: "乐乐的个人照片"
+    caption: "个人照片"
+    type: "avatar"
+    label: "个人照片"
+
+metrics:
+  - label: "Open Source"
+    value: "2"
+    desc: "个人开源项目"
+  - label: "GitHub Stars"
+    value: "108"
+    desc: "TinyAISearch + VIewRAG"
+  - label: "Awards"
+    value: "5+"
+    desc: "国家级 / 省级 / 区域赛"
+  - label: "Experience"
+    value: "3"
+    desc: "企业开发与研发经历"
+
+focus:
+  - "AI"
+  - "AI Agent"
+  - "网络安全"
+  - "软件工程"
+  - "系统架构设计"
+
+featuredAchievementId: "challenge-cup-2024"
+
+projects:
+  - id: "tiny-ai-search"
+    name: "TinyAISearch"
+    stars: 86
+    desc: "轻量级 AI 搜索项目，探索搜索、问答与大模型应用结合。"
+    tags:
+      - "AI Search"
+      - "LLM"
+      - "Open Source"
+    image:
+      src: "/images/about/project/tinyaisearch.png"
+      alt: "TinyAISearch 项目截图"
+      caption: "TinyAISearch 首页"
+      type: "screenshot"
+      label: "项目截图"
+
+  - id: "view-rag"
+    name: "VIewRAG"
+    stars: 22
+    desc: "围绕 RAG 应用构建的个人开源项目，关注文档处理、检索增强与生成式问答体验。"
+    tags:
+      - "RAG"
+      - "Document QA"
+      - "Visualization"
+    image:
+      src: "/images/about/project/viewrag.png"
+      alt: "VIewRAG 项目截图"
+      caption: "VIewRAG 项目首页"
+      type: "screenshot"
+      label: "项目截图"
+
+
+timeline:
+  - id: "nsg-2025"
+    dateText: "2025.03 - 至今"
+    sortDate: "9999-12"
+    group: "至今"
+    type: "工作"
+    title: "绿盟科技集团股份有限公司 · 研发工程师"
+    desc: "主要业务：网络安全。持续参与网络安全方向研发。"
+    important: true
+    images: []
+
+  - id: "view-rag-2026"
+    dateText: "2026.02"
+    sortDate: "2026-02"
+    group: "2026"
+    type: "开源"
+    title: "第二个个人开源项目 VIewRAG"
+    desc: "当前获得 22 Stars，围绕 RAG 应用进行探索。"
+    important: true
+    images:
+      - src: "/images/about/project/viewrag.png"
+        alt: "VIewRAG 项目截图"
+        caption: "VIewRAG 项目首页 / GitHub 截图。"
+        type: "screenshot"
+        label: "项目截图"
+
+  - id: "wuhan-ai-computing-2025"
+    dateText: "2025.07 - 2026.01"
+    sortDate: "2026-01"
+    group: "2026"
+    type: "工作"
+    title: "武汉光谷爱计算有限公司 · 开发工程师"
+    desc: "湖北科投集团子公司，主要业务为经营武汉超算中心和武汉人工智能计算中心，简称武汉双中心。"
+    important: true
+    images: []
+
+  - id: "ascend-ai-2025"
+    dateText: "2025.11"
+    sortDate: "2025-11"
+    group: "2025"
+    type: "竞赛"
+    title: "昇腾 AI 创新大赛华中区域企业赛道铜奖"
+    desc: "获得昇腾 AI 创新大赛华中区域企业赛道铜奖。"
+    important: true
+    images:
+      - src: "/images/about/certificates/ascend-ai.jpg"
+        alt: "昇腾 AI 创新大赛获奖证书"
+        caption: "昇腾 AI 创新大赛华中区域企业赛道铜奖证书。"
+        type: "certificate"
+        label: "区域铜奖"
+
+  - id: "lanshan-2025"
+    dateText: "2025.03 - 2025.06"
+    sortDate: "2025-06"
+    group: "2025"
+    type: "工作"
+    title: "武汉览山科技有限公司 · AI 应用开发工程师"
+    desc: "主要业务：在线教育。参与在线教育场景下的 AI 应用开发。"
+    images: []
+
+  - id: "tiny-ai-search-2025"
+    dateText: "2025.01"
+    sortDate: "2025-01"
+    group: "2025"
+    type: "开源"
+    title: "首个个人开源项目 TinyAISearch"
+    desc: "当前获得 86 Stars，探索轻量级 AI 搜索应用。"
+    important: true
+    images:
+      - src: "/images/about/project/tinyaisearch.png"
+        alt: "TinyAISearch 项目截图"
+        caption: "TinyAISearch 项目首页 / GitHub 截图。"
+        type: "screenshot"
+        label: "项目截图"
+
+  - id: "challenge-cup-2024"
+    dateText: "2024.11"
+    sortDate: "2024-11"
+    group: "2024"
+    type: "竞赛"
+    title: "挑战杯“揭榜挂帅”专项赛国家级特等奖"
+    desc: "发榜单位：华为技术有限公司。本科阶段最具代表性的竞赛经历之一。"
+    featured: true
+    important: true
+    images:
+      - src: "/images/about/certificates/challenge-cup.jpg"
+        alt: "挑战杯揭榜挂帅专项赛国家级特等奖证书"
+        caption: "第十九届“挑战杯”全国大学生课外学术科技作品竞赛“揭榜挂帅”专项赛特等奖证书。"
+        type: "certificate"
+        label: "国家级特等奖"
+      - src: "/images/about/certificates/challenge-cup-team.jpeg"
+        alt: "挑战杯比赛现场照片"
+        caption: "可放比赛现场、答辩现场或团队合影。"
+        type: "photo"
+        label: "比赛现场"
+
+  - id: "smart-manufacturing-2024"
+    dateText: "2024.08"
+    sortDate: "2024-08"
+    group: "2024"
+    type: "竞赛"
+    title: "智能制造大赛国家级二等奖"
+    desc: "获得智能制造大赛国家级二等奖。"
+    important: true
+    images:
+      - src: "/images/about/certificates/smart-manufacturing.jpg"
+        alt: "智能制造大赛国家级二等奖证书"
+        caption: "2024 年中国大学生机械工程创新创意大赛智能制造赛工业人工智能方向二等奖证书。"
+        type: "certificate"
+        label: "国家级二等奖"
+      - src: "/images/about/certificates/smart-manufacturing-team.jpg"
+        alt: "智能制造比赛现场照片"
+        caption: "可放比赛现场、答辩现场或团队合影。"
+        type: "photo"
+        label: "比赛现场"
+
+  - id: "computer-design-2024"
+    dateText: "2024.06"
+    sortDate: "2024-06"
+    group: "2024"
+    type: "竞赛"
+    title: "计算机设计大赛人工智能赛道省级二等奖"
+    desc: "获得计算机设计大赛人工智能赛道省级二等奖。"
+    images:
+      - src: "/images/about/certificates/computer-design.png"
+        alt: "计算机设计大赛中南地区赛二等奖证书"
+        caption: "第十七届中国大学生计算机设计大赛中南地区赛二等奖证书。"
+        type: "certificate"
+        label: "省级二等奖"
+
+  - id: "xinchuang-2024"
+    dateText: "2024.05"
+    sortDate: "2024-05"
+    group: "2024"
+    type: "竞赛"
+    title: "信创大赛人工智能赛道省级二等奖"
+    desc: "获得信创大赛人工智能赛道省级二等奖。"
+    images:
+      - src: "/images/about/certificates/xinchuang.jpg"
+        alt: "信创大赛人工智能赛道省级二等奖证书"
+        caption: "第三届湖北省大学生信创大赛“普开数据”人工智能赛道银奖证书。"
+        type: "certificate"
+        label: "省级二等奖"
+
+  - id: "ai-class-2023"
+    dateText: "2023.06"
+    sortDate: "2023-06"
+    group: "2023"
+    type: "教育"
+    title: "通过笔试和面试选拔进入学院 AI 创新班"
+    desc: "通过学院笔试和面试选拔，进入 AI 创新班，开始更系统地接触人工智能相关方向。"
+    images: []
+
+  - id: "hbut-2022"
+    dateText: "2022.09"
+    sortDate: "2022-09"
+    group: "2022"
+    type: "教育"
+    title: "考入湖北工业大学计算机学院"
+    desc: "进入湖北工业大学计算机学院，开始系统学习计算机基础、软件开发与工程实践。"
+    images: []
+
+  - id: "high-school-2022"
+    dateText: "2022.06"
+    sortDate: "2022-06"
+    group: "2022"
+    type: "教育"
+    title: "湖北省襄阳市老河口市第一中学毕业"
+    desc: "完成高中阶段学习，进入新的计算机学习阶段。"
+    images: []

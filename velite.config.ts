@@ -135,6 +135,65 @@ const basic = defineCollection({
     })
 })
 
+// 定义 image schema 用于 About 集合
+const imageSchema = s.object({
+  src: s.string().optional(),
+  alt: s.string(),
+  caption: s.string().optional(),
+  type: s.string(),
+  label: s.string().optional(),
+})
+
+// 定义 About 集合
+const about = defineCollection({
+  name: 'About',
+  pattern: 'about/index.yml',
+  schema: s.object({
+    profile: s.object({
+      name: s.string(),
+      title: s.string(),
+      intro: s.string(),
+      email: s.string(),
+      github: s.string(),
+      website: s.string(),
+      avatar: imageSchema.optional(),
+    }),
+    metrics: s.array(
+      s.object({
+        label: s.string(),
+        value: s.string(),
+        desc: s.string(),
+      })
+    ),
+    focus: s.array(s.string()).default([]),
+    featuredAchievementId: s.string().optional(),
+    projects: s.array(
+      s.object({
+        id: s.string(),
+        name: s.string(),
+        stars: s.number().default(0),
+        desc: s.string(),
+        tags: s.array(s.string()).default([]),
+        image: imageSchema.optional(),
+      })
+    ),
+    timeline: s.array(
+      s.object({
+        id: s.string(),
+        dateText: s.string(),
+        sortDate: s.string(),
+        group: s.string(),
+        type: s.string(), // "教育" | "竞赛" | "开源" | "工作"
+        title: s.string(),
+        desc: s.string(),
+        featured: s.boolean().default(false),
+        important: s.boolean().default(false),
+        images: s.array(imageSchema).default([]),
+      })
+    ),
+  }),
+})
+
 // 定义 Thought (游思) 集合
 const thoughts = defineCollection({
   name: 'Thought',
@@ -159,7 +218,7 @@ export default defineConfig({
     name: '[name]-[hash:6].[ext]',
     clean: true,
   },
-  collections: { posts, projects, basic, thoughts },
+  collections: { posts, projects, basic, thoughts, about },
   mdx: {
     rehypePlugins: [
       rehypeSlug,
