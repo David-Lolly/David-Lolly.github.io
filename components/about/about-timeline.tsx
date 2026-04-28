@@ -45,14 +45,14 @@ export function AboutTimeline({ timeline, onOpenImage }: AboutTimelineProps) {
           <section key={year} className="grid gap-6 md:grid-cols-[8rem_1fr]">
             <div>
               <div
-                className="sticky top-40 text-5xl font-black leading-none tracking-[-0.06em] text-stone-900/20 md:text-right"
+                className="sticky top-40 text-5xl font-black leading-none tracking-[-0.06em] text-stone-900/20 md:text-right dark:text-white/30"
                 style={{ fontFamily: "var(--font-numeric-serif)" }}
               >
                 {year}
               </div>
             </div>
             <div className="relative space-y-5">
-              <div className="absolute -left-[1.4rem] top-3 hidden h-[calc(100%-1.5rem)] w-px bg-stone-900/15 md:block" />
+              <div className="absolute -left-[1.4rem] top-3 hidden h-[calc(100%-1.5rem)] w-px bg-stone-900/15 md:block dark:bg-border" />
               {grouped[year].map((item) => (
                 <TimelineNode
                   key={`${item.id}-${item.dateText}`}

@@ -33,18 +33,18 @@ export function AboutProjects({ projects, onOpenImage }: AboutProjectsProps) {
           <PaperCard key={project.id} className="h-fit transition duration-200 hover:-translate-y-1">
             <div className="mb-5 flex items-start justify-between gap-4">
               <div>
-                <div className="text-xs font-black uppercase tracking-[0.22em] text-[#8b6f47]">
+                <div className="text-xs font-black uppercase tracking-[0.22em] text-[#8b6f47] dark:text-amber-300">
                   0{index + 1} / Open Source Project
                 </div>
-                <h3 className="mt-2 font-serif text-3xl font-black text-stone-950">
+                <h3 className="mt-2 font-serif text-3xl font-black text-stone-950 dark:text-foreground">
                   {project.name}
                 </h3>
-                <div className="mt-3 inline-flex items-center gap-1 rounded-full bg-stone-900 px-3 py-1 text-sm font-black text-[#fff8d6]">
+                <div className="mt-3 inline-flex items-center gap-1 rounded-full bg-stone-900 px-3 py-1 text-sm font-black text-[#fff8d6] dark:bg-muted dark:text-foreground">
                   <Icon name="star" className="h-4 w-4" />
                   {project.stars} Stars
                 </div>
               </div>
-              <Github className="h-9 w-9 text-[#8b6f47]" strokeWidth={1.8} />
+              <Github className="h-9 w-9 text-[#8b6f47] dark:text-amber-300" strokeWidth={1.8} />
             </div>
             {project.image && project.image.src && (
               <VisualImage
@@ -54,16 +54,17 @@ export function AboutProjects({ projects, onOpenImage }: AboutProjectsProps) {
                 className="h-auto"
               />
             )}
-            <p className="mt-4 text-sm leading-7 text-stone-600">{project.desc}</p>
+            <p className="mt-4 text-sm leading-7 text-stone-600 dark:text-muted-foreground">{project.desc}</p>
             {project.tags && project.tags.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">
                 {project.tags.map((tag) => (
-                  <span
+                  <div
                     key={tag}
-                    className="rounded-full border border-stone-900/10 bg-white/55 px-3 py-1 text-xs font-bold text-stone-600"
+                    className="inline-flex items-center gap-2 rounded-full border border-[#3f6f53]/18 bg-[#3f6f53]/10 px-3 py-1 text-xs font-bold text-[#315d43] shadow-[inset_0_1px_0_rgba(255,255,255,0.62)] dark:border-emerald-400/25 dark:bg-emerald-400/10 dark:text-emerald-200 dark:shadow-none"
                   >
-                    {tag}
-                  </span>
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#3f6f53] dark:bg-emerald-300" />
+                    <span className="truncate">{tag}</span>
+                  </div>
                 ))}
               </div>
             )}

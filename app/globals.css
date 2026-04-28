@@ -170,6 +170,21 @@ body {
   color: rgb(var(--color-foreground));
 }
 
+.about-page-shell {
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(218, 196, 126, 0.28), transparent 28%),
+    radial-gradient(circle at 85% 0%, rgba(255, 255, 255, 0.62), transparent 26%),
+    linear-gradient(rgba(91, 75, 42, 0.038) 1px, transparent 1px);
+  background-size: auto, auto, 28px 28px;
+}
+
+.dark .about-page-shell {
+  background-image:
+    radial-gradient(circle at 18% 8%, rgba(234, 179, 8, 0.12), transparent 30%),
+    radial-gradient(circle at 86% 0%, rgba(37, 99, 235, 0.12), transparent 28%),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+}
+
 .font-serif {
   font-synthesis: none;
   font-synthesis-weight: none;

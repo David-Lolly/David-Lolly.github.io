@@ -33,11 +33,11 @@ export function VisualImage({
         <img
           src={item.src}
           alt={item.alt || item.caption || "经历图片"}
-          className="absolute inset-0 h-full w-full rounded-2xl border border-stone-900/10 bg-[#fffdf3] object-contain transition duration-300 group-hover:scale-[1.025]"
+          className="absolute inset-0 h-full w-full rounded-2xl border border-stone-900/10 bg-[#fffdf3] object-contain transition duration-300 group-hover:scale-[1.025] dark:border-border dark:bg-[#fffdf3]"
         />
       </div>
       {item.caption && (
-        <div className="mt-2 line-clamp-2 text-xs font-semibold leading-5 text-stone-500 w-full">
+        <div className="mt-2 line-clamp-2 text-xs font-semibold leading-5 text-stone-500 w-full dark:text-muted-foreground">
           {item.caption}
         </div>
       )}

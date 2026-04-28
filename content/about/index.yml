@@ -157,7 +157,7 @@ timeline:
         caption: "第十九届“挑战杯”全国大学生课外学术科技作品竞赛“揭榜挂帅”专项赛特等奖证书。"
         type: "certificate"
         label: "国家级特等奖"
-      - src: "/images/about/certificates/challenge-cup-team.jpeg"
+      - src: "/images/about/certificates/challenge-cup-team.png"
         alt: "挑战杯比赛现场照片"
         caption: "可放比赛现场、答辩现场或团队合影。"
         type: "photo"
