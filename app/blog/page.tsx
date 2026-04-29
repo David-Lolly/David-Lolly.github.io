@@ -121,7 +121,7 @@ export default function BlogPage() {
               <button
                 type="button"
                 // Glass effect kept for reference: bg-card/60 backdrop-blur-md hover:bg-card/80
-                className="flex items-center cursor-pointer min-w-[72px] justify-between bg-card dark:bg-[rgb(24,24,27)] px-4 py-2 rounded-md border border-border shadow-sm transition-colors hover:bg-muted dark:hover:bg-[rgb(39,39,42)]"
+                className="flex items-center cursor-pointer min-w-[72px] justify-between bg-[rgb(250,250,228)] dark:bg-[rgb(24,24,27)] px-4 py-2 rounded-md border border-border shadow-sm transition-colors hover:bg-[rgb(255,255,238)] dark:hover:bg-[rgb(39,39,42)]"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 aria-expanded={isDropdownOpen}
                 aria-label="选择每页显示数量"
@@ -132,13 +132,13 @@ export default function BlogPage() {
 
               {isDropdownOpen && (
                 // Glass effect kept for reference: bg-card/60 backdrop-blur-md
-                <div className="absolute top-[calc(100%+0.5rem)] right-0 w-28 rounded-md border border-border bg-card dark:bg-[rgb(24,24,27)] shadow-xl z-[70] py-1 overflow-hidden">
+                <div className="absolute top-[calc(100%+0.5rem)] right-0 w-28 rounded-md border border-border bg-[rgb(250,250,228)] dark:bg-[rgb(24,24,27)] shadow-xl z-[70] py-1 overflow-hidden">
                   {[12, 24, 36, 48, 60, 120].map((num) => (
                     <div
                       key={num}
                       className={`px-4 py-2 text-sm cursor-pointer transition-colors group relative ${itemsPerPage === num
-                        ? 'font-bold text-foreground bg-muted dark:bg-[rgb(39,39,42)]'
-                        : 'font-medium text-foreground/85 hover:text-foreground hover:bg-muted dark:hover:bg-[rgb(39,39,42)]'
+                        ? 'font-bold text-foreground bg-[rgb(240,240,215)] dark:bg-[rgb(39,39,42)]'
+                        : 'font-medium text-foreground/85 hover:text-foreground hover:bg-[rgb(245,245,220)] dark:hover:bg-[rgb(39,39,42)]'
                         }`}
                       onClick={() => {
                         setItemsPerPage(num)

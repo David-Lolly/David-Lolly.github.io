@@ -10,6 +10,16 @@
     ]
   },
   {
+    "title": "从原理到实战的 JWT 鉴权指南",
+    "description": "从原理到实战的 JWT 鉴权指南",
+    "date": "2025-12-27T00:00:00.000Z",
+    "slug": "jwt",
+    "type": "blog",
+    "categories": [
+      "Web开发"
+    ]
+  },
+  {
     "title": "Linux系统服务器上安装Clash代理",
     "description": "在Linux系统服务器上安装Clash代理服务指南。",
     "date": "2025-11-30T00:00:00.000Z",
@@ -30,6 +40,16 @@
     ]
   },
   {
+    "title": "K8s 挂载 SQLite 单文件踩坑记",
+    "description": "在 Kubernetes 环境中挂载 SQLite 单文件时连续遭遇两个经典陷阱",
+    "date": "2026-03-18T00:00:00.000Z",
+    "slug": "k8s-sqlite-hostpath",
+    "type": "blog",
+    "categories": [
+      "DevOps"
+    ]
+  },
+  {
     "title": "端口映射：Empty reply from server",
     "description": "Xshell端口映射报错：Empty reply from server的排查指南。",
     "date": "2025-12-03T00:00:00.000Z",
@@ -40,13 +60,36 @@
     ]
   },
   {
-    "title": "从原理到实战的 JWT 鉴权指南",
-    "description": "从原理到实战的 JWT 鉴权指南",
-    "date": "2025-12-27T00:00:00.000Z",
-    "slug": "jwt",
+    "title": "第二个开源项目复盘 - ViewRAG",
+    "description": "记录第二个开源项目 ViewRAG 的开发历程，探索 AI 编程时代的架构设计、需求表达与验收实践",
+    "date": "2026-04-10T00:00:00.000Z",
+    "slug": "second-open-source-project-review-viewrag",
     "type": "blog",
     "categories": [
-      "Web开发"
+      "开源项目",
+      "AI编程"
+    ]
+  },
+  {
+    "title": "我是怎么降低论文的AIGC率",
+    "description": "分享使用AI辅助降低论文AIGC率的实操经验和完整提示词",
+    "date": "2026-04-24T00:00:00.000Z",
+    "slug": "reduce-paper-aigc-rate",
+    "type": "blog",
+    "categories": [
+      "AI实践",
+      "论文写作"
+    ]
+  },
+  {
+    "title": "\"牛马\"的自我修养",
+    "description": "关于职场中如何培养主人翁意识，将个人成长与公司战略巧妙结合的思考",
+    "date": "2026-03-20T00:00:00.000Z",
+    "slug": "self-cultivation-of-niuma",
+    "type": "blog",
+    "categories": [
+      "职场思考",
+      "个人成长"
     ]
   },
   {
@@ -70,30 +113,9 @@
     ]
   },
   {
-    "title": "K8s 挂载 SQLite 单文件踩坑记",
-    "description": "在 Kubernetes 环境中挂载 SQLite 单文件时连续遭遇两个经典陷阱",
-    "date": "2026-03-18T00:00:00.000Z",
-    "slug": "k8s-sqlite-hostpath",
-    "type": "blog",
-    "categories": [
-      "DevOps"
-    ]
-  },
-  {
-    "title": "我是怎么降低论文的AIGC率",
-    "description": "分享使用AI辅助降低论文AIGC率的实操经验和完整提示词",
-    "date": "2026-04-24T00:00:00.000Z",
-    "slug": "reduce-paper-aigc-rate",
-    "type": "blog",
-    "categories": [
-      "AI实践",
-      "论文写作"
-    ]
-  },
-  {
     "title": "TinyAISearch",
     "description": "TinyAISearch 是一个轻量但强大的 AI 搜索项目，为你完整揭示从智能搜索规划、网页爬取、内容召回到流式问答的 RAG 全链路。",
-    "date": "2026-04-29T13:10:36.589Z",
+    "date": "2026-04-29T14:02:21.375Z",
     "slug": "tiny-ai-search",
     "type": "project",
     "tags": [
@@ -106,7 +128,7 @@
   {
     "title": "ViewRAG",
     "description": "基于 RAG 的 PDF 智能解析系统，支持图片和表格精准召回、引用溯源、图文并茂问答",
-    "date": "2026-04-29T13:10:36.589Z",
+    "date": "2026-04-29T14:02:21.375Z",
     "slug": "viewrag-pdf-rag",
     "type": "project",
     "tags": [
