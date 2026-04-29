@@ -176,7 +176,7 @@ export default function ProjectsPage() {
                       >
                         <span className="relative inline-block">
                           {num} 项
-                          <span className="absolute left-0 -bottom-1 w-full h-[2px] bg-foreground scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full"></span>
+                          <span className="absolute left-0 -bottom-1 w-full h-[2px] bg-black dark:bg-white scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full"></span>
                         </span>
                       </div>
                     ))}
