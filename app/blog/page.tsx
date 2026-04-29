@@ -120,7 +120,8 @@ export default function BlogPage() {
             <div ref={dropdownRef} className="relative flex items-center">
               <button
                 type="button"
-                className="flex items-center cursor-pointer min-w-[72px] justify-between bg-card/60 backdrop-blur-md px-4 py-2 rounded-md border border-border shadow-sm transition-colors hover:bg-card/80"
+                // Glass effect kept for reference: bg-card/60 backdrop-blur-md hover:bg-card/80
+                className="flex items-center cursor-pointer min-w-[72px] justify-between bg-card dark:bg-[rgb(24,24,27)] px-4 py-2 rounded-md border border-border shadow-sm transition-colors hover:bg-muted dark:hover:bg-[rgb(39,39,42)]"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 aria-expanded={isDropdownOpen}
                 aria-label="选择每页显示数量"
@@ -130,13 +131,14 @@ export default function BlogPage() {
               </button>
 
               {isDropdownOpen && (
-                <div className="absolute top-[calc(100%+0.5rem)] right-0 w-28 rounded-md border border-border bg-card/60 backdrop-blur-md shadow-xl z-[70] py-1 overflow-hidden">
+                // Glass effect kept for reference: bg-card/60 backdrop-blur-md
+                <div className="absolute top-[calc(100%+0.5rem)] right-0 w-28 rounded-md border border-border bg-card dark:bg-[rgb(24,24,27)] shadow-xl z-[70] py-1 overflow-hidden">
                   {[12, 24, 36, 48, 60, 120].map((num) => (
                     <div
                       key={num}
                       className={`px-4 py-2 text-sm cursor-pointer transition-colors group relative ${itemsPerPage === num
-                        ? 'font-bold text-foreground bg-black/5 dark:bg-white/10'
-                        : 'font-medium text-foreground/85 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/10'
+                        ? 'font-bold text-foreground bg-muted dark:bg-[rgb(39,39,42)]'
+                        : 'font-medium text-foreground/85 hover:text-foreground hover:bg-muted dark:hover:bg-[rgb(39,39,42)]'
                         }`}
                       onClick={() => {
                         setItemsPerPage(num)
@@ -146,7 +148,7 @@ export default function BlogPage() {
                     >
                       <span className="relative inline-block">
                         {num} 篇
-                        <span className="absolute left-0 -bottom-1 w-full h-[2px] bg-black dark:bg-white scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full"></span>
+                        <span className="absolute left-0 -bottom-1 w-full h-[2px] bg-foreground scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full"></span>
                       </span>
                     </div>
                   ))}

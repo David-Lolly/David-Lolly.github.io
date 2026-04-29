@@ -1,7 +1,7 @@
 ﻿profile:
   name: "乐乐"
   title: "AI 应用开发 / RAG / 网络安全研发"
-  intro: "一名关注 AI 应用、检索增强生成、网络安全工具与工程化落地的计算机方向开发者。喜欢把技术想法做成可以运行、可以展示、可以持续迭代的项目。"
+  intro: "一名关注 AI 应用、AI Agent、软件工程、网络安全的计算机方向开发者。善于思考、动手实践与复盘。"
   email: "lelexiongl@gmail.com"
   github: "David-Lolly"
   website: "www.davidxiong.com"
@@ -18,7 +18,7 @@ metrics:
     desc: "个人开源项目"
   - label: "GitHub Stars"
     value: "108"
-    desc: "TinyAISearch + VIewRAG"
+    desc: "TinyAISearch + ViewRAG"
   - label: "Awards"
     value: "5+"
     desc: "国家级 / 省级 / 区域赛"
@@ -52,17 +52,17 @@ projects:
       label: "项目截图"
 
   - id: "view-rag"
-    name: "VIewRAG"
+    name: "ViewRAG"
     stars: 22
-    desc: "围绕 RAG 应用构建的个人开源项目，关注文档处理、检索增强与生成式问答体验。"
+    desc: "PDF 非结构化文档的高质量解析、分块、召回、图文并茂问答体验和溯源的系统。"
     tags:
       - "RAG"
       - "Document QA"
       - "Visualization"
     image:
       src: "/images/about/project/viewrag.png"
-      alt: "VIewRAG 项目截图"
-      caption: "VIewRAG 项目首页"
+      alt: "ViewRAG 项目截图"
+      caption: "ViewRAG 项目首页"
       type: "screenshot"
       label: "项目截图"
 
@@ -74,7 +74,7 @@ timeline:
     group: "至今"
     type: "工作"
     title: "绿盟科技集团股份有限公司 · 研发工程师"
-    desc: "主要业务：网络安全。持续参与网络安全方向研发。"
+    desc: "主要业务：网络安全。参与AI+ 网络安全产品研发。"
     important: true
     images: []
 
@@ -84,12 +84,12 @@ timeline:
     group: "2026"
     type: "开源"
     title: "第二个个人开源项目 ViewRAG"
-    desc: "当前获得 22 Stars，围绕 RAG 应用进行探索。"
+    desc: "当前获得 22 Stars，围绕 PDF 非结构化文档的高质量解析、分块、召回、图文并茂问答体验和溯源的系统进行开发。"
     important: true
     images:
       - src: "/images/about/project/viewrag.png"
         alt: "ViewRAG 项目截图"
-        caption: "ViewRAG 项目首页 / GitHub 截图。"
+        caption: "ViewRAG 项目"
         type: "screenshot"
         label: "项目截图"
 
@@ -99,7 +99,7 @@ timeline:
     group: "2026"
     type: "工作"
     title: "武汉光谷爱计算有限公司 · 开发工程师"
-    desc: "湖北科投集团子公司，主要业务为经营武汉超算中心和武汉人工智能计算中心，简称武汉双中心。"
+    desc: "湖北科投集团子公司，主要业务为经营武汉超算中心和武汉人工智能计算中心，简称武汉双中心。参与国产化硬件适配与应用开发"
     important: true
     images: []
 
@@ -138,7 +138,7 @@ timeline:
     images:
       - src: "/images/about/project/tinyaisearch.png"
         alt: "TinyAISearch 项目截图"
-        caption: "TinyAISearch 项目首页 / GitHub 截图。"
+        caption: "TinyAISearch 项目"
         type: "screenshot"
         label: "项目截图"
 
@@ -159,7 +159,7 @@ timeline:
         label: "国家级特等奖"
       - src: "/images/about/certificates/challenge-cup-team.png"
         alt: "挑战杯比赛现场照片"
-        caption: "可放比赛现场、答辩现场或团队合影。"
+        caption: "答辩现场和同学、老师合影"
         type: "photo"
         label: "比赛现场"
 
@@ -179,7 +179,7 @@ timeline:
         label: "国家级二等奖"
       - src: "/images/about/certificates/smart-manufacturing-team.jpg"
         alt: "智能制造比赛现场照片"
-        caption: "可放比赛现场、答辩现场或团队合影。"
+        caption: "比赛现场团队合影。"
         type: "photo"
         label: "比赛现场"
 
