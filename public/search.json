@@ -10,13 +10,14 @@
     ]
   },
   {
-    "title": "从原理到实战的 JWT 鉴权指南",
-    "description": "从原理到实战的 JWT 鉴权指南",
-    "date": "2025-12-27T00:00:00.000Z",
-    "slug": "jwt",
+    "title": "Clash 服务器中转代理：从配置到分流的全流程指南",
+    "description": "通过 SSH 端口转发 + 服务器 Clash 中转，实现外网访问加速与智能分流的全流程指南，含端口冲突排查、yacd 面板配置、浏览器分流插件设置等排坑经验",
+    "date": "2026-05-13T00:00:00.000Z",
+    "slug": "clash-server-proxy-guide",
     "type": "blog",
     "categories": [
-      "Web开发"
+      "技术教程",
+      "网络工具"
     ]
   },
   {
@@ -27,6 +28,16 @@
     "type": "blog",
     "categories": [
       "Linux系统"
+    ]
+  },
+  {
+    "title": "端口映射：Empty reply from server",
+    "description": "Xshell端口映射报错：Empty reply from server的排查指南。",
+    "date": "2025-12-03T00:00:00.000Z",
+    "slug": "empty_reply_from_server",
+    "type": "blog",
+    "categories": [
+      "故障排查"
     ]
   },
   {
@@ -50,13 +61,24 @@
     ]
   },
   {
-    "title": "端口映射：Empty reply from server",
-    "description": "Xshell端口映射报错：Empty reply from server的排查指南。",
-    "date": "2025-12-03T00:00:00.000Z",
-    "slug": "empty_reply_from_server",
+    "title": "我是怎么降低论文的AIGC率",
+    "description": "分享使用AI辅助降低论文AIGC率的实操经验和完整提示词",
+    "date": "2026-04-24T00:00:00.000Z",
+    "slug": "reduce-paper-aigc-rate",
     "type": "blog",
     "categories": [
-      "故障排查"
+      "AI实践",
+      "论文写作"
+    ]
+  },
+  {
+    "title": "从原理到实战的 JWT 鉴权指南",
+    "description": "从原理到实战的 JWT 鉴权指南",
+    "date": "2025-12-27T00:00:00.000Z",
+    "slug": "jwt",
+    "type": "blog",
+    "categories": [
+      "Web开发"
     ]
   },
   {
@@ -68,17 +90,6 @@
     "categories": [
       "开源项目",
       "AI编程"
-    ]
-  },
-  {
-    "title": "我是怎么降低论文的AIGC率",
-    "description": "分享使用AI辅助降低论文AIGC率的实操经验和完整提示词",
-    "date": "2026-04-24T00:00:00.000Z",
-    "slug": "reduce-paper-aigc-rate",
-    "type": "blog",
-    "categories": [
-      "AI实践",
-      "论文写作"
     ]
   },
   {
@@ -113,22 +124,9 @@
     ]
   },
   {
-    "title": "TinyAISearch",
-    "description": "TinyAISearch 是一个轻量但强大的 AI 搜索项目，为你完整揭示从智能搜索规划、网页爬取、内容召回到流式问答的 RAG 全链路。",
-    "date": "2026-04-29T14:02:21.375Z",
-    "slug": "tiny-ai-search",
-    "type": "project",
-    "tags": [
-      "Python",
-      "LangChain",
-      "FastAPI",
-      "AI"
-    ]
-  },
-  {
     "title": "ViewRAG",
     "description": "基于 RAG 的 PDF 智能解析系统，支持图片和表格精准召回、引用溯源、图文并茂问答",
-    "date": "2026-04-29T14:02:21.375Z",
+    "date": "2026-05-18T13:02:42.648Z",
     "slug": "viewrag-pdf-rag",
     "type": "project",
     "tags": [
@@ -138,6 +136,19 @@
       "FastAPI",
       "pgvector",
       "LLM"
+    ]
+  },
+  {
+    "title": "TinyAISearch",
+    "description": "TinyAISearch 是一个轻量但强大的 AI 搜索项目，为你完整揭示从智能搜索规划、网页爬取、内容召回到流式问答的 RAG 全链路。",
+    "date": "2026-05-18T13:02:42.648Z",
+    "slug": "tiny-ai-search",
+    "type": "project",
+    "tags": [
+      "Python",
+      "LangChain",
+      "FastAPI",
+      "AI"
     ]
   }
 ]
