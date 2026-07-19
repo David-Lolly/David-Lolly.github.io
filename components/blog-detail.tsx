@@ -99,7 +99,7 @@ export function BlogDetail({ post, prevPost, nextPost }: BlogDetailProps) {
         </div>
 
         <div className="article-content leading-relaxed">
-          <MDXContent code={post.body} />
+          <MDXContent code={post.body} enableImageLightbox />
         </div>
       </article>
 

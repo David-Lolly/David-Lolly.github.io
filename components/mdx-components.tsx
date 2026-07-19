@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Fragment, jsx, jsxs } from "react/jsx-runtime"
 import { Copy, Check } from 'lucide-react'
+import { MdxImageLightbox } from "@/components/mdx-image-lightbox"
 
 type ElementWithChildren = React.ReactElement<{ children?: React.ReactNode }>
 
@@ -456,7 +457,12 @@ const components = {
   ),
 }
 
-export function MDXContent({ code }: { code: string }) {
+interface MDXContentProps {
+  code: string
+  enableImageLightbox?: boolean
+}
+
+export function MDXContent({ code, enableImageLightbox = false }: MDXContentProps) {
   const Component = React.useMemo(() => {
     try {
       // velite 生成的代码格式:
@@ -488,9 +494,13 @@ export function MDXContent({ code }: { code: string }) {
     return <div className="text-muted-foreground">内容加载失败</div>
   }
 
+  const runtimeComponents = enableImageLightbox
+    ? { ...components, img: MdxImageLightbox }
+    : components
+
   return (
     <div className="text-foreground" style={{ fontSize: '1.0625rem', lineHeight: 1.75 }}>
-      <Component components={components} />
+      <Component components={runtimeComponents} />
     </div>
   )
 }
