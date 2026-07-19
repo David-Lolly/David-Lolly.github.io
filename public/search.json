@@ -6,7 +6,17 @@
     "slug": "ai-programming-tools-skills",
     "type": "blog",
     "categories": [
-      "AI实践"
+      "前沿实践"
+    ]
+  },
+  {
+    "title": "入职四个月，我开始不再只用“研发工程师”定义自己",
+    "description": "从写代码、部署系统到制作PPT、剪辑视频，一名研发新人重新理解岗位边界与个人价值的四个月。",
+    "date": "2026-07-19T00:00:00.000Z",
+    "slug": "beyond-the-role-of-software-engineer",
+    "type": "blog",
+    "categories": [
+      "个人心法"
     ]
   },
   {
@@ -16,8 +26,7 @@
     "slug": "clash-server-proxy-guide",
     "type": "blog",
     "categories": [
-      "技术教程",
-      "网络工具"
+      "前沿实践"
     ]
   },
   {
@@ -27,7 +36,7 @@
     "slug": "clash_for_linux",
     "type": "blog",
     "categories": [
-      "Linux系统"
+      "前沿实践"
     ]
   },
   {
@@ -37,7 +46,7 @@
     "slug": "empty_reply_from_server",
     "type": "blog",
     "categories": [
-      "故障排查"
+      "前沿实践"
     ]
   },
   {
@@ -47,28 +56,7 @@
     "slug": "graphrag_qwen",
     "type": "blog",
     "categories": [
-      "开源项目实战"
-    ]
-  },
-  {
-    "title": "K8s 挂载 SQLite 单文件踩坑记",
-    "description": "在 Kubernetes 环境中挂载 SQLite 单文件时连续遭遇两个经典陷阱",
-    "date": "2026-03-18T00:00:00.000Z",
-    "slug": "k8s-sqlite-hostpath",
-    "type": "blog",
-    "categories": [
-      "DevOps"
-    ]
-  },
-  {
-    "title": "我是怎么降低论文的AIGC率",
-    "description": "分享使用AI辅助降低论文AIGC率的实操经验和完整提示词",
-    "date": "2026-04-24T00:00:00.000Z",
-    "slug": "reduce-paper-aigc-rate",
-    "type": "blog",
-    "categories": [
-      "AI实践",
-      "论文写作"
+      "前沿实践"
     ]
   },
   {
@@ -78,29 +66,17 @@
     "slug": "jwt",
     "type": "blog",
     "categories": [
-      "Web开发"
+      "前沿实践"
     ]
   },
   {
-    "title": "第二个开源项目复盘 - ViewRAG",
-    "description": "记录第二个开源项目 ViewRAG 的开发历程，探索 AI 编程时代的架构设计、需求表达与验收实践",
-    "date": "2026-04-10T00:00:00.000Z",
-    "slug": "second-open-source-project-review-viewrag",
+    "title": "K8s 挂载 SQLite 单文件踩坑记",
+    "description": "在 Kubernetes 环境中挂载 SQLite 单文件时连续遭遇两个经典陷阱",
+    "date": "2026-03-18T00:00:00.000Z",
+    "slug": "k8s-sqlite-hostpath",
     "type": "blog",
     "categories": [
-      "开源项目",
-      "AI编程"
-    ]
-  },
-  {
-    "title": "\"牛马\"的自我修养",
-    "description": "关于职场中如何培养主人翁意识，将个人成长与公司战略巧妙结合的思考",
-    "date": "2026-03-20T00:00:00.000Z",
-    "slug": "self-cultivation-of-niuma",
-    "type": "blog",
-    "categories": [
-      "职场思考",
-      "个人成长"
+      "前沿实践"
     ]
   },
   {
@@ -110,7 +86,37 @@
     "slug": "tmux-cheat-sheet",
     "type": "blog",
     "categories": [
-      "工具"
+      "前沿实践"
+    ]
+  },
+  {
+    "title": "第二个开源项目复盘 - ViewRAG",
+    "description": "记录第二个开源项目 ViewRAG 的开发历程，探索 AI 编程时代的架构设计、需求表达与验收实践",
+    "date": "2026-04-10T00:00:00.000Z",
+    "slug": "second-open-source-project-review-viewrag",
+    "type": "blog",
+    "categories": [
+      "前沿实践"
+    ]
+  },
+  {
+    "title": "我是怎么降低论文的AIGC率",
+    "description": "分享使用AI辅助降低论文AIGC率的实操经验和完整提示词",
+    "date": "2026-04-24T00:00:00.000Z",
+    "slug": "reduce-paper-aigc-rate",
+    "type": "blog",
+    "categories": [
+      "前沿实践"
+    ]
+  },
+  {
+    "title": "\"牛马\"的自我修养",
+    "description": "关于职场中如何培养主人翁意识，将个人成长与公司战略巧妙结合的思考",
+    "date": "2026-03-20T00:00:00.000Z",
+    "slug": "self-cultivation-of-niuma",
+    "type": "blog",
+    "categories": [
+      "个人心法"
     ]
   },
   {
@@ -120,13 +126,26 @@
     "slug": "vllm_inference_vram",
     "type": "blog",
     "categories": [
-      "模型推理"
+      "前沿实践"
+    ]
+  },
+  {
+    "title": "TinyAISearch",
+    "description": "TinyAISearch 是一个轻量但强大的 AI 搜索项目，为你完整揭示从智能搜索规划、网页爬取、内容召回到流式问答的 RAG 全链路。",
+    "date": "2026-07-19T09:42:19.017Z",
+    "slug": "tiny-ai-search",
+    "type": "project",
+    "tags": [
+      "Python",
+      "LangChain",
+      "FastAPI",
+      "AI"
     ]
   },
   {
     "title": "ViewRAG",
     "description": "基于 RAG 的 PDF 智能解析系统，支持图片和表格精准召回、引用溯源、图文并茂问答",
-    "date": "2026-05-18T13:02:42.648Z",
+    "date": "2026-07-19T09:42:19.017Z",
     "slug": "viewrag-pdf-rag",
     "type": "project",
     "tags": [
@@ -136,19 +155,6 @@
       "FastAPI",
       "pgvector",
       "LLM"
-    ]
-  },
-  {
-    "title": "TinyAISearch",
-    "description": "TinyAISearch 是一个轻量但强大的 AI 搜索项目，为你完整揭示从智能搜索规划、网页爬取、内容召回到流式问答的 RAG 全链路。",
-    "date": "2026-05-18T13:02:42.648Z",
-    "slug": "tiny-ai-search",
-    "type": "project",
-    "tags": [
-      "Python",
-      "LangChain",
-      "FastAPI",
-      "AI"
     ]
   }
 ]

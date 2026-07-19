@@ -4,7 +4,7 @@ slug: clash-server-proxy-guide
 date: 2026-05-13
 image: ./images/cover.jpg
 description: 通过 SSH 端口转发 + 服务器 Clash 中转，实现外网访问加速与智能分流的全流程指南，含端口冲突排查、yacd 面板配置、浏览器分流插件设置等排坑经验
-categories: [技术教程, 网络工具]
+categories: [前沿实践]
 featured: false
 ---
 
@@ -107,4 +107,3 @@ Host clash-proxy
 浏览器 $\rightarrow$ `Zero Omega` $\rightarrow$ `clash-server (7891)` $\rightarrow$ `Xshell 隧道` $\rightarrow$ `服务器 Clash` $\rightarrow$ 判定为国内 $\rightarrow$ **直连返回**。
 2. **访问国外网站 (如 ChatGPT)**：
 浏览器 $\rightarrow$ `Zero Omega` $\rightarrow$ `clash-server (7891)` $\rightarrow$ `Xshell 隧道` $\rightarrow$ `服务器 Clash` $\rightarrow$ 命中代理规则 $\rightarrow$ 走**代理节点** $\rightarrow$ **极速响应**。
-
