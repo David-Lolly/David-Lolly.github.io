@@ -192,7 +192,7 @@ export default function BlogPage() {
                   />
                 </div>
 
-                <div className="p-5 flex flex-col h-[200px]">
+                <div className="p-5 flex flex-col h-44">
                   <div className="mb-3">
                     {article.categories && article.categories.length > 0 && (
                       <span className="inline-block px-3 py-1.5 text-xs font-semibold bg-accent-yellow/30 text-[rgb(133,77,14)] dark:text-[rgb(251,191,36)] rounded-md border border-accent-yellow/40">
@@ -201,11 +201,9 @@ export default function BlogPage() {
                     )}
                   </div>
 
-                  <h3 className="text-lg font-serif font-bold mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                  <h3 className="min-h-14 text-lg font-serif font-bold group-hover:text-primary transition-colors line-clamp-2">
                     {article.title}
                   </h3>
-
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-4 line-clamp-2 flex-grow">{article.description}</p>
 
                   <div className="flex items-center justify-between text-xs text-muted-foreground mt-auto">
                     <div className="flex items-center gap-1">
