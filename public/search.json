@@ -30,13 +30,13 @@
     ]
   },
   {
-    "title": "端口映射：Empty reply from server",
-    "description": "Xshell端口映射报错：Empty reply from server的排查指南。",
-    "date": "2025-12-03T00:00:00.000Z",
-    "slug": "empty_reply_from_server",
+    "title": "CliProxyAPI Codex 认证与额度查询失败解决方案",
+    "description": "解决 CliProxyAPI 在 Windows 下 Codex 认证地区不支持、认证成功后额度获取失败等代理问题。",
+    "date": "2026-07-12T00:00:00.000Z",
+    "slug": "cli-proxy-api",
     "type": "blog",
     "categories": [
-      "前沿实践"
+      "个人心法"
     ]
   },
   {
@@ -44,6 +44,16 @@
     "description": "在Linux系统服务器上安装Clash代理服务指南。",
     "date": "2025-11-30T00:00:00.000Z",
     "slug": "clash_for_linux",
+    "type": "blog",
+    "categories": [
+      "前沿实践"
+    ]
+  },
+  {
+    "title": "端口映射：Empty reply from server",
+    "description": "Xshell端口映射报错：Empty reply from server的排查指南。",
+    "date": "2025-12-03T00:00:00.000Z",
+    "slug": "empty_reply_from_server",
     "type": "blog",
     "categories": [
       "前沿实践"
@@ -100,16 +110,6 @@
     ]
   },
   {
-    "title": "Tmux 常用操作指南",
-    "description": "详细介绍 tmux 的会话管理、窗口管理、面板管理等常用操作，包含实用的快捷键指南。",
-    "date": "2026-03-15T00:00:00.000Z",
-    "slug": "tmux-cheat-sheet",
-    "type": "blog",
-    "categories": [
-      "前沿实践"
-    ]
-  },
-  {
     "title": "\"牛马\"的自我修养",
     "description": "关于职场中如何培养主人翁意识，将个人成长与公司战略巧妙结合的思考",
     "date": "2026-03-20T00:00:00.000Z",
@@ -117,6 +117,16 @@
     "type": "blog",
     "categories": [
       "个人心法"
+    ]
+  },
+  {
+    "title": "Tmux 常用操作指南",
+    "description": "详细介绍 tmux 的会话管理、窗口管理、面板管理等常用操作，包含实用的快捷键指南。",
+    "date": "2026-03-15T00:00:00.000Z",
+    "slug": "tmux-cheat-sheet",
+    "type": "blog",
+    "categories": [
+      "前沿实践"
     ]
   },
   {
@@ -130,9 +140,22 @@
     ]
   },
   {
+    "title": "TinyAISearch",
+    "description": "TinyAISearch 是一个轻量但强大的 AI 搜索项目，为你完整揭示从智能搜索规划、网页爬取、内容召回到流式问答的 RAG 全链路。",
+    "date": "2026-07-20T02:50:43.958Z",
+    "slug": "tiny-ai-search",
+    "type": "project",
+    "tags": [
+      "Python",
+      "LangChain",
+      "FastAPI",
+      "AI"
+    ]
+  },
+  {
     "title": "ViewRAG",
     "description": "基于 RAG 的 PDF 智能解析系统，支持图片和表格精准召回、引用溯源、图文并茂问答",
-    "date": "2026-07-19T09:52:43.661Z",
+    "date": "2026-07-20T02:50:43.958Z",
     "slug": "viewrag-pdf-rag",
     "type": "project",
     "tags": [
@@ -142,19 +165,6 @@
       "FastAPI",
       "pgvector",
       "LLM"
-    ]
-  },
-  {
-    "title": "TinyAISearch",
-    "description": "TinyAISearch 是一个轻量但强大的 AI 搜索项目，为你完整揭示从智能搜索规划、网页爬取、内容召回到流式问答的 RAG 全链路。",
-    "date": "2026-07-19T09:52:43.661Z",
-    "slug": "tiny-ai-search",
-    "type": "project",
-    "tags": [
-      "Python",
-      "LangChain",
-      "FastAPI",
-      "AI"
     ]
   }
 ]

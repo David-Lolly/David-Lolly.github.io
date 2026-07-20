@@ -1,0 +1,186 @@
+
+---
+title: CliProxyAPI Codex 认证与额度查询失败解决方案
+date: 2026-07-12
+slug: cli-proxy-api
+description: 解决 CliProxyAPI 在 Windows 下 Codex 认证地区不支持、认证成功后额度获取失败等代理问题。
+image: ./images/cover.png
+categories: [个人心法]
+featured: false
+---
+
+# Windows 下 CliProxyAPI 完成 Codex 认证与额度查询避坑指南
+
+在 Windows 使用 CliProxyAPI 登录 Codex 时，最常见的问题是：
+
+> 浏览器走了代理，不代表 `cli-proxy-api.exe` 也走了代理。
+
+典型表现有两种：
+
+```text
+unsupported_country_region_territory
+````
+
+或者认证成功后，额度页面提示：
+
+```text
+额度获取失败：request failed
+```
+## config.yaml 关键配置
+
+```yaml
+proxy-url: "http://127.0.0.1:7897" # 替换为你的代理地址
+```
+
+下面给出最直接的解决步骤。
+
+## 1. 确认本地代理端口可用
+
+假设 Clash Verge 的代理端口是 `7897`，在 CMD 中执行：
+
+```cmd
+curl -x http://127.0.0.1:7897 https://api.ipify.org
+```
+
+只要能够返回代理节点的出口 IP，说明 `7897` 端口可用。
+
+不要只执行：
+
+```cmd
+curl https://ipinfo.io
+```
+
+因为不显式指定代理时，CMD 可能仍然走国内网络。
+
+## 2. 在 config.yaml 中配置代理
+
+打开 CliProxyAPI 目录中的 `config.yaml`，找到：
+
+```yaml
+proxy-url: ""
+```
+
+修改为：
+
+```yaml
+proxy-url: "http://127.0.0.1:7897"
+```
+
+如果使用的是 SOCKS5 代理端口，可以写成：
+
+```yaml
+proxy-url: "socks5://127.0.0.1:7897"
+```
+
+保存配置后，必须完全关闭并重新启动：
+
+```text
+cli-proxy-api.exe
+```
+
+不需要开启 TUN 模式，也不要只依赖 Clash 的系统代理或全局模式。CliProxyAPI 自带的 `proxy-url` 配置更加可靠。
+
+## 3. 完成 Codex OAuth 认证
+
+进入 CliProxyAPI 管理页面：
+
+```text
+OAuth 登录 → 开始 Codex 登录
+```
+
+在浏览器中完成 OpenAI 授权。
+
+浏览器出现：
+
+```text
+Authentication successful!
+```
+
+只能说明浏览器回调成功。
+
+还需要检查 CliProxyAPI 控制台是否出现：
+
+```text
+Authentication successful!
+Token saved to C:\Users\用户名\.cli-proxy-api\codex-账号.json
+```
+
+看到 `Token saved` 才表示：
+
+* OAuth 授权成功
+* 授权码已经换取 Token
+* 认证文件已经保存
+
+如果出现：
+
+```text
+unsupported_country_region_territory
+```
+
+说明 CliProxyAPI 请求仍然使用了国内出口 IP，需要重新检查 `proxy-url`。
+
+## 4. 查看 Codex 额度
+
+认证成功后进入：
+
+```text
+配额管理 → Codex 额度 → 刷新额度
+```
+
+如果能够正常显示额度和重置时间，说明代理、认证和上游请求均已正常。
+
+如果出现：
+
+```text
+额度获取失败：request failed
+```
+
+同时日志中出现：
+
+```text
+502 | POST "/v0/management/api-call"
+```
+
+通常说明 CliProxyAPI 查询额度时没有正确连接到上游服务。
+
+重点检查：
+
+```yaml
+proxy-url: "http://127.0.0.1:7897"
+```
+
+并确认修改配置后已经重启程序。
+
+必要时可以临时开启调试日志：
+
+```yaml
+debug: true
+```
+
+排查完成后再改回：
+
+```yaml
+debug: false
+```
+
+## 常见错误判断
+
+| 错误现象                                   | 常见原因                   |
+| -------------------------------------- | ---------------------- |
+| `unsupported_country_region_territory` | CliProxyAPI 使用了国内出口 IP |
+| 浏览器显示认证成功，但没有 `Token saved`            | 浏览器授权成功，但 Token 交换失败   |
+| 已出现 `Token saved`，额度查询返回 `502`         | 查询额度的请求未正确走代理或连接超时     |
+| `/v1/models` 返回 `200`                  | 只能证明本地服务正常，不代表上游服务正常   |
+| Windows 找不到 exe                        | 启动脚本中的文件名或运行目录错误       |
+
+
+
+完整验证流程：
+
+```text
+代理端口测试成功
+→ 控制台出现 Token saved
+→ Codex 额度刷新成功
+→ 实际模型调用成功
+```
+
