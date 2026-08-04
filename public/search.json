@@ -152,7 +152,7 @@
   {
     "title": "TinyAISearch",
     "description": "TinyAISearch 是一个轻量但强大的 AI 搜索项目，为你完整揭示从智能搜索规划、网页爬取、内容召回到流式问答的 RAG 全链路。",
-    "date": "2026-07-31T06:49:15.799Z",
+    "date": "2026-08-03T02:14:42.680Z",
     "slug": "tiny-ai-search",
     "type": "project",
     "tags": [
@@ -165,7 +165,7 @@
   {
     "title": "ViewRAG",
     "description": "基于 RAG 的 PDF 智能解析系统，支持图片和表格精准召回、引用溯源、图文并茂问答",
-    "date": "2026-07-31T06:49:15.799Z",
+    "date": "2026-08-03T02:14:42.680Z",
     "slug": "viewrag-pdf-rag",
     "type": "project",
     "tags": [
