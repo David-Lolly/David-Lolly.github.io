@@ -410,19 +410,27 @@ export default defineConfig({
       ...(data.projects || []).map((project: any) => ({
         title: project.title,
         description: project.description || '',
-        date: new Date().toISOString(), // 项目没有日期，使用当前日期
+        date: project.date,
         slug: project.slug,
         type: 'project' as const,
         tags: project.tags || [],
       })),
-    ]
+    ].sort((a, b) => {
+      const dateDifference = new Date(b.date).getTime() - new Date(a.date).getTime()
+
+      if (dateDifference !== 0) {
+        return dateDifference
+      }
+
+      return `${a.type}:${a.slug}`.localeCompare(`${b.type}:${b.slug}`)
+    })
 
     // 写入搜索索引文件到 public 目录
     const publicDir = path.join(process.cwd(), 'public')
     await fs.mkdir(publicDir, { recursive: true })
     await fs.writeFile(
       path.join(publicDir, 'search.json'),
-      JSON.stringify(searchIndex, null, 2)
+      `${JSON.stringify(searchIndex, null, 2)}\n`
     )
 
     console.log(`✅ 已生成搜索索引，包含 ${searchIndex.length} 个条目`)

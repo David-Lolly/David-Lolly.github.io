@@ -4,6 +4,10 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --font-sans-en: "Inter Variable";
+  --font-sans-sc: "Noto Sans SC Variable";
+  --font-serif-sc: "Noto Serif SC Variable";
+
   /* Updated color system to match design proposal with warm beige palette */
   /* Main colors - Warm beige theme */
   --bg-primary: 245 245 213;
