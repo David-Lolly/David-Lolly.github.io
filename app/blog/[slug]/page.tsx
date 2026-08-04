@@ -5,9 +5,9 @@ import { BlogDetail } from "@/components/blog-detail"
 import "katex/dist/katex.min.css"
 
 interface BlogPostPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export async function generateStaticParams() {

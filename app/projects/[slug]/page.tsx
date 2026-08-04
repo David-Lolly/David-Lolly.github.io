@@ -5,9 +5,9 @@ import { ProjectDetail } from "@/components/project-detail"
 import "katex/dist/katex.min.css"
 
 interface ProjectPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export async function generateStaticParams() {

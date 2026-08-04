@@ -22,14 +22,14 @@ export function TimelineNode({ item, onOpenImage }: { item: TimelineItem; onOpen
   return (
     <div
       className={cn(
-        "relative rounded-[2rem] border bg-white/45 p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-white/70 dark:bg-[rgb(24,24,27)] dark:hover:bg-muted",
+        "relative rounded-2xl border bg-white/45 p-4 shadow-sm transition duration-200 motion-safe:md:hover:-translate-y-0.5 hover:bg-white/70 sm:rounded-[2rem] sm:p-5 dark:bg-[rgb(24,24,27)] dark:hover:bg-muted",
         item.important
           ? "border-[#8b6f47]/30 bg-[#fff8d6]/55 shadow-[0_18px_58px_rgba(69,52,25,0.10)] dark:border-border dark:shadow-lg"
           : "border-stone-900/10 dark:border-border"
       )}
     >
       {item.important && (
-        <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-[linear-gradient(135deg,rgba(139,111,71,0.10),transparent_46%)] dark:bg-[linear-gradient(135deg,rgba(255,255,255,0.035),transparent_44%)]" />
+        <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[linear-gradient(135deg,rgba(139,111,71,0.10),transparent_46%)] sm:rounded-[2rem] dark:bg-[linear-gradient(135deg,rgba(255,255,255,0.035),transparent_44%)]" />
       )}
       <div
         className={cn(

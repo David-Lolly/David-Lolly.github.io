@@ -40,12 +40,12 @@ export function AboutTimeline({ timeline, onOpenImage }: AboutTimelineProps) {
         title="成长历程"
         desc="高中毕业之后，我所做的一些事情以及获得的成就"
       />
-      <div className="space-y-12">
+      <div className="space-y-9 sm:space-y-12">
         {sortedGroups.map((year) => (
-          <section key={year} className="grid gap-6 md:grid-cols-[8rem_1fr]">
+          <section key={year} className="grid gap-3 sm:gap-6 md:grid-cols-[8rem_1fr]">
             <div>
               <div
-                className="sticky top-40 text-5xl font-black leading-none tracking-[-0.06em] text-stone-900/20 md:text-right dark:text-white/30"
+                className="text-4xl font-black leading-none tracking-[-0.06em] text-stone-900/20 md:sticky md:top-40 md:text-right md:text-5xl dark:text-white/30"
                 style={{ fontFamily: "var(--font-numeric-serif)" }}
               >
                 {year}

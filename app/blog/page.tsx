@@ -94,10 +94,10 @@ export default function BlogPage() {
     <div className="min-h-screen">
       <Header />
 
-      <main className="max-w-6xl mx-auto px-6 py-12">
-        <div className="mb-12">
-          <h1 className="text-4xl font-serif font-bold mb-4">博客文章</h1>
-          <p className="text-lg text-muted-foreground leading-relaxed">分享技术见解、学习笔记和开发经验</p>
+      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-12">
+        <div className="mb-8 sm:mb-12">
+          <h1 className="mb-3 text-3xl font-serif font-bold sm:mb-4 sm:text-4xl">博客文章</h1>
+          <p className="text-base text-muted-foreground leading-relaxed sm:text-lg">分享技术见解、学习笔记和开发经验</p>
         </div>
 
         <div className="mb-8 flex flex-col sm:flex-row justify-between gap-4">
@@ -115,7 +115,7 @@ export default function BlogPage() {
             />
           </div>
 
-          <div className="flex items-center gap-3 relative z-30">
+          <div className="relative z-30 hidden items-center gap-3 sm:flex">
             <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">每页显示:</span>
             <div ref={dropdownRef} className="relative flex items-center">
               <button
@@ -158,12 +158,12 @@ export default function BlogPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-8">
+        <div className="-mx-4 mb-6 flex gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:mb-8 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
           {allCategories.map((category) => (
             <Badge
               key={category}
               variant={category === selectedCategory ? "default" : "outline"}
-              className={`cursor-pointer transition-colors ${category === selectedCategory
+              className={`shrink-0 cursor-pointer transition-colors ${category === selectedCategory
                 ? "bg-[rgb(220,200,100)] text-[rgb(92,64,32)]"
                 : ""
                 }`}
@@ -177,22 +177,22 @@ export default function BlogPage() {
           ))}
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
           {currentArticles.map((article) => (
             <Card
               key={article.slug}
               className="overflow-hidden bg-[rgb(250,250,228)] dark:bg-[rgb(24,24,27)] shadow-lg hover:shadow-xl transition-all duration-300 group border-border/60"
             >
               <a href={`/blog/${article.slug}`} className="block">
-                <div className="h-48 overflow-hidden bg-muted">
+                <div className="h-40 overflow-hidden bg-muted sm:h-48">
                   <img
                     src={article.image || "/placeholder.svg"}
                     alt={article.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover transition-transform duration-300 motion-safe:md:group-hover:scale-105"
                   />
                 </div>
 
-                <div className="p-5 flex flex-col h-44">
+                <div className="flex min-h-40 flex-col p-4 sm:h-44 sm:p-5">
                   <div className="mb-3">
                     {article.categories && article.categories.length > 0 && (
                       <span className="inline-block px-3 py-1.5 text-xs font-semibold bg-accent-yellow/30 text-[rgb(133,77,14)] dark:text-[rgb(251,191,36)] rounded-md border border-accent-yellow/40">
@@ -201,7 +201,7 @@ export default function BlogPage() {
                     )}
                   </div>
 
-                  <h3 className="min-h-14 text-lg font-serif font-bold group-hover:text-primary transition-colors line-clamp-2">
+                  <h3 className="text-lg font-serif font-bold group-hover:text-primary transition-colors line-clamp-2 sm:min-h-14">
                     {article.title}
                   </h3>
 
@@ -228,12 +228,12 @@ export default function BlogPage() {
               size="icon"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="h-8 w-8"
+              className="h-11 w-11 sm:h-8 sm:w-8"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
 
-            <div className="flex items-center gap-1">
+            <div className="hidden items-center gap-1 sm:flex">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <Button
                   key={page}
@@ -247,12 +247,16 @@ export default function BlogPage() {
               ))}
             </div>
 
+            <span className="px-3 text-sm font-medium sm:hidden">
+              {currentPage} / {totalPages}
+            </span>
+
             <Button
               variant="outline"
               size="icon"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="h-8 w-8"
+              className="h-11 w-11 sm:h-8 sm:w-8"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

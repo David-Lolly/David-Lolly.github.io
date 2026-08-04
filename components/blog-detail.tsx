@@ -59,8 +59,8 @@ export function BlogDetail({ post, prevPost, nextPost }: BlogDetailProps) {
   const markdownPayload = buildMarkdownPayload(post)
 
   return (
-    <main className="max-w-4xl mx-auto px-6 py-12">
-      <Button variant="ghost" className="mb-6 -ml-2" asChild>
+    <main className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-12">
+      <Button variant="ghost" className="mb-5 min-h-11 -ml-2 sm:mb-6" asChild>
         <a href="/blog">
           <ArrowLeft className="h-4 w-4 mr-2" />
           返回博客列表
@@ -69,8 +69,8 @@ export function BlogDetail({ post, prevPost, nextPost }: BlogDetailProps) {
 
       <article>
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="mb-4 flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
                 <span>{formatDate(post.date)}</span>
@@ -82,12 +82,12 @@ export function BlogDetail({ post, prevPost, nextPost }: BlogDetailProps) {
             </div>
           </div>
 
-          <h1 className="text-4xl font-serif font-bold mb-4 leading-tight">
+          <h1 className="mb-4 text-3xl font-serif font-bold leading-tight sm:text-4xl">
             {post.title}
           </h1>
 
           {post.description && (
-            <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+            <p className="mb-6 text-base text-muted-foreground leading-relaxed sm:text-lg">
               {post.description}
             </p>
           )}
@@ -110,8 +110,8 @@ export function BlogDetail({ post, prevPost, nextPost }: BlogDetailProps) {
           </div>
           <div>
             <h2 className="text-xl font-sans font-semibold mb-6">推荐阅读</h2>
-            <div className="grid grid-cols-2 gap-4">
-              <Card className="p-5 hover:shadow-md transition-shadow">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Card className="p-4 hover:shadow-md transition-shadow sm:p-5">
                 {prevPost ? (
                   <a
                     href={`/blog/${prevPost.slug}`}
@@ -137,7 +137,7 @@ export function BlogDetail({ post, prevPost, nextPost }: BlogDetailProps) {
                 )}
               </Card>
 
-              <Card className="p-5 hover:shadow-md transition-shadow">
+              <Card className="p-4 hover:shadow-md transition-shadow sm:p-5">
                 <div className="text-right">
                   {nextPost ? (
                     <a
@@ -183,7 +183,7 @@ export function BlogDetail({ post, prevPost, nextPost }: BlogDetailProps) {
         <p className="text-sm text-muted-foreground">
           欢迎留下你的想法和见解，使用 GitHub 账号登录即可参与讨论
         </p>
-        <div className="bg-card rounded-lg border border-border/60 p-6">
+        <div className="bg-card rounded-lg border border-border/60 p-3 sm:p-6">
           <GiscusComments />
         </div>
       </div>

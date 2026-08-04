@@ -40,7 +40,7 @@ const components = {
   h1: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
     const id = generateId(children)
     return (
-      <h1 id={id} className="text-4xl font-serif font-bold mt-12 mb-4 text-foreground" style={{ lineHeight: 1.2, color: 'rgb(var(--foreground-rgb))' }} {...props}>
+      <h1 id={id} className="mt-9 mb-4 text-3xl font-serif font-bold text-foreground sm:mt-12 sm:text-4xl" style={{ lineHeight: 1.2, color: 'rgb(var(--foreground-rgb))' }} {...props}>
         {children}
       </h1>
     )
@@ -48,7 +48,7 @@ const components = {
   h2: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
     const id = generateId(children)
     return (
-      <h2 id={id} className="text-3xl font-serif font-bold mt-10 mb-5 text-foreground border-b pb-3" style={{ color: 'rgb(var(--foreground-rgb))', borderColor: 'rgb(var(--border))' }} {...props}>
+      <h2 id={id} className="mt-8 mb-4 border-b pb-3 text-2xl font-serif font-bold text-foreground sm:mt-10 sm:mb-5 sm:text-3xl" style={{ color: 'rgb(var(--foreground-rgb))', borderColor: 'rgb(var(--border))' }} {...props}>
         {children}
       </h2>
     )
@@ -56,7 +56,7 @@ const components = {
   h3: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
     const id = generateId(children)
     return (
-      <h3 id={id} className="text-2xl font-serif font-bold mt-8 mb-4 text-foreground" style={{ color: 'rgb(var(--foreground-rgb))' }} {...props}>
+      <h3 id={id} className="mt-7 mb-3 text-xl font-serif font-bold text-foreground sm:mt-8 sm:mb-4 sm:text-2xl" style={{ color: 'rgb(var(--foreground-rgb))' }} {...props}>
         {children}
       </h3>
     )
@@ -77,7 +77,7 @@ const components = {
   ul: ({ children, ...props }: React.HTMLAttributes<HTMLUListElement>) => {
     const childrenArray = React.Children.toArray(children)
     return (
-      <ul className="mb-6 ml-6 space-y-2 list-disc" {...props}>
+      <ul className="mb-6 ml-5 space-y-2 list-disc sm:ml-6" {...props}>
         {childrenArray.map((child, index) => {
           if (React.isValidElement(child)) {
             return React.cloneElement(child, { key: index } as any)
@@ -90,7 +90,7 @@ const components = {
   ol: ({ children, ...props }: React.HTMLAttributes<HTMLOListElement>) => {
     const childrenArray = React.Children.toArray(children)
     return (
-      <ol className="mb-6 ml-6 space-y-2 list-decimal" {...props}>
+      <ol className="mb-6 ml-5 space-y-2 list-decimal sm:ml-6" {...props}>
         {childrenArray.map((child, index) => {
           if (React.isValidElement(child)) {
             return React.cloneElement(child, { key: index } as any)
@@ -229,7 +229,7 @@ const components = {
             {/* 复制按钮 - 固定在可视区域右上角，不随滚动移动 */}
             <button
               onClick={handleCopy}
-              className="absolute opacity-0 group-hover:opacity-100 transition-all duration-200 p-2 rounded hover:bg-white/10 z-10"
+              className="absolute z-10 min-h-11 min-w-11 rounded p-2 opacity-100 transition-all duration-200 hover:bg-white/10 sm:min-h-0 sm:min-w-0 sm:opacity-0 sm:group-hover:opacity-100"
               style={{
                 top: '0.5rem',
                 right: '0.75rem',
@@ -263,7 +263,7 @@ const components = {
                     margin: 0,
                     paddingTop: '0.75rem',    // 可调整：代码距离头部的距离 (默认 0.75rem = 12px)
                     paddingBottom: '1.25rem', // 可调整：代码底部内边距 (默认 1.25rem = 20px)
-                    paddingLeft: '1.5rem',    // 可调整：代码左侧内边距 (默认 1.5rem = 24px)
+                    paddingLeft: '1rem',      // 小屏减少留白，保留代码横向滚动
                     paddingRight: '3.5rem',   // 可调整：代码右侧内边距，为复制按钮留空间 (默认 3.5rem = 56px)
                     backgroundColor: '#2d3748',
                     fontSize: '0.875rem',
@@ -402,7 +402,7 @@ const components = {
   },
   th: ({ children, ...props }: React.HTMLAttributes<HTMLTableCellElement>) => (
     <th
-      className="font-bold text-left px-6 py-4 text-sm"
+      className="whitespace-nowrap px-3 py-3 text-left text-sm font-bold sm:px-6 sm:py-4"
       style={{
         backgroundColor: 'rgb(var(--color-muted))',
         color: 'rgb(var(--foreground-rgb))',
@@ -417,7 +417,7 @@ const components = {
   ),
   td: ({ children, ...props }: React.HTMLAttributes<HTMLTableCellElement>) => (
     <td
-      className="px-6 py-4 text-sm"
+      className="whitespace-nowrap px-3 py-3 text-sm sm:px-6 sm:py-4"
       style={{
         color: 'rgb(var(--foreground-muted-rgb))',
         lineHeight: '1.6',

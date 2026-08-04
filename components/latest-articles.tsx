@@ -19,7 +19,7 @@ export function LatestArticles() {
   }
 
   return (
-    <Card className="p-6 sticky top-24 bg-[rgb(250,250,228)] dark:bg-[rgb(24,24,27)]">
+    <Card className="p-4 sm:p-6 lg:sticky lg:top-24 bg-[rgb(250,250,228)] dark:bg-[rgb(24,24,27)]">
       <div className="flex items-center gap-2">
         <Clock className="h-4.5 w-4.5 text-primary" />
         <h3 className="text-base font-serif font-semibold">最新文章</h3>

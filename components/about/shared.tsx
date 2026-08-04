@@ -6,7 +6,7 @@ export function PaperCard({ children, className = "" }: { children: React.ReactN
   return (
     <div
       className={cn(
-        "rounded-[2rem] border border-stone-900/10 bg-[#fffbe6]/75 p-6 shadow-[0_18px_60px_rgba(69,52,25,0.09)] backdrop-blur dark:border-border dark:bg-[rgb(24,24,27)] dark:shadow-lg",
+        "rounded-2xl border border-stone-900/10 bg-[#fffbe6]/75 p-4 shadow-[0_18px_60px_rgba(69,52,25,0.09)] backdrop-blur sm:rounded-[2rem] sm:p-6 dark:border-border dark:bg-[rgb(24,24,27)] dark:shadow-lg",
         className
       )}
     >

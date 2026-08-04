@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/inter/wght.css";
 import "./globals.css";
 import { Toaster } from "sonner";
@@ -17,6 +17,16 @@ export const metadata: Metadata = {
       "baidu-site-verification": "codeva-G4kFwFkkNI",
     },
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f5d5" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
 };
 
 export default function RootLayout({

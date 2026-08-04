@@ -566,11 +566,6 @@ export default function YousiUniverse() {
       --mark-bg: rgba(255, 255, 255, 0.3);
     }
 
-    body {
-      margin: 0;
-      overflow: hidden;
-    }
-
     /* 自定义呼吸动画：更慢更柔和 */
     @keyframes slowPulse {
       0%, 100% { opacity: 1; }
@@ -588,7 +583,7 @@ export default function YousiUniverse() {
 
     return (
         <div
-            className="min-h-screen w-full relative theme-container transition-colors duration-[800ms]"
+            className="relative h-[100dvh] min-h-[32rem] w-full overflow-hidden theme-container transition-colors duration-[800ms]"
             ref={containerRef}
             onWheel={handleScroll}
             onTouchStart={onTouchStart}
@@ -603,15 +598,17 @@ export default function YousiUniverse() {
             <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full z-0" style={{ pointerEvents: 'none' }} />
 
             {/* 居中文本内容区 */}
-            <main className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 pt-[80px]">
-                <div className="w-full max-w-3xl h-[70%] px-8 relative flex flex-col justify-center">
+            <main className="pointer-events-none absolute inset-x-0 bottom-0 top-16 z-10 flex items-center justify-center">
+                <div className="relative flex h-full w-full max-w-3xl flex-col justify-center px-4 pb-20 pt-16 sm:h-[70%] sm:px-8 sm:pb-0 sm:pt-0">
 
-                    <div className="absolute top-0 right-8 pointer-events-auto select-none">
+                    <div className="pointer-events-auto absolute right-4 top-3 select-none sm:right-8 sm:top-0">
                         <div className="flex items-center gap-3 relative">
                             {/* 去除了原生提示弹窗，改用自定义精美气泡 Tooltip */}
-                            <div
+                            <button
+                                type="button"
                                 onClick={handleTogglePlay}
-                                className={`group relative flex items-center gap-1.5 cursor-pointer transition-all hover:text-[var(--text-main)] ${isCurrentlyAuto
+                                aria-label={isCurrentlyAuto ? "暂停星轨自动巡航" : "恢复星轨自动巡航"}
+                                className={`group relative flex min-h-11 items-center gap-1.5 cursor-pointer transition-all hover:text-[var(--text-main)] ${isCurrentlyAuto
                                     ? 'opacity-100 animate-slow-pulse text-[var(--text-main)]'
                                     : 'opacity-60 text-[var(--text-sub)] hover:opacity-100'
                                     }`}
@@ -638,7 +635,7 @@ export default function YousiUniverse() {
                                         style={{ borderBottomColor: 'var(--border-color)' }}
                                     ></div>
                                 </div>
-                            </div>
+                            </button>
 
                             <div className="w-[1px] h-3 bg-[var(--border-color)]"></div>
 
@@ -646,7 +643,9 @@ export default function YousiUniverse() {
                                 ? 'text-[var(--text-main)] opacity-100'
                                 : `text-[var(--text-sub)] ${showHint ? 'opacity-100' : 'opacity-60'}`
                                 }`}>
-                                <span className={isCurrentlyAuto ? "" : "animate-bounce"}>↓</span> 滚动穿梭
+                                <span className={isCurrentlyAuto ? "" : "animate-bounce"}>↓</span>
+                                <span className="hidden sm:inline">滚动穿梭</span>
+                                <span className="sm:hidden">上下滑动</span>
                             </div>
                         </div>
                     </div>
@@ -659,18 +658,20 @@ export default function YousiUniverse() {
                             return (
                                 <div
                                     key={item.id}
-                                    className="absolute w-[90%] md:w-[100%] transition-all duration-1000 ease-in-out pointer-events-auto"
+                                    className="pointer-events-auto absolute left-4 w-[calc(100%_-_2rem)] transition-all duration-1000 ease-in-out sm:left-8 sm:w-[calc(100%_-_4rem)] md:left-0 md:w-full"
                                     style={{
                                         opacity: isActive ? 1 : 0,
                                         transform: isActive ? 'translateY(0)' : `translateY(${idx < activeIndex ? '-40px' : '40px'})`,
                                         visibility: isActive ? 'visible' : 'hidden',
                                     }}
                                 >
-                                    <div className="text-6xl font-serif leading-none mb-4 opacity-30 select-none" style={{ color: 'var(--accent-yellow)' }}>"</div>
-                                    <h2 className="text-2xl md:text-3xl font-serif leading-relaxed tracking-wide mb-8 drop-shadow-md">{item.content}</h2>
+                                    <div className="mb-2 text-5xl font-serif leading-none opacity-30 select-none sm:mb-4 sm:text-6xl" style={{ color: 'var(--accent-yellow)' }}>"</div>
+                                    <h2 className="mb-5 text-xl font-serif leading-relaxed tracking-wide drop-shadow-md sm:mb-8 sm:text-2xl md:text-3xl">{item.content}</h2>
                                     <div
-                                        className="p-5 rounded-lg backdrop-blur-sm border transition-colors duration-500"
+                                        className="max-h-[38dvh] overflow-y-auto rounded-lg border p-4 backdrop-blur-sm transition-colors duration-500 sm:max-h-none sm:p-5"
                                         style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--border-color)' }}
+                                        onTouchStart={(event) => event.stopPropagation()}
+                                        onTouchEnd={(event) => event.stopPropagation()}
                                     >
                                         <p className="text-sm md:text-base leading-relaxed opacity-90 mb-4">{item.note}</p>
                                         <div className="flex flex-wrap items-center justify-between gap-4 border-t pt-4" style={{ borderColor: 'var(--border-color)' }}>
@@ -679,7 +680,7 @@ export default function YousiUniverse() {
                                                 <span className="w-1 h-1 rounded-full" style={{ backgroundColor: 'var(--text-sub)' }}></span>
                                                 <span style={{ color: 'var(--accent-blue)' }}>{item.tag}</span>
                                             </div>
-                                            <div className="text-[10px] font-mono opacity-40">
+                                            <div className="hidden text-[10px] font-mono opacity-40 sm:block">
                                                 星轨坐标: {(idx * (360 / thoughtsData.length)).toFixed(1)}° / 第三行星
                                             </div>
                                         </div>
@@ -687,6 +688,30 @@ export default function YousiUniverse() {
                                 </div>
                             );
                         })
+                    )}
+
+                    {thoughtsData.length > 1 && (
+                        <div className="pointer-events-auto absolute inset-x-4 bottom-4 flex items-center justify-between sm:hidden">
+                            <button
+                                type="button"
+                                onClick={() => handleScroll({ deltaY: -100 } as React.WheelEvent)}
+                                className="min-h-11 rounded-full border px-4 text-sm font-semibold backdrop-blur-sm"
+                                style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--border-color)' }}
+                                aria-label="查看上一条游思"
+                            >
+                                ← 上一条
+                            </button>
+                            <span className="text-xs font-mono opacity-60">{activeIndex + 1} / {thoughtsData.length}</span>
+                            <button
+                                type="button"
+                                onClick={() => handleScroll({ deltaY: 100 } as React.WheelEvent)}
+                                className="min-h-11 rounded-full border px-4 text-sm font-semibold backdrop-blur-sm"
+                                style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--border-color)' }}
+                                aria-label="查看下一条游思"
+                            >
+                                下一条 →
+                            </button>
+                        </div>
                     )}
                 </div>
             </main>
