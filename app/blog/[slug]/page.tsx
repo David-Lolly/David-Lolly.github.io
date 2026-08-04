@@ -2,6 +2,7 @@ import { Header } from "@/components/header"
 import { posts } from "#site/content"
 import { notFound } from "next/navigation"
 import { BlogDetail } from "@/components/blog-detail"
+import "katex/dist/katex.min.css"
 
 interface BlogPostPageProps {
   params: {

@@ -5,8 +5,8 @@
 
 :root {
   --font-sans-en: "Inter Variable";
-  --font-sans-sc: "Noto Sans SC Variable";
-  --font-serif-sc: "Noto Serif SC Variable";
+  --font-sans-sc: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", Arial, sans-serif;
+  --font-serif-sc: "Songti SC", STSong, SimSun, "Noto Serif CJK SC", "Source Han Serif SC", serif;
 
   /* Updated color system to match design proposal with warm beige palette */
   /* Main colors - Warm beige theme */

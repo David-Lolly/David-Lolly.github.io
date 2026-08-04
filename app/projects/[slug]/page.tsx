@@ -2,6 +2,7 @@ import { Header } from "@/components/header"
 import { projects } from "#site/content"
 import { notFound } from "next/navigation"
 import { ProjectDetail } from "@/components/project-detail"
+import "katex/dist/katex.min.css"
 
 interface ProjectPageProps {
   params: {

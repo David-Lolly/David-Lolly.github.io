@@ -3,13 +3,17 @@
 import { Moon, Search, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
-import { SearchDialog } from "@/components/search-dialog"
+import dynamic from "next/dynamic"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
 
+const SearchDialog = dynamic(
+  () => import("@/components/search-dialog").then((module) => module.SearchDialog),
+  { ssr: false }
+)
+
 export function Header() {
   const [searchOpen, setSearchOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
 
@@ -32,10 +36,6 @@ export function Header() {
 
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [])
-
-  useEffect(() => {
-    setMounted(true)
   }, [])
 
   return (
@@ -114,7 +114,7 @@ export function Header() {
       </header>
 
       {/* Search Dialog */}
-      <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
+      {searchOpen && <SearchDialog open onOpenChange={setSearchOpen} />}
     </>
   )
 }

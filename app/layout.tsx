@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import "@fontsource-variable/inter/wght.css";
-import "@fontsource-variable/noto-sans-sc/wght.css";
-import "@fontsource-variable/noto-serif-sc/wght.css";
 import "./globals.css";
-import "katex/dist/katex.min.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 

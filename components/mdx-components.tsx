@@ -314,6 +314,8 @@ const components = {
     <img
       alt={alt}
       src={src}
+      loading="lazy"
+      decoding="async"
       className="rounded-lg my-6 w-full"
       style={{ boxShadow: 'var(--shadow-md)' }}
       {...props}

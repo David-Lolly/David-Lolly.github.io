@@ -31,7 +31,14 @@ export function ProfileCard() {
       {/* Avatar */}
       <div className="flex flex-col items-center mb-6">
         <div className="w-32 h-32 rounded-full overflow-hidden mb-4 ring-4 ring-primary/10">
-          <img src={avatar || "/static/images/basic_info/avatar.jpg"} alt={name || "用户"} className="w-full h-full object-cover" />
+          <img
+            src={avatar || "/static/images/basic_info/avatar.jpg"}
+            alt={name || "用户"}
+            width={128}
+            height={128}
+            fetchPriority="high"
+            className="w-full h-full object-cover"
+          />
         </div>
         <h2 className="text-2xl font-serif font-bold text-center mb-2">{name || "未设置姓名"}</h2>
         {position && (
