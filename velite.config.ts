@@ -225,10 +225,7 @@ export default defineConfig({
       [
         rehypePrettyCode,
         {
-          theme: {
-            light: 'github-light',
-            dark: 'github-dark',
-          },
+          theme: 'github-dark',
           keepBackground: false, // 不保留主题背景，使用自定义样式
           defaultLang: 'plaintext',
         }

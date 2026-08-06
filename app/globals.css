@@ -36,14 +36,13 @@
   --radius-button: 6px;
   --radius-full: 9999px;
 
-  /* Code blocks: GitHub Light-compatible surfaces and readable plain text. */
-  --code-background: #f6f8fa;
-  --code-header-background: #eaeef2;
-  --code-foreground: #24292f;
-  --code-border: #d0d7de;
-  --code-muted: #57606a;
-  --code-scrollbar: rgba(87, 96, 106, 0.42);
-  --code-scrollbar-hover: rgba(87, 96, 106, 0.68);
+  /* Code blocks stay dark in both site themes. */
+  --code-background: #2d3748;
+  --code-header-background: #3d4754;
+  --code-foreground: #f7fafc;
+  --code-muted: #a0aec0;
+  --code-scrollbar: rgba(255, 255, 255, 0.35);
+  --code-scrollbar-hover: rgba(255, 255, 255, 0.55);
 
   /* Standard shadcn color mappings */
   --background: oklch(1 0 0);
@@ -121,13 +120,6 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
-  --code-background: #0d1117;
-  --code-header-background: #161b22;
-  --code-foreground: #e6edf3;
-  --code-border: #30363d;
-  --code-muted: #8b949e;
-  --code-scrollbar: rgba(139, 148, 158, 0.42);
-  --code-scrollbar-hover: rgba(139, 148, 158, 0.7);
 }
 
 @theme inline {
@@ -325,17 +317,11 @@ h6 {
 .code-window-shell {
   overflow: hidden;
   background-color: var(--code-background);
-  border: 1px solid var(--code-border);
-  box-shadow: 0 10px 30px rgb(31 35 40 / 0.12), 0 1px 3px rgb(31 35 40 / 0.08);
-}
-
-.dark .code-window-shell {
-  box-shadow: 0 10px 30px rgb(0 0 0 / 0.28), 0 1px 3px rgb(0 0 0 / 0.18);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.2), 0 1px 3px rgb(0 0 0 / 0.1);
 }
 
 .code-window-header {
   background-color: var(--code-header-background);
-  border-bottom: 1px solid var(--code-border);
 }
 
 .code-window-body,
@@ -353,20 +339,7 @@ h6 {
 }
 
 .code-window-copy:hover {
-  background-color: rgb(31 35 40 / 0.08);
-}
-
-.dark .code-window-copy:hover {
   background-color: rgb(255 255 255 / 0.1);
-}
-
-/* rehype-pretty-code emits both token palettes as CSS variables. */
-.article-content [data-theme~="github-light"] span[style*="--shiki-light"] {
-  color: var(--shiki-light);
-}
-
-.dark .article-content [data-theme~="github-dark"] span[style*="--shiki-dark"] {
-  color: var(--shiki-dark);
 }
 
 /* 代码块滚动条（纵向、横向共用） */
