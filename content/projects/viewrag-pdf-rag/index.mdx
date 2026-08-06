@@ -62,7 +62,7 @@ forks: 4
 
 ## 系统架构
 
-```c
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                       Nginx (8080)                       │
 │          反向代理 + SSE 无缓冲 + 大文件上传               │
@@ -85,7 +85,7 @@ forks: 4
 
 **PDF 处理流水线：**
 
-```c
+```text
 上传 PDF
   → PaddleX API 版式解析（识别文本/图片/表格/公式块）
   → PyMuPDF 按 bbox 裁剪图片 → 上传 MinIO
@@ -96,7 +96,7 @@ forks: 4
 
 **RAG 检索流水线：**
 
-```c
+```text
 用户提问
   → QueryRewrite 问题重写
   → Embedding 向量化查询
@@ -133,7 +133,7 @@ docker compose up -d
 
 ### 3. 访问应用
 
-```c
+```text
 http://localhost:8080
 ```
 
@@ -190,7 +190,7 @@ npm run dev
 
 ## 项目结构
 
-```c
+```text
 ViewRAG/
 ├── docker/                      # Docker 部署配置
 │   ├── mount                    # 容器挂载   

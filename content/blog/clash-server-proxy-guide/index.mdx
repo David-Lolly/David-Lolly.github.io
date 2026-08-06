@@ -64,7 +64,7 @@ ssh -N -f -L 7891:127.0.0.1:7890 -L 9090:127.0.0.1:9091 user@server_ip
 
 若希望免去每次输入长命令的繁琐，可将规则写入本地 `~/.ssh/config` 文件：
 
-```bash
+```ssh-config
 Host clash-proxy
     HostName server_ip
     User user

@@ -36,6 +36,15 @@
   --radius-button: 6px;
   --radius-full: 9999px;
 
+  /* Code blocks: GitHub Light-compatible surfaces and readable plain text. */
+  --code-background: #f6f8fa;
+  --code-header-background: #eaeef2;
+  --code-foreground: #24292f;
+  --code-border: #d0d7de;
+  --code-muted: #57606a;
+  --code-scrollbar: rgba(87, 96, 106, 0.42);
+  --code-scrollbar-hover: rgba(87, 96, 106, 0.68);
+
   /* Standard shadcn color mappings */
   --background: oklch(1 0 0);
   /* Use unified foreground rgb values; keep oklch system removed for simplicity */
@@ -112,6 +121,13 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+  --code-background: #0d1117;
+  --code-header-background: #161b22;
+  --code-foreground: #e6edf3;
+  --code-border: #30363d;
+  --code-muted: #8b949e;
+  --code-scrollbar: rgba(139, 148, 158, 0.42);
+  --code-scrollbar-hover: rgba(139, 148, 158, 0.7);
 }
 
 @theme inline {
@@ -306,10 +322,57 @@ h6 {
   font-family: var(--font-mono);
 }
 
+.code-window-shell {
+  overflow: hidden;
+  background-color: var(--code-background);
+  border: 1px solid var(--code-border);
+  box-shadow: 0 10px 30px rgb(31 35 40 / 0.12), 0 1px 3px rgb(31 35 40 / 0.08);
+}
+
+.dark .code-window-shell {
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.28), 0 1px 3px rgb(0 0 0 / 0.18);
+}
+
+.code-window-header {
+  background-color: var(--code-header-background);
+  border-bottom: 1px solid var(--code-border);
+}
+
+.code-window-body,
+.article-content pre.code-block {
+  background-color: var(--code-background);
+}
+
+.article-content pre.code-block,
+.article-content pre.code-block code {
+  color: var(--code-foreground);
+}
+
+.code-window-copy {
+  color: var(--code-muted);
+}
+
+.code-window-copy:hover {
+  background-color: rgb(31 35 40 / 0.08);
+}
+
+.dark .code-window-copy:hover {
+  background-color: rgb(255 255 255 / 0.1);
+}
+
+/* rehype-pretty-code emits both token palettes as CSS variables. */
+.article-content [data-theme~="github-light"] span[style*="--shiki-light"] {
+  color: var(--shiki-light);
+}
+
+.dark .article-content [data-theme~="github-dark"] span[style*="--shiki-dark"] {
+  color: var(--shiki-dark);
+}
+
 /* 代码块滚动条（纵向、横向共用） */
 .code-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+  scrollbar-color: var(--code-scrollbar) transparent;
 }
 
 .code-scroll::-webkit-scrollbar {
@@ -318,19 +381,19 @@ h6 {
 }
 
 .code-scroll::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: transparent;
   border-radius: 999px;
 }
 
 .code-scroll::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.35);
+  background-color: var(--code-scrollbar);
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 
 .code-scroll::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.55);
+  background-color: var(--code-scrollbar-hover);
 }
 
 .code-scroll::-webkit-scrollbar-corner {

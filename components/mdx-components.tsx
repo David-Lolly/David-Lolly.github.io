@@ -181,21 +181,18 @@ const components = {
     }
 
     return (
-      <div className="relative group my-6">
+      <div className="code-window relative group my-6">
         {/* macOS 风格的窗口容器 */}
         <div
-          className="rounded-xl"
+          className="code-window-shell rounded-xl"
           style={{
-            backgroundColor: '#2d3748',
-            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1)',
             overflow: 'visible',
           }}
         >
           {/* macOS 窗口头部 - 灰色背景覆盖整个宽度 */}
           <div
-            className="flex items-center px-4"
+            className="code-window-header flex items-center px-4"
             style={{
-              backgroundColor: '#3d4754',
               paddingTop: '0.75rem',    // 可调整：头部上内边距 (默认 0.75rem = 12px)
               paddingBottom: '0.75rem', // 可调整：头部下内边距 (默认 0.75rem = 12px)
               width: '100%',            // 灰色背景覆盖整个宽度
@@ -221,19 +218,17 @@ const components = {
           </div>
 
           {/* 代码内容区域的包装容器 */}
-          <div className="relative" style={{
-            backgroundColor: '#2d3748',
+          <div className="code-window-body relative" style={{
             borderBottomLeftRadius: '0.75rem',
             borderBottomRightRadius: '0.75rem',
           }}>
             {/* 复制按钮 - 固定在可视区域右上角，不随滚动移动 */}
             <button
               onClick={handleCopy}
-              className="absolute z-10 min-h-11 min-w-11 rounded p-2 opacity-100 transition-all duration-200 hover:bg-white/10 sm:min-h-0 sm:min-w-0 sm:opacity-0 sm:group-hover:opacity-100"
+              className="code-window-copy absolute z-10 min-h-11 min-w-11 rounded p-2 opacity-100 transition-all duration-200 sm:min-h-0 sm:min-w-0 sm:opacity-0 sm:group-hover:opacity-100"
               style={{
                 top: '0.5rem',
                 right: '0.75rem',
-                color: '#a0aec0',
               }}
               title={copied ? '已复制' : '复制代码'}
             >
@@ -258,14 +253,13 @@ const components = {
               <CodeBlockContext.Provider value={true}>
                 <pre
                   ref={preRef}
-                  className="font-mono text-sm"
+                  className="code-block font-mono text-sm"
                   style={{
                     margin: 0,
                     paddingTop: '0.75rem',    // 可调整：代码距离头部的距离 (默认 0.75rem = 12px)
                     paddingBottom: '1.25rem', // 可调整：代码底部内边距 (默认 1.25rem = 20px)
                     paddingLeft: '1rem',      // 小屏减少留白，保留代码横向滚动
                     paddingRight: '3.5rem',   // 可调整：代码右侧内边距，为复制按钮留空间 (默认 3.5rem = 56px)
-                    backgroundColor: '#2d3748',
                     fontSize: '0.875rem',
                     lineHeight: '1.7',
                     borderRadius: 0,
