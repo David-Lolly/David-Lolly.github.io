@@ -123,7 +123,7 @@ export default function ProjectsPage() {
 
       <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-12">
         <div className="mb-8 sm:mb-12">
-          <h1 className="mb-3 text-3xl font-serif font-bold sm:mb-4 sm:text-4xl">开源项目</h1>
+          <h1 className="mb-3 text-3xl font-heading font-bold sm:mb-4 sm:text-4xl">开源项目</h1>
           <p className="mb-6 text-base text-muted-foreground leading-relaxed sm:text-lg">
             这里是我参与开发和维护的开源项目，涵盖 AI、云原生、微服务等技术领域
           </p>
@@ -220,7 +220,7 @@ export default function ProjectsPage() {
               <div className="p-4 sm:p-6">
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <h3 className="text-xl font-serif font-bold mb-2 group-hover:text-primary transition-colors">
+                    <h3 className="text-xl font-heading font-bold mb-2 group-hover:text-primary transition-colors">
                       {project.title}
                     </h3>
                     <Badge variant={project.status === "已完成" ? "default" : "secondary"} className="text-xs">
@@ -333,7 +333,7 @@ export default function ProjectsPage() {
 
         <div className="mt-12 text-center">
           <Card className="p-5 sm:p-8">
-            <h2 className="mb-3 text-xl font-serif font-bold sm:mb-4 sm:text-2xl">更多项目</h2>
+            <h2 className="mb-3 text-xl font-heading font-bold sm:mb-4 sm:text-2xl">更多项目</h2>
             <p className="text-muted-foreground mb-6">访问我的 GitHub 查看更多开源项目和贡献</p>
             <Button size="lg" className="gap-2" asChild>
               <a href="https://github.com/username" target="_blank" rel="noopener noreferrer">

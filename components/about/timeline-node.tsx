@@ -46,7 +46,7 @@ export function TimelineNode({ item, onOpenImage }: { item: TimelineItem; onOpen
         )}
       </div>
       <div className="relative text-sm font-black text-[#8b6f47] dark:text-amber-300">{item.dateText}</div>
-      <h3 className="relative mt-2 font-serif text-2xl font-black leading-snug text-stone-950 dark:text-foreground">
+      <h3 className="relative mt-2 font-heading text-2xl font-black leading-snug text-stone-950 dark:text-foreground">
         {item.title}
       </h3>
       <p className="relative mt-3 text-sm leading-7 text-stone-600 dark:text-muted-foreground">{item.desc}</p>

@@ -116,7 +116,7 @@ function MetricRow({ metrics }: { metrics: AboutHeroProps["metrics"] }) {
           <div key={item.label} className="flex min-w-0 flex-col items-center text-center">
             <div
               className="text-3xl font-black leading-none tracking-[-0.045em] text-stone-950 dark:text-foreground"
-              style={{ fontFamily: "var(--font-numeric-serif)" }}
+              style={{ fontFamily: "var(--font-number)" }}
             >
               {item.value}
             </div>
@@ -140,7 +140,7 @@ export function AboutHero({ profile, metrics, focus, currentStatus, onOpenImage 
           <div className="min-w-0">
             <div className="text-[11px] font-black uppercase tracking-[0.28em] text-[#8b6f47] dark:text-amber-300">About</div>
             <div className="mt-4 flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center">
-              <h1 className="font-serif text-4xl font-black leading-none tracking-[-0.055em] text-stone-950 sm:text-5xl md:text-6xl dark:text-foreground">
+              <h1 className="font-heading text-4xl font-black leading-none tracking-[-0.055em] text-stone-950 sm:text-5xl md:text-6xl dark:text-foreground">
                 {profile.name}
               </h1>
               <StatusPill currentStatus={currentStatus} />

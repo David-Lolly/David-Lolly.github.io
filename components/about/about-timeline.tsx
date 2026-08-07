@@ -46,7 +46,7 @@ export function AboutTimeline({ timeline, onOpenImage }: AboutTimelineProps) {
             <div>
               <div
                 className="text-4xl font-black leading-none tracking-[-0.06em] text-stone-900/20 md:sticky md:top-40 md:text-right md:text-5xl dark:text-white/30"
-                style={{ fontFamily: "var(--font-numeric-serif)" }}
+                style={{ fontFamily: "var(--font-number)" }}
               >
                 {year}
               </div>

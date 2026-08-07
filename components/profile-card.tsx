@@ -41,7 +41,7 @@ export function ProfileCard() {
           />
         </div>
         <div className="min-w-0 text-left lg:text-center">
-          <h2 className="mb-1 text-xl font-serif font-bold sm:text-2xl lg:mb-2">{name || "未设置姓名"}</h2>
+          <h2 className="mb-1 text-xl font-heading font-bold sm:text-2xl lg:mb-2">{name || "未设置姓名"}</h2>
           {position && (
             <p className="mb-1 text-xs text-muted-foreground lg:mb-2">{position}</p>
           )}

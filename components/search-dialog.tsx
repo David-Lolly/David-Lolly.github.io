@@ -197,7 +197,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
 
                     {/* 内容 */}
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-serif font-bold text-black dark:text-white text-lg mb-2 line-clamp-1 transition-colors group-hover:text-primary dark:group-hover:text-primary">
+                      <h3 className="font-heading font-bold text-black dark:text-white text-lg mb-2 line-clamp-1 transition-colors group-hover:text-primary dark:group-hover:text-primary">
                         {item.title}
                       </h3>
 

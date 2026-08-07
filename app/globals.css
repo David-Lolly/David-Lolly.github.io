@@ -4,9 +4,11 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --font-sans-en: "Inter Variable";
-  --font-sans-sc: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", Arial, sans-serif;
-  --font-serif-sc: "Songti SC", STSong, SimSun, "Noto Serif CJK SC", "Source Han Serif SC", serif;
+  --font-body: "Inter Variable", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  --font-heading: "Inter Variable", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-serif: "Noto Serif SC", "Songti SC", STSong, SimSun, serif;
+  --font-number: Georgia, "Times New Roman", serif;
+  --font-code: "JetBrains Mono", "Cascadia Code", "SFMono-Regular", Consolas, monospace;
 
   /* Updated color system to match design proposal with warm beige palette */
   /* Main colors - Warm beige theme */
@@ -123,10 +125,8 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-sans-en), var(--font-sans-sc);
-  --font-serif: "Times New Roman", "方正小标宋简体", "FZ XiaoBiaoSong-B05S", var(--font-serif-sc);
-  --font-numeric-serif: Georgia, "Times New Roman", "方正小标宋简体", "FZ XiaoBiaoSong-B05S", var(--font-serif-sc);
-  --font-mono: var(--font-sans-en), var(--font-sans-sc);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-code);
 
   /* Using design proposal colors with proper RGB values */
   --color-background: var(--bg-primary);
@@ -175,7 +175,7 @@
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   font-synthesis: none;
   font-synthesis-weight: none;
   background-color: rgb(var(--color-background));
@@ -212,8 +212,17 @@ svg {
 }
 
 .font-serif {
+  font-family: var(--font-serif);
   font-synthesis: none;
   font-synthesis-weight: none;
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-number {
+  font-family: var(--font-number);
 }
 
 h1,
@@ -222,7 +231,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-serif);
+  font-family: var(--font-heading);
 }
 
 /* Enhanced Markdown rendering styles for blog content */
@@ -235,33 +244,44 @@ h6 {
 }
 
 .article-content h1 {
-  @apply text-2xl font-serif font-bold mt-12 mb-6;
+  @apply text-2xl font-bold mt-12 mb-6;
+  font-family: var(--font-heading);
   color: #000000;
   line-height: 1.2;
 }
 
 .article-content h2 {
-  @apply text-xl font-serif font-bold mt-10 mb-5;
+  @apply text-xl font-bold mt-10 mb-5;
+  font-family: var(--font-heading);
   color: #000000;
 }
 
 .article-content h3 {
-  @apply text-lg font-serif font-bold mt-8 mb-4;
+  @apply text-lg font-bold mt-8 mb-4;
+  font-family: var(--font-heading);
   color: #000000;
 }
 
 .article-content h4 {
-  @apply text-base font-serif font-semibold mt-6 mb-3;
+  @apply text-base font-semibold mt-6 mb-3;
+  font-family: var(--font-heading);
   color: #000000;
 }
 
 .article-content p {
-  @apply font-serif leading-relaxed text-foreground;
+  @apply leading-relaxed text-foreground;
+  font-family: var(--font-body);
+}
+
+.article-content blockquote,
+.article-content blockquote p {
+  font-family: var(--font-serif);
 }
 
 .article-content ul,
 .article-content ol {
-  @apply font-serif mb-6 ml-6 space-y-2;
+  @apply mb-6 ml-6 space-y-2;
+  font-family: var(--font-body);
 }
 
 .article-content ul {
@@ -311,7 +331,7 @@ h6 {
   background: transparent;
   border-radius: 0;
   font-weight: normal;
-  font-family: var(--font-mono);
+  font-family: var(--font-code);
 }
 
 .code-window-shell {

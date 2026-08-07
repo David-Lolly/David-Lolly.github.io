@@ -19,7 +19,7 @@ export function SectionTitle({ eyebrow, title, desc, center = false }: { eyebrow
   return (
     <div className={cn("mb-8", center && "text-center")}>
       {eyebrow && <div className="mb-3 text-sm font-black uppercase tracking-[0.28em] text-[#8b6f47] dark:text-amber-300">{eyebrow}</div>}
-      <h2 className="font-serif text-3xl font-black leading-tight text-stone-950 md:text-4xl dark:text-foreground">{title}</h2>
+      <h2 className="font-heading text-3xl font-black leading-tight text-stone-950 md:text-4xl dark:text-foreground">{title}</h2>
       {desc && <p className={cn("mt-3 max-w-2xl text-base leading-8 text-stone-600 dark:text-muted-foreground", center && "mx-auto")}>{desc}</p>}
     </div>
   );

@@ -62,12 +62,12 @@ export function Header() {
             </a>
 
             {/* Navigation */}
-            <nav className="hidden md:flex items-center gap-8 text-base font-serif font-bold">
+            <nav className="hidden md:flex items-center gap-8 text-base font-sans font-bold">
               {navItems.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
-                  className={`hover:text-primary transition-colors font-serif pb-1 ${isActive(item.href)
+                  className={`hover:text-primary transition-colors font-sans pb-1 ${isActive(item.href)
                     ? "border-b-2 border-primary text-foreground"
                     : "text-muted-foreground"
                     }`}
@@ -123,7 +123,7 @@ export function Header() {
                   key={item.href}
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
-                  className={`flex min-h-11 items-center rounded-md px-4 font-serif font-semibold transition-colors ${isActive(item.href)
+                  className={`flex min-h-11 items-center rounded-md px-4 font-sans font-semibold transition-colors ${isActive(item.href)
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:bg-black/5 hover:text-foreground dark:hover:bg-white/10"
                     }`}

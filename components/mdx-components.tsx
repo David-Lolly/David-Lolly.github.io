@@ -40,7 +40,7 @@ const components = {
   h1: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
     const id = generateId(children)
     return (
-      <h1 id={id} className="mt-9 mb-4 text-3xl font-serif font-bold text-foreground sm:mt-12 sm:text-4xl" style={{ lineHeight: 1.2, color: 'rgb(var(--foreground-rgb))' }} {...props}>
+      <h1 id={id} className="mt-9 mb-4 text-3xl font-heading font-bold text-foreground sm:mt-12 sm:text-4xl" style={{ lineHeight: 1.2, color: 'rgb(var(--foreground-rgb))' }} {...props}>
         {children}
       </h1>
     )
@@ -48,7 +48,7 @@ const components = {
   h2: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
     const id = generateId(children)
     return (
-      <h2 id={id} className="mt-8 mb-4 border-b pb-3 text-2xl font-serif font-bold text-foreground sm:mt-10 sm:mb-5 sm:text-3xl" style={{ color: 'rgb(var(--foreground-rgb))', borderColor: 'rgb(var(--border))' }} {...props}>
+      <h2 id={id} className="mt-8 mb-4 border-b pb-3 text-2xl font-heading font-bold text-foreground sm:mt-10 sm:mb-5 sm:text-3xl" style={{ color: 'rgb(var(--foreground-rgb))', borderColor: 'rgb(var(--border))' }} {...props}>
         {children}
       </h2>
     )
@@ -56,7 +56,7 @@ const components = {
   h3: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
     const id = generateId(children)
     return (
-      <h3 id={id} className="mt-7 mb-3 text-xl font-serif font-bold text-foreground sm:mt-8 sm:mb-4 sm:text-2xl" style={{ color: 'rgb(var(--foreground-rgb))' }} {...props}>
+      <h3 id={id} className="mt-7 mb-3 text-xl font-heading font-bold text-foreground sm:mt-8 sm:mb-4 sm:text-2xl" style={{ color: 'rgb(var(--foreground-rgb))' }} {...props}>
         {children}
       </h3>
     )
@@ -64,7 +64,7 @@ const components = {
   h4: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
     const id = generateId(children)
     return (
-      <h4 id={id} className="text-xl font-serif font-semibold mt-6 mb-3 text-foreground" style={{ color: 'rgb(var(--foreground-rgb))' }} {...props}>
+      <h4 id={id} className="text-xl font-heading font-semibold mt-6 mb-3 text-foreground" style={{ color: 'rgb(var(--foreground-rgb))' }} {...props}>
         {children}
       </h4>
     )
@@ -107,7 +107,7 @@ const components = {
   ),
   blockquote: ({ children, ...props }: React.HTMLAttributes<HTMLQuoteElement>) => (
     <blockquote
-      className="my-6 pl-5 italic"
+      className="my-6 pl-5 font-serif italic"
       style={{
         borderLeft: '4px solid rgb(var(--color-primary))',
         backgroundColor: 'rgb(var(--color-muted) / 0.5)',
@@ -130,7 +130,7 @@ const components = {
           className="font-mono text-sm"
           style={{
             ...(inlineStyles || {}),
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-code)',
             fontSize: '0.875rem',
             backgroundColor: 'transparent',
             borderRadius: 0,

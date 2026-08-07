@@ -36,7 +36,7 @@ export function AboutProjects({ projects, onOpenImage }: AboutProjectsProps) {
                 <div className="text-xs font-black uppercase tracking-[0.22em] text-[#8b6f47] dark:text-amber-300">
                   0{index + 1} / Open Source Project
                 </div>
-                <h3 className="mt-2 font-serif text-3xl font-black text-stone-950 dark:text-foreground">
+                <h3 className="mt-2 font-heading text-3xl font-black text-stone-950 dark:text-foreground">
                   {project.name}
                 </h3>
                 <div className="mt-3 inline-flex items-center gap-1 rounded-full bg-stone-900 px-3 py-1 text-sm font-black text-[#fff8d6] dark:bg-muted dark:text-foreground">

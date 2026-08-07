@@ -33,7 +33,7 @@ export function FeaturedAchievement({ timeline, featuredAchievementId, onOpenIma
             Featured Achievement
           </div>
           <div className="text-sm font-black text-[#d9c481] dark:text-[#facc15]">{item.dateText}</div>
-          <h3 className="mt-3 max-w-2xl font-serif text-3xl font-black leading-tight text-[#fff8d6] md:text-4xl">{item.title}</h3>
+          <h3 className="mt-3 max-w-2xl font-heading text-3xl font-black leading-tight text-[#fff8d6] md:text-4xl">{item.title}</h3>
           <p className="mt-4 max-w-2xl text-base leading-8 text-[#f7edc0]/80 dark:text-[#f7edc0]/88">{item.desc}</p>
         </div>
         {validImages.length > 0 && (

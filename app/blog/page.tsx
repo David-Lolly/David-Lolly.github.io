@@ -96,7 +96,7 @@ export default function BlogPage() {
 
       <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-12">
         <div className="mb-8 sm:mb-12">
-          <h1 className="mb-3 text-3xl font-serif font-bold sm:mb-4 sm:text-4xl">博客文章</h1>
+          <h1 className="mb-3 text-3xl font-heading font-bold sm:mb-4 sm:text-4xl">博客文章</h1>
           <p className="text-base text-muted-foreground leading-relaxed sm:text-lg">分享技术见解、学习笔记和开发经验</p>
         </div>
 
@@ -201,7 +201,7 @@ export default function BlogPage() {
                     )}
                   </div>
 
-                  <h3 className="text-lg font-serif font-bold group-hover:text-primary transition-colors line-clamp-2 sm:min-h-14">
+                  <h3 className="text-lg font-heading font-bold group-hover:text-primary transition-colors line-clamp-2 sm:min-h-14">
                     {article.title}
                   </h3>
 

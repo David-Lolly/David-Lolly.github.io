@@ -82,7 +82,7 @@ export function BlogDetail({ post, prevPost, nextPost }: BlogDetailProps) {
             </div>
           </div>
 
-          <h1 className="mb-4 text-3xl font-serif font-bold leading-tight sm:text-4xl">
+          <h1 className="mb-4 text-3xl font-heading font-bold leading-tight sm:text-4xl">
             {post.title}
           </h1>
 
@@ -109,7 +109,7 @@ export function BlogDetail({ post, prevPost, nextPost }: BlogDetailProps) {
             <Separator className="h-[1px] bg-border/100" />
           </div>
           <div>
-            <h2 className="text-xl font-sans font-semibold mb-6">推荐阅读</h2>
+            <h2 className="text-xl font-heading font-semibold mb-6">推荐阅读</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Card className="p-4 hover:shadow-md transition-shadow sm:p-5">
                 {prevPost ? (
@@ -176,7 +176,7 @@ export function BlogDetail({ post, prevPost, nextPost }: BlogDetailProps) {
       <div className="space-y-4">
         <div className="flex items-center gap-3">
           <MessageSquare className="h-5 w-5 text-muted-foreground" />
-          <h2 className="text-xl font-sans font-semibold text-foreground">
+          <h2 className="text-xl font-heading font-semibold text-foreground">
             发表评论
           </h2>
         </div>

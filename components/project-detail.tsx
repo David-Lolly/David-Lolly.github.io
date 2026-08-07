@@ -112,7 +112,7 @@ export function ProjectDetail({ project, relatedProjects }: ProjectDetailProps) 
             </div>
           </div>
 
-          <h1 className="mb-4 text-3xl font-serif font-bold leading-tight sm:text-4xl">
+          <h1 className="mb-4 text-3xl font-heading font-bold leading-tight sm:text-4xl">
             {project.title}
           </h1>
 
@@ -154,13 +154,13 @@ export function ProjectDetail({ project, relatedProjects }: ProjectDetailProps) 
         <>
           <Separator className="my-12" />
           <div>
-            <h2 className="text-2xl font-serif font-bold mb-6">相关项目</h2>
+            <h2 className="text-2xl font-heading font-bold mb-6">相关项目</h2>
             <div className="grid md:grid-cols-2 gap-4">
               {relatedProjects.map((proj) => (
                 <Card key={proj.slug} className="p-5 hover:shadow-md transition-shadow">
                   <a href={`/projects/${proj.slug}`} className="block group">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-serif font-bold group-hover:text-primary transition-colors">
+                      <h3 className="font-heading font-bold group-hover:text-primary transition-colors">
                         {proj.title}
                       </h3>
                       <Badge
@@ -197,7 +197,7 @@ export function ProjectDetail({ project, relatedProjects }: ProjectDetailProps) 
       <div className="space-y-4">
         <div className="flex items-center gap-3">
           <MessageSquare className="h-5 w-5 text-muted-foreground" />
-          <h2 className="text-xl font-sans font-semibold text-foreground">
+          <h2 className="text-xl font-heading font-semibold text-foreground">
             发表评论
           </h2>
         </div>

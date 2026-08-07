@@ -29,7 +29,7 @@ export function ImageModal({ image, onClose }: { image: ImageProps | null; onClo
             <div className="text-xs font-black uppercase tracking-[0.25em] text-[#8b6f47] dark:text-amber-300">
               Image Preview
             </div>
-            <h3 className="mt-1 font-serif text-2xl font-black text-stone-950 dark:text-foreground">
+            <h3 className="mt-1 font-heading text-2xl font-black text-stone-950 dark:text-foreground">
               {image.alt || image.label || "图片预览"}
             </h3>
           </div>

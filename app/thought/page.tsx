@@ -614,7 +614,7 @@ export default function YousiUniverse() {
                                     }`}
                             >
                                 {isCurrentlyAuto ? <IconPause /> : <IconPlay />}
-                                <span className="text-xs font-serif font-semibold tracking-[0.12em]">{isCurrentlyAuto ? '自动巡航' : '星轨悬停'}</span>
+                                <span className="text-xs font-sans font-semibold tracking-[0.12em]">{isCurrentlyAuto ? '自动巡航' : '星轨悬停'}</span>
 
                                 {/* ========================================= */}
                                 {/* 新增：精美的自定义悬停气泡 Tooltip           */}
@@ -639,7 +639,7 @@ export default function YousiUniverse() {
 
                             <div className="w-[1px] h-3 bg-[var(--border-color)]"></div>
 
-                            <div className={`text-xs font-serif font-semibold tracking-[0.12em] flex items-center gap-1 transition-all ${!isCurrentlyAuto
+                            <div className={`text-xs font-sans font-semibold tracking-[0.12em] flex items-center gap-1 transition-all ${!isCurrentlyAuto
                                 ? 'text-[var(--text-main)] opacity-100'
                                 : `text-[var(--text-sub)] ${showHint ? 'opacity-100' : 'opacity-60'}`
                                 }`}>
@@ -651,7 +651,7 @@ export default function YousiUniverse() {
                     </div>
 
                     {thoughtsData.length === 0 ? (
-                        <div className="text-[var(--text-main)] text-xl font-serif">暂无游思记录</div>
+                        <div className="text-[var(--text-main)] text-xl font-heading">暂无游思记录</div>
                     ) : (
                         thoughtsData.map((item, idx) => {
                             const isActive = idx === activeIndex;
