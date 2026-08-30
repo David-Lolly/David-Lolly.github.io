@@ -118,14 +118,14 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl p-0 gap-0 bg-[rgb(240,240,215)] dark:bg-[rgb(40,40,40)] border-[rgb(229,229,209)] dark:border-[rgb(60,60,60)] shadow-2xl transition-colors">
+      <DialogContent className="max-h-[calc(100dvh-1rem)] w-[calc(100vw-1rem)] max-w-3xl gap-0 overflow-hidden p-0 bg-[rgb(240,240,215)] dark:bg-[rgb(40,40,40)] border-[rgb(229,229,209)] dark:border-[rgb(60,60,60)] shadow-2xl transition-colors sm:w-full">
         <DialogHeader className="sr-only">
           <DialogTitle>搜索博客和项目</DialogTitle>
           <DialogDescription>输入关键词搜索博客文章和项目</DialogDescription>
         </DialogHeader>
 
         {/* 搜索输入框 */}
-        <div className="px-8 pt-6 pb-4 border-b border-[rgb(229,229,209)] dark:border-[rgb(60,60,60)] transition-colors">
+        <div className="border-b border-[rgb(229,229,209)] px-4 pb-4 pt-5 transition-colors dark:border-[rgb(60,60,60)] sm:px-8 sm:pt-6">
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-black/60 dark:text-white/60 transition-colors">
               <Search className="w-5 h-5" />
@@ -136,7 +136,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="h-12 pl-10 pr-24 rounded-full bg-[rgb(235,235,210)] dark:bg-[rgb(50,50,50)] border border-[rgb(229,229,209)] dark:border-[rgb(60,60,60)] shadow-sm text-lg text-black dark:text-white placeholder:text-black/50 dark:placeholder:text-white/50 font-sans focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none transition-colors" // <-- 修改点：移除了 focus 效果
+              className="h-11 rounded-full border border-[rgb(229,229,209)] bg-[rgb(235,235,210)] pl-10 pr-12 font-sans text-base text-black shadow-sm transition-colors placeholder:text-black/50 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 dark:border-[rgb(60,60,60)] dark:bg-[rgb(50,50,50)] dark:text-white dark:placeholder:text-white/50 sm:h-12 sm:pr-24 sm:text-lg"
               autoFocus
             />
             {query && (
@@ -145,7 +145,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                 size="icon"
                 onClick={() => setQuery("")}
                 aria-label="清空搜索"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 rounded-full h-8 w-8 transition-colors"
+                className="absolute right-1 top-1/2 h-11 w-11 -translate-y-1/2 rounded-full text-black/70 transition-colors hover:bg-black/5 hover:text-black dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white sm:right-3 sm:h-8 sm:w-8"
               >
                 <svg
                   viewBox="0 0 1024 1024"
@@ -183,7 +183,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                 <button
                   key={`${item.type}-${item.slug}-${index}`}
                   onClick={() => handleItemClick(item)}
-                  className="w-full px-6 py-4 text-left border-b border-[rgb(229,229,209)] dark:border-[rgb(60,60,60)] last:border-0 transition-all duration-200 hover:bg-[rgb(252,252,228)] dark:hover:bg-[rgb(55,55,55)] hover:border-[rgb(210,180,120)] dark:hover:border-[rgb(180,150,90)] hover:shadow-md cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(210,180,120)] dark:focus-visible:ring-[rgb(180,150,90)] focus-visible:bg-[rgb(252,252,228)] dark:focus-visible:bg-[rgb(55,55,55)] group"
+                  className="group w-full cursor-pointer border-b border-[rgb(229,229,209)] px-4 py-4 text-left transition-all duration-200 last:border-0 hover:border-[rgb(210,180,120)] hover:bg-[rgb(252,252,228)] hover:shadow-md focus-visible:bg-[rgb(252,252,228)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(210,180,120)] dark:border-[rgb(60,60,60)] dark:hover:border-[rgb(180,150,90)] dark:hover:bg-[rgb(55,55,55)] dark:focus-visible:bg-[rgb(55,55,55)] dark:focus-visible:ring-[rgb(180,150,90)] sm:px-6"
                 >
                   <div className="flex items-start gap-4">
                     {/* 图标 */}
@@ -197,7 +197,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
 
                     {/* 内容 */}
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-serif font-bold text-black dark:text-white text-lg mb-2 line-clamp-1 transition-colors group-hover:text-primary dark:group-hover:text-primary">
+                      <h3 className="font-heading font-bold text-black dark:text-white text-lg mb-2 line-clamp-1 transition-colors group-hover:text-primary dark:group-hover:text-primary">
                         {item.title}
                       </h3>
 
@@ -242,9 +242,9 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
               ))}
             </div>
           ) : (
-            <div className="px-6 py-20 text-center space-y-3">
-              <p className="text-base text-black/80 dark:text-white/80 font-medium transition-colors">点击对话框外部空白关闭搜索</p>
-              <div className="flex items-center justify-center gap-2 text-sm text-black/70 dark:text-white/70 transition-colors">
+            <div className="space-y-3 px-4 py-14 text-center sm:px-6 sm:py-20">
+              <p className="text-base text-black/80 dark:text-white/80 font-medium transition-colors">输入关键词搜索博客和项目</p>
+              <div className="hidden items-center justify-center gap-2 text-sm text-black/70 dark:text-white/70 transition-colors sm:flex">
                 <kbd className="px-2 py-1 rounded border border-[rgb(229,229,209)] dark:border-[rgb(60,60,60)] bg-[rgb(235,235,210)] dark:bg-[rgb(50,50,50)] transition-colors">Ctrl</kbd>
                 <span>+</span>
                 <kbd className="px-2 py-1 rounded border border-[rgb(229,229,209)] dark:border-[rgb(60,60,60)] bg-[rgb(235,235,210)] dark:bg-[rgb(50,50,50)] transition-colors">K</kbd>

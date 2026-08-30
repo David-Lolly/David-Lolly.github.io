@@ -116,7 +116,7 @@ function MetricRow({ metrics }: { metrics: AboutHeroProps["metrics"] }) {
           <div key={item.label} className="flex min-w-0 flex-col items-center text-center">
             <div
               className="text-3xl font-black leading-none tracking-[-0.045em] text-stone-950 dark:text-foreground"
-              style={{ fontFamily: "var(--font-numeric-serif)" }}
+              style={{ fontFamily: "var(--font-number)" }}
             >
               {item.value}
             </div>
@@ -132,7 +132,7 @@ function MetricRow({ metrics }: { metrics: AboutHeroProps["metrics"] }) {
 
 export function AboutHero({ profile, metrics, focus, currentStatus, onOpenImage }: AboutHeroProps) {
   return (
-    <section className="relative overflow-hidden rounded-[2rem] border border-white/60 bg-white/45 p-4 shadow-[0_18px_55px_rgba(48,38,20,0.08)] backdrop-blur-xl md:p-5 dark:border-white/10 dark:bg-[rgb(24,24,27)] dark:shadow-[0_24px_72px_rgba(0,0,0,0.42)]">
+    <section className="relative overflow-hidden rounded-2xl border border-white/60 bg-white/45 p-3 shadow-[0_18px_55px_rgba(48,38,20,0.08)] backdrop-blur-xl sm:rounded-[2rem] sm:p-4 md:p-5 dark:border-white/10 dark:bg-[rgb(24,24,27)] dark:shadow-[0_24px_72px_rgba(0,0,0,0.42)]">
       <div className="relative grid gap-5 md:grid-cols-[16rem_1fr] md:items-stretch xl:grid-cols-[17.5rem_1fr]">
         <AvatarPanel avatar={profile.avatar} onOpenImage={onOpenImage} />
 
@@ -140,7 +140,7 @@ export function AboutHero({ profile, metrics, focus, currentStatus, onOpenImage 
           <div className="min-w-0">
             <div className="text-[11px] font-black uppercase tracking-[0.28em] text-[#8b6f47] dark:text-amber-300">About</div>
             <div className="mt-4 flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center">
-              <h1 className="font-serif text-5xl font-black leading-none tracking-[-0.055em] text-stone-950 md:text-6xl dark:text-foreground">
+              <h1 className="font-heading text-4xl font-black leading-none tracking-[-0.055em] text-stone-950 sm:text-5xl md:text-6xl dark:text-foreground">
                 {profile.name}
               </h1>
               <StatusPill currentStatus={currentStatus} />

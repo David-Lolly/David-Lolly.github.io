@@ -8,20 +8,20 @@ export default function Home() {
     <div className="min-h-screen">
       <Header />
 
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <main className="container mx-auto max-w-7xl px-4 py-6 sm:py-8">
+        <div className="grid grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-12">
           {/* Left sidebar - Profile */}
-          <aside className="lg:col-span-3">
+          <aside className="order-2 lg:order-1 lg:col-span-3">
             <ProfileCard />
           </aside>
 
           {/* Main content - Featured articles */}
-          <section className="lg:col-span-6">
+          <section className="order-1 lg:order-2 lg:col-span-6">
             <FeaturedArticles />
           </section>
 
           {/* Right sidebar - Latest articles */}
-          <aside className="lg:col-span-3">
+          <aside className="order-3 lg:col-span-3">
             <LatestArticles />
           </aside>
         </div>

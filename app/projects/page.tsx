@@ -121,10 +121,10 @@ export default function ProjectsPage() {
     <div className="min-h-screen">
       <Header />
 
-      <main className="max-w-6xl mx-auto px-6 py-12">
-        <div className="mb-12">
-          <h1 className="text-4xl font-serif font-bold mb-4">开源项目</h1>
-          <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-12">
+        <div className="mb-8 sm:mb-12">
+          <h1 className="mb-3 text-3xl font-heading font-bold sm:mb-4 sm:text-4xl">开源项目</h1>
+          <p className="mb-6 text-base text-muted-foreground leading-relaxed sm:text-lg">
             这里是我参与开发和维护的开源项目，涵盖 AI、云原生、微服务等技术领域
           </p>
 
@@ -143,7 +143,7 @@ export default function ProjectsPage() {
               />
             </div>
 
-            <div className="flex items-center gap-3 relative z-30">
+            <div className="relative z-30 hidden items-center gap-3 sm:flex">
               <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">每页显示:</span>
               <div ref={dropdownRef} className="relative flex items-center">
                 <button
@@ -186,12 +186,12 @@ export default function ProjectsPage() {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
             {allTags.map((tag) => (
               <Badge
                 key={tag}
                 variant={tag === selectedTag ? "default" : "outline"}
-                className={`cursor-pointer transition-colors ${tag === selectedTag
+                className={`shrink-0 cursor-pointer transition-colors ${tag === selectedTag
                   ? "bg-[rgb(220,200,100)] text-[rgb(92,64,32)]"
                   : ""
                   }`}
@@ -206,21 +206,21 @@ export default function ProjectsPage() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid gap-4 md:grid-cols-2 md:gap-6">
           {currentProjects.map((project) => (
             <Card key={project.slug} className="overflow-hidden hover:shadow-lg transition-shadow group bg-[rgba(250,250,227,1)] dark:bg-[rgb(24,24,27)]">
-              <div className="h-48 overflow-hidden bg-muted">
+              <div className="h-40 overflow-hidden bg-muted sm:h-48">
                 <img
                   src={project.image || "/placeholder.svg"}
                   alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover transition-transform duration-300 motion-safe:md:group-hover:scale-105"
                 />
               </div>
 
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <h3 className="text-xl font-serif font-bold mb-2 group-hover:text-primary transition-colors">
+                    <h3 className="text-xl font-heading font-bold mb-2 group-hover:text-primary transition-colors">
                       {project.title}
                     </h3>
                     <Badge variant={project.status === "已完成" ? "default" : "secondary"} className="text-xs">
@@ -264,14 +264,14 @@ export default function ProjectsPage() {
 
                 <div className="flex items-center gap-2">
                   {project.github_url && (
-                    <Button variant="outline" size="sm" className="gap-2 flex-1 bg-transparent" asChild>
+                    <Button variant="outline" size="sm" className="min-h-11 gap-2 flex-1 bg-transparent sm:min-h-9" asChild>
                       <a href={project.github_url} target="_blank" rel="noopener noreferrer">
                         <Github className="h-4 w-4" />
                         源码
                       </a>
                     </Button>
                   )}
-                  <Button variant="outline" size="sm" className="gap-2 flex-1" asChild>
+                  <Button variant="outline" size="sm" className="min-h-11 gap-2 flex-1 sm:min-h-9" asChild>
                     <a href={`/projects/${project.slug}`}>
                       <BookOpen className="h-4 w-4 bg-background" />
                       详情
@@ -290,12 +290,12 @@ export default function ProjectsPage() {
               size="icon"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="h-8 w-8"
+              className="h-11 w-11 sm:h-8 sm:w-8"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
 
-            <div className="flex items-center gap-1">
+            <div className="hidden items-center gap-1 sm:flex">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <Button
                   key={page}
@@ -309,12 +309,16 @@ export default function ProjectsPage() {
               ))}
             </div>
 
+            <span className="px-3 text-sm font-medium sm:hidden">
+              {currentPage} / {totalPages}
+            </span>
+
             <Button
               variant="outline"
               size="icon"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="h-8 w-8"
+              className="h-11 w-11 sm:h-8 sm:w-8"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
@@ -328,8 +332,8 @@ export default function ProjectsPage() {
         )}
 
         <div className="mt-12 text-center">
-          <Card className="p-8">
-            <h2 className="text-2xl font-serif font-bold mb-4">更多项目</h2>
+          <Card className="p-5 sm:p-8">
+            <h2 className="mb-3 text-xl font-heading font-bold sm:mb-4 sm:text-2xl">更多项目</h2>
             <p className="text-muted-foreground mb-6">访问我的 GitHub 查看更多开源项目和贡献</p>
             <Button size="lg" className="gap-2" asChild>
               <a href="https://github.com/username" target="_blank" rel="noopener noreferrer">

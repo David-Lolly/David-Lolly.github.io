@@ -6,7 +6,7 @@ export function PaperCard({ children, className = "" }: { children: React.ReactN
   return (
     <div
       className={cn(
-        "rounded-[2rem] border border-stone-900/10 bg-[#fffbe6]/75 p-6 shadow-[0_18px_60px_rgba(69,52,25,0.09)] backdrop-blur dark:border-border dark:bg-[rgb(24,24,27)] dark:shadow-lg",
+        "rounded-2xl border border-stone-900/10 bg-[#fffbe6]/75 p-4 shadow-[0_18px_60px_rgba(69,52,25,0.09)] backdrop-blur sm:rounded-[2rem] sm:p-6 dark:border-border dark:bg-[rgb(24,24,27)] dark:shadow-lg",
         className
       )}
     >
@@ -19,7 +19,7 @@ export function SectionTitle({ eyebrow, title, desc, center = false }: { eyebrow
   return (
     <div className={cn("mb-8", center && "text-center")}>
       {eyebrow && <div className="mb-3 text-sm font-black uppercase tracking-[0.28em] text-[#8b6f47] dark:text-amber-300">{eyebrow}</div>}
-      <h2 className="font-serif text-3xl font-black leading-tight text-stone-950 md:text-4xl dark:text-foreground">{title}</h2>
+      <h2 className="font-heading text-3xl font-black leading-tight text-stone-950 md:text-4xl dark:text-foreground">{title}</h2>
       {desc && <p className={cn("mt-3 max-w-2xl text-base leading-8 text-stone-600 dark:text-muted-foreground", center && "mx-auto")}>{desc}</p>}
     </div>
   );

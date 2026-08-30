@@ -33,6 +33,8 @@ export function MdxImageLightbox({
             {...props}
             src={src}
             alt={alt || ""}
+            loading={props.loading ?? "lazy"}
+            decoding={props.decoding ?? "async"}
             className={cn(
               "block w-full rounded-lg transition duration-200 group-hover:brightness-90 group-focus-visible:brightness-90",
               className
@@ -68,6 +70,7 @@ export function MdxImageLightbox({
               {...props}
               src={src}
               alt={alt || ""}
+              decoding={props.decoding ?? "async"}
               className="max-h-[calc(100dvh-4rem)] max-w-[calc(100vw-2rem)] rounded-sm object-contain shadow-2xl sm:max-h-[calc(100dvh-5rem)] sm:max-w-[calc(100vw-4rem)]"
               style={style}
             />

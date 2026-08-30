@@ -60,8 +60,8 @@ export function ProjectDetail({ project, relatedProjects }: ProjectDetailProps) 
   const markdownPayload = buildMarkdownPayload(project)
 
   return (
-    <main className="max-w-4xl mx-auto px-6 py-12">
-      <Button variant="ghost" className="mb-6 -ml-2" asChild>
+    <main className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-12">
+      <Button variant="ghost" className="mb-5 min-h-11 -ml-2 sm:mb-6" asChild>
         <a href="/projects">
           <ArrowLeft className="h-4 w-4 mr-2" />
           返回项目列表
@@ -70,7 +70,7 @@ export function ProjectDetail({ project, relatedProjects }: ProjectDetailProps) 
 
       <article>
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
+          <div className="mb-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <Badge variant={project.status === "已完成" ? "default" : "secondary"}>
                 {project.status}
@@ -94,7 +94,7 @@ export function ProjectDetail({ project, relatedProjects }: ProjectDetailProps) 
             </div>
             <div className="flex items-center gap-2">
               {project.github_url && (
-                <Button variant="outline" size="sm" className="gap-2" asChild>
+                <Button variant="outline" size="sm" className="min-h-11 gap-2 sm:min-h-9" asChild>
                   <a href={project.github_url} target="_blank" rel="noopener noreferrer">
                     <Github className="h-4 w-4" />
                     源码
@@ -102,7 +102,7 @@ export function ProjectDetail({ project, relatedProjects }: ProjectDetailProps) 
                 </Button>
               )}
               {project.demo_url && (
-                <Button variant="outline" size="sm" className="gap-2" asChild>
+                <Button variant="outline" size="sm" className="min-h-11 gap-2 sm:min-h-9" asChild>
                   <a href={project.demo_url} target="_blank" rel="noopener noreferrer">
                     <ExternalLink className="h-4 w-4" />
                     demo
@@ -112,12 +112,12 @@ export function ProjectDetail({ project, relatedProjects }: ProjectDetailProps) 
             </div>
           </div>
 
-          <h1 className="text-4xl font-serif font-bold mb-4 leading-tight">
+          <h1 className="mb-4 text-3xl font-heading font-bold leading-tight sm:text-4xl">
             {project.title}
           </h1>
 
           {project.description && (
-            <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+            <p className="mb-6 text-base text-muted-foreground leading-relaxed sm:text-lg">
               {project.description}
             </p>
           )}
@@ -154,13 +154,13 @@ export function ProjectDetail({ project, relatedProjects }: ProjectDetailProps) 
         <>
           <Separator className="my-12" />
           <div>
-            <h2 className="text-2xl font-serif font-bold mb-6">相关项目</h2>
+            <h2 className="text-2xl font-heading font-bold mb-6">相关项目</h2>
             <div className="grid md:grid-cols-2 gap-4">
               {relatedProjects.map((proj) => (
                 <Card key={proj.slug} className="p-5 hover:shadow-md transition-shadow">
                   <a href={`/projects/${proj.slug}`} className="block group">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-serif font-bold group-hover:text-primary transition-colors">
+                      <h3 className="font-heading font-bold group-hover:text-primary transition-colors">
                         {proj.title}
                       </h3>
                       <Badge
@@ -197,14 +197,14 @@ export function ProjectDetail({ project, relatedProjects }: ProjectDetailProps) 
       <div className="space-y-4">
         <div className="flex items-center gap-3">
           <MessageSquare className="h-5 w-5 text-muted-foreground" />
-          <h2 className="text-xl font-sans font-semibold text-foreground">
+          <h2 className="text-xl font-heading font-semibold text-foreground">
             发表评论
           </h2>
         </div>
         <p className="text-sm text-muted-foreground">
           欢迎留下你的想法和见解，使用 GitHub 账号登录即可参与讨论
         </p>
-        <div className="bg-card rounded-lg border border-border/60 p-6">
+        <div className="bg-card rounded-lg border border-border/60 p-3 sm:p-6">
           <GiscusComments />
         </div>
       </div>

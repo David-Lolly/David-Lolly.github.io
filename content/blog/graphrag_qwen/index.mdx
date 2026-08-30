@@ -49,7 +49,7 @@ pip install graphrag
 由于阿里百炼等国内模型对 Embedding 的批处理有特殊要求，需要修改 GraphRAG 源码中的 batch_size 设置。
 
 **修改文件路径**：
-```sh
+```text
 graphrag/index/operations/embed_text/strategies/openai.py
 
 # conda 环境示例
@@ -126,7 +126,7 @@ GraphRAG 默认使用英文提示词，这会导致提取的实体和关系也�
 
 **将你的API填写在.env文件中**
 示例：
-```sh
+```dotenv
 GRAPHRAG_API_KEY=sk-xxx
 ```
 
@@ -308,7 +308,7 @@ cat logs/indexing-engine.log
 
 索引成功后，`output/` 目录应包含以下 parquet 文件：
 
-```c
+```text
 output/
 ├── lancedb/
 │   ├── default-community-full_content.lance/
@@ -333,7 +333,7 @@ output/
 基于我们使用的 `llm.txt` 文件（关于 LangChain Agents 的文档），我们设计一个能够体现 GraphRAG 优势的问题：
 
 **问题**：
-```c
+```text
 LangChain中的智能体(Agents)是如何实现工具调用和推理的？请详细说明ReAct循环的工作流程。
 ```
 
@@ -352,7 +352,7 @@ graphrag query --root . --method local --query "LangChain中的智能体(Agents)
 
 **回答结果**：
 
-```c
+```text
 LangChain中的智能体（Agents）通过结合语言模型（LLM）与外部工具（Tools），实现对复杂任务的推理与行动。其核心机制依赖于“推理+行动”（ReAct）模式，该模式在智能体执行任务时交替进行内部思考（推理）与外部工具 调用（行动），从而逐步达成目标。这一过程由`create_agent`函数创建的智能体运行时驱动，该运行时基于LangGraph构建图结构，使智能体能够以状态化的方式管理多步骤任务流程 [Data: Entities (1, 3, 56, 38); Relationships (30, 20, 31,  [Data: Sources (2); Relationships (27)]。随后，系统执行该工具调用，返回搜索结果，例如列出五款无线耳机，其中WH-1000XM5排名最高 [Data: Sources (2); Relationships (29)]。智能体接着再次推理，决定需要检查该产品的库存，于是调用`check_inventory`工具，传入产品ID“WH-1000XM5” [Data: Sources (2); Relationships (28)]。工具返回库存为10单位后，智能体完成最终推理，生成包含产品型号和库存状态的回复，如“我找到了最受欢迎的无线耳机（型号WH-1000XM5），目前有10个库存” [Data: Sources (2); Relationships (29)]。整个过程体现了ReAct模式的核心——将推理与行动在每一步交替进行，利用工具反馈不断修正决策路径。
 
 ReAct循环在LangChain中通过`create_agent`函数实现，并被明确集成在智能体的执行流程中。该模式依赖于语言模型的推理能力与工具调用的可执行性，使得 智能体不仅能理解任务，还能主动规划并执行多步操作 [Data: Entities (31, 23); Relationships (30, 20)]。此外，智能体在执行过程中可通过中间件（Middleware）扩展功能，例如使用`@wrap_tool_call`装饰器实现工具调用的错误处理，或使用`@dynamic_prompt`实现系统提示的动态生成，从而增强系统的鲁棒性与适应性 [Data: Entities (56, 37, 28, 38); Sources (1, 2)]。同时，LangChain支持流式输出（STREAMING）机制，允许在智能体逐步执行过程中实时返回token，提升用户体验 [Data: Entities (40); Sources (3)]。
@@ -370,7 +370,7 @@ graphrag query --root . --method global --query "LangChain中的智能体(Agents
 
 **回答结果**：
 
-```c
+```markdown
 ### LangChain智能体的推理与工具调用机制
 
 LangChain中的智能体（Agents）通过结合**推理（Reasoning）**与**工具调用（Action）**的交替执行，实现复杂的多步骤任务处理。其核心机制是**ReAct循环**，该循环由智能体内部的推理过程（Thought）与对外部工具的调用（Action）构成，形成一个“推理+行动”的闭环。智能体首先基于当前上下文生成思考（Thought），判断是否需要调用工具；若需要，便生成具体工具调用指令（Action）；工具执行后返回结果（Observation），智能体再根据观察结果进行新一轮推理，判断任务是否完成或是否需要进一步操作。该流程支持多步骤任务的自主执行，是构建复杂智能体系统的技术基础 [Data: Reports (1, 3, 2, 7, 9, +more]。
@@ -585,7 +585,7 @@ pip install pandas jupyter ipython
 
 Notebook 会展示类似以下的可视化内容：
 
-```c
+```text
 🏷️ 社区报告 (Community ID: 2)
 **标题:** LangChain Agents 核心机制
 

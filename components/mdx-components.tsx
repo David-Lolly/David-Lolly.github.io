@@ -54,7 +54,7 @@ const components = {
   h1: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
     const id = generateId(children)
     return (
-      <h1 id={id} className="text-4xl font-serif font-bold mt-12 mb-4 text-foreground" style={{ lineHeight: 1.2, color: 'rgb(var(--foreground-rgb))' }} {...props}>
+      <h1 id={id} className="mt-9 mb-4 text-3xl font-heading font-bold text-foreground sm:mt-12 sm:text-4xl" style={{ lineHeight: 1.2, color: 'rgb(var(--foreground-rgb))' }} {...props}>
         {children}
       </h1>
     )
@@ -62,7 +62,7 @@ const components = {
   h2: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
     const id = generateId(children)
     return (
-      <h2 id={id} className="text-3xl font-serif font-bold mt-10 mb-5 text-foreground border-b pb-3" style={{ color: 'rgb(var(--foreground-rgb))', borderColor: 'rgb(var(--border))' }} {...props}>
+      <h2 id={id} className="mt-8 mb-4 border-b pb-3 text-2xl font-heading font-bold text-foreground sm:mt-10 sm:mb-5 sm:text-3xl" style={{ color: 'rgb(var(--foreground-rgb))', borderColor: 'rgb(var(--border))' }} {...props}>
         {children}
       </h2>
     )
@@ -70,7 +70,7 @@ const components = {
   h3: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
     const id = generateId(children)
     return (
-      <h3 id={id} className="text-2xl font-serif font-bold mt-8 mb-4 text-foreground" style={{ color: 'rgb(var(--foreground-rgb))' }} {...props}>
+      <h3 id={id} className="mt-7 mb-3 text-xl font-heading font-bold text-foreground sm:mt-8 sm:mb-4 sm:text-2xl" style={{ color: 'rgb(var(--foreground-rgb))' }} {...props}>
         {children}
       </h3>
     )
@@ -78,7 +78,7 @@ const components = {
   h4: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
     const id = generateId(children)
     return (
-      <h4 id={id} className="text-xl font-serif font-semibold mt-6 mb-3 text-foreground" style={{ color: 'rgb(var(--foreground-rgb))' }} {...props}>
+      <h4 id={id} className="text-xl font-heading font-semibold mt-6 mb-3 text-foreground" style={{ color: 'rgb(var(--foreground-rgb))' }} {...props}>
         {children}
       </h4>
     )
@@ -91,7 +91,7 @@ const components = {
   ul: ({ children, ...props }: React.HTMLAttributes<HTMLUListElement>) => {
     const childrenArray = React.Children.toArray(children)
     return (
-      <ul className="mb-6 ml-6 space-y-2 list-disc" {...props}>
+      <ul className="mb-6 ml-5 space-y-2 list-disc sm:ml-6" {...props}>
         {childrenArray.map((child, index) => {
           if (React.isValidElement(child)) {
             return React.cloneElement(child, { key: index } as any)
@@ -104,7 +104,7 @@ const components = {
   ol: ({ children, ...props }: React.HTMLAttributes<HTMLOListElement>) => {
     const childrenArray = React.Children.toArray(children)
     return (
-      <ol className="mb-6 ml-6 space-y-2 list-decimal" {...props}>
+      <ol className="mb-6 ml-5 space-y-2 list-decimal sm:ml-6" {...props}>
         {childrenArray.map((child, index) => {
           if (React.isValidElement(child)) {
             return React.cloneElement(child, { key: index } as any)
@@ -121,7 +121,7 @@ const components = {
   ),
   blockquote: ({ children, ...props }: React.HTMLAttributes<HTMLQuoteElement>) => (
     <blockquote
-      className="my-6 pl-5 italic"
+      className="my-6 pl-5 font-serif italic"
       style={{
         borderLeft: '4px solid rgb(var(--color-primary))',
         backgroundColor: 'rgb(var(--color-muted) / 0.5)',
@@ -144,7 +144,7 @@ const components = {
           className="font-mono text-sm"
           style={{
             ...(inlineStyles || {}),
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-code)',
             fontSize: '0.875rem',
             backgroundColor: 'transparent',
             borderRadius: 0,
@@ -200,21 +200,18 @@ const components = {
     }
 
     return (
-      <div className="relative group my-6">
+      <div className="code-window relative group my-6">
         {/* macOS 风格的窗口容器 */}
         <div
-          className="rounded-xl"
+          className="code-window-shell rounded-xl"
           style={{
-            backgroundColor: '#2d3748',
-            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1)',
             overflow: 'visible',
           }}
         >
           {/* macOS 窗口头部 - 灰色背景覆盖整个宽度 */}
           <div
-            className="flex items-center px-4"
+            className="code-window-header flex items-center px-4"
             style={{
-              backgroundColor: '#3d4754',
               paddingTop: '0.75rem',    // 可调整：头部上内边距 (默认 0.75rem = 12px)
               paddingBottom: '0.75rem', // 可调整：头部下内边距 (默认 0.75rem = 12px)
               width: '100%',            // 灰色背景覆盖整个宽度
@@ -240,19 +237,17 @@ const components = {
           </div>
 
           {/* 代码内容区域的包装容器 */}
-          <div className="relative" style={{
-            backgroundColor: '#2d3748',
+          <div className="code-window-body relative" style={{
             borderBottomLeftRadius: '0.75rem',
             borderBottomRightRadius: '0.75rem',
           }}>
             {/* 复制按钮 - 固定在可视区域右上角，不随滚动移动 */}
             <button
               onClick={handleCopy}
-              className="absolute opacity-0 group-hover:opacity-100 transition-all duration-200 p-2 rounded hover:bg-white/10 z-10"
+              className="code-window-copy absolute z-10 min-h-11 min-w-11 rounded p-2 opacity-100 transition-all duration-200 sm:min-h-0 sm:min-w-0 sm:opacity-0 sm:group-hover:opacity-100"
               style={{
                 top: '0.5rem',
                 right: '0.75rem',
-                color: '#a0aec0',
               }}
               title={copied ? '已复制' : '复制代码'}
             >
@@ -277,14 +272,13 @@ const components = {
               <CodeBlockContext.Provider value={true}>
                 <pre
                   ref={preRef}
-                  className="font-mono text-sm"
+                  className="code-block font-mono text-sm"
                   style={{
                     margin: 0,
                     paddingTop: '0.75rem',    // 可调整：代码距离头部的距离 (默认 0.75rem = 12px)
                     paddingBottom: '1.25rem', // 可调整：代码底部内边距 (默认 1.25rem = 20px)
-                    paddingLeft: '1.5rem',    // 可调整：代码左侧内边距 (默认 1.5rem = 24px)
+                    paddingLeft: '1rem',      // 小屏减少留白，保留代码横向滚动
                     paddingRight: '3.5rem',   // 可调整：代码右侧内边距，为复制按钮留空间 (默认 3.5rem = 56px)
-                    backgroundColor: '#2d3748',
                     fontSize: '0.875rem',
                     lineHeight: '1.7',
                     borderRadius: 0,
@@ -334,6 +328,8 @@ const components = {
     <img
       alt={alt}
       src={src}
+      loading="lazy"
+      decoding="async"
       className="rounded-lg my-6 w-full"
       style={{ boxShadow: 'var(--shadow-md)' }}
       {...props}
@@ -420,7 +416,7 @@ const components = {
   },
   th: ({ children, ...props }: React.HTMLAttributes<HTMLTableCellElement>) => (
     <th
-      className="font-bold text-left px-6 py-4 text-sm"
+      className="whitespace-nowrap px-3 py-3 text-left text-sm font-bold sm:px-6 sm:py-4"
       style={{
         backgroundColor: 'rgb(var(--color-muted))',
         color: 'rgb(var(--foreground-rgb))',
@@ -435,7 +431,7 @@ const components = {
   ),
   td: ({ children, ...props }: React.HTMLAttributes<HTMLTableCellElement>) => (
     <td
-      className="px-6 py-4 text-sm"
+      className="whitespace-nowrap px-3 py-3 text-sm sm:px-6 sm:py-4"
       style={{
         color: 'rgb(var(--foreground-muted-rgb))',
         lineHeight: '1.6',

@@ -4,6 +4,12 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --font-body: "Inter Variable", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  --font-heading: "Inter Variable", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-serif: "Noto Serif SC", "Songti SC", STSong, SimSun, serif;
+  --font-number: Georgia, "Times New Roman", serif;
+  --font-code: "JetBrains Mono", "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+
   /* Updated color system to match design proposal with warm beige palette */
   /* Main colors - Warm beige theme */
   --bg-primary: 245 245 213;
@@ -31,6 +37,14 @@
   --radius-card: 8px;
   --radius-button: 6px;
   --radius-full: 9999px;
+
+  /* Code blocks stay dark in both site themes. */
+  --code-background: #2d3748;
+  --code-header-background: #3d4754;
+  --code-foreground: #f7fafc;
+  --code-muted: #a0aec0;
+  --code-scrollbar: rgba(255, 255, 255, 0.35);
+  --code-scrollbar-hover: rgba(255, 255, 255, 0.55);
 
   /* Standard shadcn color mappings */
   --background: oklch(1 0 0);
@@ -111,10 +125,8 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-sans-en), var(--font-sans-sc);
-  --font-serif: "Times New Roman", "方正小标宋简体", "FZ XiaoBiaoSong-B05S", var(--font-serif-sc);
-  --font-numeric-serif: Georgia, "Times New Roman", "方正小标宋简体", "FZ XiaoBiaoSong-B05S", var(--font-serif-sc);
-  --font-mono: var(--font-sans-en), var(--font-sans-sc);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-code);
 
   /* Using design proposal colors with proper RGB values */
   --color-background: var(--bg-primary);
@@ -163,11 +175,25 @@
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   font-synthesis: none;
   font-synthesis-weight: none;
   background-color: rgb(var(--color-background));
   color: rgb(var(--color-foreground));
+  overflow-wrap: break-word;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
 }
 
 .about-page-shell {
@@ -186,8 +212,17 @@ body {
 }
 
 .font-serif {
+  font-family: var(--font-serif);
   font-synthesis: none;
   font-synthesis-weight: none;
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-number {
+  font-family: var(--font-number);
 }
 
 h1,
@@ -196,7 +231,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-serif);
+  font-family: var(--font-heading);
 }
 
 /* Enhanced Markdown rendering styles for blog content */
@@ -204,36 +239,49 @@ h6 {
   @apply text-foreground;
   font-size: 1rem;
   line-height: 1.7;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .article-content h1 {
-  @apply text-2xl font-serif font-bold mt-12 mb-6;
+  @apply text-2xl font-bold mt-12 mb-6;
+  font-family: var(--font-heading);
   color: #000000;
   line-height: 1.2;
 }
 
 .article-content h2 {
-  @apply text-xl font-serif font-bold mt-10 mb-5;
+  @apply text-xl font-bold mt-10 mb-5;
+  font-family: var(--font-heading);
   color: #000000;
 }
 
 .article-content h3 {
-  @apply text-lg font-serif font-bold mt-8 mb-4;
+  @apply text-lg font-bold mt-8 mb-4;
+  font-family: var(--font-heading);
   color: #000000;
 }
 
 .article-content h4 {
-  @apply text-base font-serif font-semibold mt-6 mb-3;
+  @apply text-base font-semibold mt-6 mb-3;
+  font-family: var(--font-heading);
   color: #000000;
 }
 
 .article-content p {
-  @apply font-serif leading-relaxed text-foreground;
+  @apply leading-relaxed text-foreground;
+  font-family: var(--font-body);
+}
+
+.article-content blockquote,
+.article-content blockquote p {
+  font-family: var(--font-serif);
 }
 
 .article-content ul,
 .article-content ol {
-  @apply font-serif mb-6 ml-6 space-y-2;
+  @apply mb-6 ml-6 space-y-2;
+  font-family: var(--font-body);
 }
 
 .article-content ul {
@@ -283,8 +331,35 @@ h6 {
   background: transparent;
   border-radius: 0;
   font-weight: normal;
-  font-family: var(--font-mono);
-  color: #e1e4e8;
+  font-family: var(--font-code);
+}
+
+.code-window-shell {
+  overflow: hidden;
+  background-color: var(--code-background);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.2), 0 1px 3px rgb(0 0 0 / 0.1);
+}
+
+.code-window-header {
+  background-color: var(--code-header-background);
+}
+
+.code-window-body,
+.article-content pre.code-block {
+  background-color: var(--code-background);
+}
+
+.article-content pre.code-block,
+.article-content pre.code-block code {
+  color: var(--code-foreground);
+}
+
+.code-window-copy {
+  color: var(--code-muted);
+}
+
+.code-window-copy:hover {
+  background-color: rgb(255 255 255 / 0.1);
 }
 
 /* Mermaid 图表查看器 */
@@ -505,7 +580,7 @@ h6 {
 /* 代码块滚动条（纵向、横向共用） */
 .code-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+  scrollbar-color: var(--code-scrollbar) transparent;
 }
 
 .code-scroll::-webkit-scrollbar {
@@ -514,19 +589,19 @@ h6 {
 }
 
 .code-scroll::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: transparent;
   border-radius: 999px;
 }
 
 .code-scroll::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.35);
+  background-color: var(--code-scrollbar);
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 
 .code-scroll::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.55);
+  background-color: var(--code-scrollbar-hover);
 }
 
 .code-scroll::-webkit-scrollbar-corner {
@@ -771,4 +846,48 @@ h6 {
 
 .dark .article-content ol ol ol {
   list-style-type: lower-roman;
+}
+
+@media (max-width: 639px) {
+  .article-content {
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .article-content h1 {
+    @apply mt-9 mb-4 text-2xl;
+  }
+
+  .article-content h2 {
+    @apply mt-8 mb-4 text-xl;
+  }
+
+  .article-content h3 {
+    @apply mt-7 mb-3 text-lg;
+  }
+
+  .article-content ul,
+  .article-content ol {
+    @apply ml-5;
+  }
+
+  .article-content blockquote {
+    @apply my-5 px-4 py-3;
+  }
+
+  .article-content th,
+  .article-content td {
+    @apply whitespace-nowrap px-3 py-2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

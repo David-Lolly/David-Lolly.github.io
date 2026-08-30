@@ -20,13 +20,13 @@ export function AboutTimelineClient({ data }: AboutTimelineClientProps) {
 
   return (
     <div className="about-page-shell min-h-screen bg-[#f6f1cf] text-stone-900 pb-16 dark:bg-black dark:text-foreground">
-      <main className="mx-auto max-w-7xl px-6 py-12 md:py-16">
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-12 md:py-16">
         <a href="/" className="mb-8 inline-flex items-center gap-2 text-sm font-bold text-stone-600 transition hover:text-stone-900 dark:text-muted-foreground dark:hover:text-foreground">
           <Icon name="arrowLeft" className="h-4 w-4" />
           返回首页
         </a>
 
-        <div className="space-y-16">
+        <div className="space-y-12 sm:space-y-16">
           {/* Hero Section */}
           <AboutHero
             profile={data.profile}

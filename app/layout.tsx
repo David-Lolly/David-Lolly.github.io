@@ -1,30 +1,11 @@
-import { Inter, Noto_Sans_SC, Noto_Serif_SC } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import "@fontsource-variable/inter/wght.css";
+import "@fontsource/jetbrains-mono/latin-400.css";
+import "@fontsource/jetbrains-mono/latin-500.css";
+import "@fontsource/jetbrains-mono/latin-700.css";
 import "./globals.css";
-import "katex/dist/katex.min.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
-
-const fontSansEn = Inter({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-sans-en",
-  display: "swap",
-});
-
-const fontSansSc = Noto_Sans_SC({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-sans-sc",
-  display: "swap",
-});
-
-const fontSerifSc = Noto_Serif_SC({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-serif-sc",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.davidxiong.site'),
@@ -41,13 +22,23 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f5d5" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" suppressHydrationWarning className={`${fontSansEn.variable} ${fontSansSc.variable} ${fontSerifSc.variable}`}>
+    <html lang="zh-CN" suppressHydrationWarning>
       <body className="font-sans antialiased">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
           {children}
