@@ -4,6 +4,7 @@ import * as React from "react"
 import { Fragment, jsx, jsxs } from "react/jsx-runtime"
 import { Copy, Check } from 'lucide-react'
 import { MdxImageLightbox } from "@/components/mdx-image-lightbox"
+import { MermaidDiagram } from "@/components/mermaid-diagram"
 
 type ElementWithChildren = React.ReactElement<{ children?: React.ReactNode }>
 
@@ -26,6 +27,19 @@ const toPlainText = (children: React.ReactNode): string => {
       return ""
     })
     .join(" ")
+}
+
+const toSourceText = (children: React.ReactNode): string => {
+  return React.Children.toArray(children)
+    .map((child) => {
+      if (typeof child === "string") return child
+      if (typeof child === "number") return child.toString()
+      if (React.isValidElement(child)) {
+        return toSourceText((child as ElementWithChildren).props?.children)
+      }
+      return ""
+    })
+    .join("")
 }
 
 const generateId = (children: React.ReactNode): string => {
@@ -169,6 +183,11 @@ const components = {
   pre: ({ children, ...props }: React.HTMLAttributes<HTMLPreElement>) => {
     const [copied, setCopied] = React.useState(false)
     const preRef = React.useRef<HTMLPreElement>(null)
+    const language = (props as React.HTMLAttributes<HTMLPreElement> & { "data-language"?: string })["data-language"]
+
+    if (language === "mermaid") {
+      return <MermaidDiagram chart={toSourceText(children).trim()} />
+    }
 
     const handleCopy = () => {
       if (preRef.current) {
@@ -270,6 +289,7 @@ const components = {
                     lineHeight: '1.7',
                     borderRadius: 0,
                     textIndent: 0,
+                    color: '#e1e4e8',
                   }}
                   {...props}
                 >

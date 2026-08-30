@@ -284,6 +284,222 @@ h6 {
   border-radius: 0;
   font-weight: normal;
   font-family: var(--font-mono);
+  color: #e1e4e8;
+}
+
+/* Mermaid 图表查看器 */
+.mermaid-viewer {
+  --mermaid-surface: rgb(var(--bg-card));
+  --mermaid-text: rgb(var(--foreground-rgb));
+  --mermaid-text-muted: rgb(var(--foreground-muted-rgb));
+  --mermaid-border-color: rgb(var(--border));
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--mermaid-border-color);
+  border-radius: 0.75rem;
+  background: var(--mermaid-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.mermaid-toolbar {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid var(--mermaid-border-color);
+  border-radius: 0.625rem;
+  background: color-mix(in srgb, var(--mermaid-surface) 92%, transparent);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(8px);
+}
+
+.mermaid-tool-button,
+.mermaid-scale-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.5rem;
+  border: 0;
+  border-radius: 0.4rem;
+  background: transparent;
+  color: var(--mermaid-text);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 160ms ease, opacity 160ms ease;
+}
+
+.mermaid-tool-button svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.mermaid-tool-button:hover:not(:disabled),
+.mermaid-scale-button:hover:not(:disabled) {
+  background: rgb(var(--foreground-rgb) / 0.08);
+}
+
+.mermaid-tool-button:focus-visible,
+.mermaid-scale-button:focus-visible {
+  outline: 2px solid rgb(var(--accent-blue));
+  outline-offset: 1px;
+}
+
+.mermaid-tool-button:disabled,
+.mermaid-scale-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.mermaid-scale-button {
+  min-width: 3.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.mermaid-canvas {
+  display: flex;
+  min-height: 14rem;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 4.25rem 1.5rem 1.75rem;
+  background: var(--mermaid-surface);
+  touch-action: pan-y;
+}
+
+.mermaid-canvas.is-zoomed {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.mermaid-canvas.is-dragging {
+  cursor: grabbing;
+}
+
+.mermaid-diagram {
+  width: 100%;
+  color: var(--mermaid-text);
+  transform-origin: center center;
+  transition: transform 160ms ease-out;
+  will-change: transform;
+}
+
+.mermaid-canvas.is-dragging .mermaid-diagram {
+  transition: none;
+}
+
+.mermaid-loading,
+.mermaid-error {
+  width: min(100%, 42rem);
+  color: var(--mermaid-text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.mermaid-error {
+  padding: 1rem;
+  border: 1px solid rgb(220 38 38 / 0.35);
+  border-radius: 0.625rem;
+  background: rgb(220 38 38 / 0.06);
+  color: var(--mermaid-text);
+  text-align: left;
+}
+
+.mermaid-error-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+}
+
+.mermaid-error-title svg {
+  width: 1rem;
+  height: 1rem;
+  color: rgb(220 38 38);
+}
+
+.mermaid-error p {
+  margin: 0.75rem 0;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  overflow-wrap: anywhere;
+}
+
+.mermaid-error summary {
+  cursor: pointer;
+  color: var(--mermaid-text-muted);
+  font-size: 0.8125rem;
+}
+
+.mermaid-error pre {
+  max-height: 14rem;
+  margin-top: 0.75rem;
+  overflow: auto;
+  padding: 0.875rem;
+  border-radius: 0.5rem;
+  background: #2d3748;
+  color: #e1e4e8;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  white-space: pre;
+}
+
+.mermaid-viewer:fullscreen {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--mermaid-surface);
+}
+
+.mermaid-viewer:fullscreen .mermaid-canvas {
+  flex: 1;
+  min-height: 0;
+  padding: 5rem clamp(1rem, 5vw, 5rem) 2rem;
+}
+
+@media (max-width: 640px) {
+  .mermaid-toolbar {
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  .mermaid-tool-button,
+  .mermaid-scale-button {
+    min-width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .mermaid-scale-button {
+    min-width: 3rem;
+  }
+
+  .mermaid-canvas {
+    min-height: 12rem;
+    padding: 4rem 0.75rem 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mermaid-diagram,
+  .mermaid-tool-button,
+  .mermaid-scale-button {
+    transition: none;
+  }
 }
 
 /* 代码块滚动条（纵向、横向共用） */
