@@ -1,0 +1,1207 @@
+---
+title: "Claude Code 是如何把工具调用做到极致的？"
+slug: "streaming-tool-calling-anthropic-openai-claude-code-harness"
+date: "2026-08-30"
+image: "./images/cover.png"
+categories:
+  - 前沿实践
+featured: false
+---
+
+# 一次讲透 Anthropic 与 OpenAI 的流式工具调用是怎么做到的
+
+很多人第一次接触 Agent 的 Tool Calling 时，会把它理解成：
+
+```text
+LLM 生成完整回答
+    ↓
+发现里面有工具调用
+    ↓
+执行工具
+    ↓
+把结果重新发给 LLM
+```
+
+这种理解没有错，但忽略了一个非常重要的优化空间：
+
+**模型本身就是流式输出的。一个工具调用可能在整个响应结束前几秒就已经生成完整，那么为什么一定要等整个模型响应结束后才执行？**
+
+Claude Code 这类成熟 Harness 做的事情，就是利用模型 API 提供的结构化流式事件，在一个工具调用完整生成后立即启动它，让“模型继续生成”和“工具执行”在时间上重叠。
+
+理解这个机制，需要先理解 Anthropic 和 OpenAI 的流式工具调用协议。
+
+---
+
+## 一、先建立一个统一的心智模型
+
+现代模型 API 并不是简单地：
+
+```text
+Transformer
+    ↓
+一个个字符串 Token
+    ↓
+HTTP
+```
+
+实际工程结构更接近：
+
+```text
+                Transformer
+                     │
+                Token Stream
+                     │
+                     ▼
+          ┌────────────────────┐
+          │ Inference Runtime  │
+          │                    │
+          │ Reasoning Parser   │
+          │ Tool Call Parser   │
+          │ Structured Output  │
+          └─────────┬──────────┘
+                    │
+             Structured Events
+                    │
+          ┌─────────┴─────────┐
+          ▼                   ▼
+    Anthropic Adapter     OpenAI Adapter
+          │                   │
+          ▼                   ▼
+   content_block_*      response.* events
+```
+
+模型内部可能使用特殊 token、工具调用模板或者 JSON grammar 来区分：
+
+```text
+thinking
+text
+tool call
+tool arguments
+```
+
+但这些底层格式通常不会直接暴露给开发者。
+
+开发者真正看到的是经过推理服务解析后的**结构化事件流**。
+
+这也是理解所有 Harness 的关键：
+
+> Harness 操作的不是裸模型 Token，而是推理服务已经解析好的 Text Block、Tool Call、Arguments Delta 等结构。
+
+---
+
+# 二、Anthropic：Message 由多个 Content Block 组成
+
+Anthropic Messages API 最重要的设计是：
+
+```text
+一个 Assistant Message
+不是一段字符串，
+而是一组 Content Block。
+```
+
+例如一次 Claude 响应可能是：
+
+```json
+{
+  "role": "assistant",
+  "content": [
+    {
+      "type": "text",
+      "text": "我先检查两个配置文件。"
+    },
+    {
+      "type": "tool_use",
+      "id": "toolu_A",
+      "name": "Read",
+      "input": {
+        "file_path": "package.json"
+      }
+    },
+    {
+      "type": "tool_use",
+      "id": "toolu_B",
+      "name": "Read",
+      "input": {
+        "file_path": "tsconfig.json"
+      }
+    }
+  ],
+  "stop_reason": "tool_use"
+}
+```
+
+因此实际上是：
+
+```text
+Assistant Message
+│
+├── content[0] = text
+│
+├── content[1] = tool_use A
+│
+└── content[2] = tool_use B
+```
+
+这里的 `index` 就是 Content Block 在最终 `content[]` 中的位置。
+
+Anthropic 官方的 Streaming Messages 协议明确规定：一个 Message 流首先出现 `message_start`，随后每个 Content Block 都独立经历 `content_block_start → content_block_delta → content_block_stop`，最后才是 `message_delta → message_stop`。
+
+---
+
+# 三、Anthropic 一个 Tool Call 是怎么流出来的
+
+假设 Claude 要调用：
+
+```text
+get_weather(city="武汉")
+```
+
+最开始并不是直接收到完整 JSON。
+
+首先：
+
+```json
+{
+  "type": "content_block_start",
+  "index": 1,
+  "content_block": {
+    "type": "tool_use",
+    "id": "toolu_123",
+    "name": "get_weather",
+    "input": {}
+  }
+}
+```
+
+这里已经知道：
+
+```text
+这是一个 tool_use
+tool id = toolu_123
+tool name = get_weather
+```
+
+但是参数还没有生成完成，因此：
+
+```json
+"input": {}
+```
+
+只是占位符。
+
+之后参数会通过一系列：
+
+```text
+input_json_delta
+```
+
+流出来。
+
+例如：
+
+```json
+{
+  "type": "content_block_delta",
+  "index": 1,
+  "delta": {
+    "type": "input_json_delta",
+    "partial_json": "{\"city\":"
+  }
+}
+```
+
+下一块：
+
+```json
+{
+  "type": "content_block_delta",
+  "index": 1,
+  "delta": {
+    "type": "input_json_delta",
+    "partial_json": "\"武汉\"}"
+  }
+}
+```
+
+客户端只需要：
+
+```python
+arguments_buffer += event.delta.partial_json
+```
+
+最终：
+
+```text
+{"city":"武汉"}
+```
+
+然后收到：
+
+```json
+{
+  "type": "content_block_stop",
+  "index": 1
+}
+```
+
+此时才意味着：
+
+> **index=1 这个 tool_use block 已经完整。**
+
+Anthropic 官方明确推荐的处理方式也是：在 `content_block_start` 初始化 buffer，不断拼接 `partial_json`，到 `content_block_stop` 再解析完整 JSON。
+
+---
+
+# 四、最关键：content_block_stop 不等于 message_stop
+
+这是 Claude Code 能实现 Streaming Tool Execution 的根本原因。
+
+一次响应可能是：
+
+```text
+message_start
+
+    content_block_start index=0 text
+        text_delta
+        text_delta
+    content_block_stop index=0
+
+    content_block_start index=1 tool_use A
+        input_json_delta
+        input_json_delta
+    content_block_stop index=1
+
+    content_block_start index=2 tool_use B
+        input_json_delta
+        input_json_delta
+    content_block_stop index=2
+
+message_delta
+message_stop
+```
+
+注意：
+
+```text
+Tool A content_block_stop
+```
+
+发生时：
+
+```text
+整个 Message 还没有结束。
+```
+
+模型可能仍在继续生成 Tool B。
+
+因此时间线可以变成：
+
+```text
+Claude Streaming
+──────────────────────────────────────>
+
+Text
+─────
+
+      Tool A generating
+      ───────────────┐
+                     │ block_stop
+                     ▼
+                  Execute A
+                  ───────────>
+
+                     Tool B generating
+                     ───────────────┐
+                                    │ block_stop
+                                    ▼
+                                 Execute B
+                                 ─────────>
+
+                                         message_stop
+```
+
+这就是流式工具执行真正优化的地方。
+
+---
+
+# 五、Claude Code Harness 做了什么
+
+传统 Harness：
+
+```text
+模型 Streaming
+─────────────────────┐
+                     │ message_stop
+                     ▼
+
+                     Tool A
+                     ───────
+
+                            Tool B
+                            ───────
+
+                                   下一轮模型
+```
+
+总延迟近似：
+
+```text
+Model Generation Time
++
+Tool Execution Time
+```
+
+而 Claude Code 这样的 Streaming Tool Executor 会在完整 `tool_use block` 到达后马上把工具加入执行队列。
+
+逻辑可以抽象成：
+
+```python
+for event in model_stream:
+
+    if event is TEXT_DELTA:
+        show_to_ui(event.text)
+
+    if event is TOOL_START:
+        create_tool_state(
+            index=event.index,
+            id=event.id,
+            name=event.name
+        )
+
+    if event is TOOL_ARGUMENT_DELTA:
+        tools[event.index].arguments += event.partial_json
+
+    if event is TOOL_BLOCK_STOP:
+        tool = tools[event.index]
+
+        args = json.loads(tool.arguments)
+
+        start_tool_execution(
+            tool.name,
+            args
+        )
+```
+
+真正的 Claude Code 实现也是收到完整的 `ToolUseBlock` 后立即放入 `StreamingToolExecutor`，随后根据工具的 concurrency-safe 属性决定是否立刻执行。工具执行本身使用异步 generator，因此 Bash stdout 等 progress 可以继续实时发送给 UI。
+
+---
+
+# 六、工具执行完了，会马上重新调用模型吗？
+
+不会。
+
+这一点特别容易误解。
+
+Streaming Tool Execution 的意思是：
+
+```text
+提前执行工具
+```
+
+而不是：
+
+```text
+某个工具一完成
+立刻启动下一轮 LLM
+```
+
+假设这一轮模型生成三个工具：
+
+```text
+Tool A
+Tool B
+Tool C
+```
+
+可能：
+
+```text
+A 1 秒完成
+B 3 秒完成
+C 6 秒完成
+```
+
+Harness 可以：
+
+```text
+1s  → A result ready
+3s  → B result ready
+6s  → C result ready
+```
+
+甚至把这些结果实时展示给 UI。
+
+但是下一次 LLM 请求通常仍然有一个 **turn-level barrier**：
+
+```text
+当前 Assistant Message 完成
++
+这一轮所有 Tool Use 处理完成
+                     │
+                     ▼
+              下一轮 LLM
+```
+
+原因很简单。
+
+如果 Assistant 已经生成：
+
+```text
+tool_use A
+tool_use B
+tool_use C
+```
+
+你在只拿到 A 结果时就重新调用模型：
+
+```text
+Assistant:
+A B C
+
+User:
+result A
+
+Assistant:
+???
+```
+
+那么 B、C 仍然处于悬空状态。
+
+与此同时它们又可能随时完成，Conversation Ordering 会变得非常复杂。
+
+所以成熟 Harness 通常采用：
+
+```text
+执行提前
+反馈可以流式
+下一轮推理仍按 Turn 收口
+```
+
+Claude Code 当前的 `getRemainingResults()` 就会持续等待、收集和 yield 剩余工具结果，直到这一批工具 drain 完毕，然后 Query Loop 才进入下一轮模型调用。
+
+---
+
+# 七、Anthropic 工具结果如何回给模型
+
+Claude 返回：
+
+```json
+{
+  "type": "tool_use",
+  "id": "toolu_A",
+  "name": "get_weather",
+  "input": {
+    "city": "武汉"
+  }
+}
+```
+
+你的程序执行：
+
+```text
+get_weather("武汉")
+```
+
+返回：
+
+```text
+28°C
+```
+
+下一轮要用 `user` message 中的 `tool_result`：
+
+```json
+{
+  "role": "user",
+  "content": [
+    {
+      "type": "tool_result",
+      "tool_use_id": "toolu_A",
+      "content": "武汉当前温度 28°C"
+    }
+  ]
+}
+```
+
+其中：
+
+```text
+tool_use.id
+       │
+       ▼
+tool_result.tool_use_id
+```
+
+就是跨消息关联工具请求与结果的 ID。Anthropic 对 client tool 的标准循环就是 `assistant.tool_use → application executes → user.tool_result → assistant continues`。
+
+---
+
+# 八、OpenAI 旧体系：Chat Completions
+
+很多 DeepSeek、vLLM、SGLang 和 OpenAI-compatible 服务现在依然广泛使用：
+
+```text
+/v1/chat/completions
+```
+
+它的 Tool Streaming 格式更加扁平。
+
+例如第一个 chunk：
+
+```json
+{
+  "choices": [
+    {
+      "delta": {
+        "tool_calls": [
+          {
+            "index": 0,
+            "id": "call_A",
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "arguments": ""
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+之后主要开始流：
+
+```json
+{
+  "choices": [
+    {
+      "delta": {
+        "tool_calls": [
+          {
+            "index": 0,
+            "function": {
+              "arguments": "{\"city\":"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+接下来：
+
+```json
+{
+  "choices": [
+    {
+      "delta": {
+        "tool_calls": [
+          {
+            "index": 0,
+            "function": {
+              "arguments": "\"武汉\"}"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+最终：
+
+```text
+finish_reason = tool_calls
+```
+
+客户端同样维护：
+
+```python
+tools[index]["arguments"] += delta
+```
+
+因此旧 Chat Completions 的核心也是：
+
+```text
+完整 Tool Name
++
+Arguments Delta
+```
+
+但它没有 Anthropic 那样清晰的：
+
+```text
+content_block_start
+content_block_stop
+```
+
+生命周期。
+
+这也是为什么从 Harness 设计角度来看，新的事件式协议更容易实现细粒度流水线。
+
+---
+
+# 九、OpenAI 新体系：Responses API
+
+OpenAI 的 Responses API 已经明显转向和 Anthropic 类似的 **Item + Event** 架构。
+
+最终一次 Response 可能包含：
+
+```text
+Response
+│
+├── reasoning item
+│
+├── message item
+│
+└── function_call item
+```
+
+一个函数调用是独立 Output Item：
+
+```json
+{
+  "type": "function_call",
+  "id": "fc_123",
+  "call_id": "call_456",
+  "name": "get_weather",
+  "arguments": "{\"city\":\"武汉\"}",
+  "status": "completed"
+}
+```
+
+OpenAI 官方 Responses API 将 `function_call` 定义成独立 output item，并为 function arguments 提供专门的 streaming delta 事件。
+
+---
+
+# 十、OpenAI Responses 的 Tool Streaming
+
+开始出现新的 Function Call Item：
+
+```json
+{
+  "type": "response.output_item.added",
+  "output_index": 1,
+  "item": {
+    "id": "fc_123",
+    "type": "function_call",
+    "call_id": "call_456",
+    "name": "get_weather",
+    "arguments": "",
+    "status": "in_progress"
+  }
+}
+```
+
+这里已经知道：
+
+```text
+这是 function_call
+name = get_weather
+call_id = call_456
+```
+
+随后：
+
+```json
+{
+  "type": "response.function_call_arguments.delta",
+  "item_id": "fc_123",
+  "output_index": 1,
+  "delta": "{\"city\":"
+}
+```
+
+然后：
+
+```json
+{
+  "type": "response.function_call_arguments.delta",
+  "item_id": "fc_123",
+  "output_index": 1,
+  "delta": "\"武汉\"}"
+}
+```
+
+最后有非常明确的：
+
+```json
+{
+  "type": "response.function_call_arguments.done",
+  "item_id": "fc_123",
+  "output_index": 1,
+  "name": "get_weather",
+  "arguments": "{\"city\":\"武汉\"}"
+}
+```
+
+OpenAI 官方定义中，`response.function_call_arguments.delta` 表示参数增量，而 `response.function_call_arguments.done` 表示参数已经最终确定。
+
+这就给 Harness 提供了和 Anthropic `content_block_stop` 很接近的工具执行边界。
+
+---
+
+# 十一、Anthropic 和 OpenAI 可以这样统一理解
+
+| 概念        | Anthropic                       | OpenAI Responses                |
+| --------- | ------------------------------- | ------------------------------- |
+| 整体响应      | Message                         | Response                        |
+| 一个结构化输出单元 | Content Block                   | Output Item                     |
+| 工具类型      | `tool_use`                      | `function_call`                 |
+| 工具位置      | `index`                         | `output_index`                  |
+| 调用关联 ID   | `tool_use.id`                   | `call_id`                       |
+| 工具名称      | `name`                          | `name`                          |
+| 参数增量      | `input_json_delta.partial_json` | `function_call_arguments.delta` |
+| 参数完成      | `content_block_stop`            | `function_call_arguments.done`  |
+| 整体结束      | `message_stop`                  | `response.completed`            |
+| 工具结果      | `tool_result`                   | `function_call_output`          |
+
+两种协议的名字不同，但工程本质已经高度一致：
+
+```text
+Structured Item Start
+        ↓
+知道 Tool Name / ID
+        ↓
+Arguments Delta
+        ↓
+Arguments Complete
+        ↓
+Execute Tool
+```
+
+---
+
+# 十二、OpenAI 的 function_call_output
+
+假设：
+
+```text
+call_id = call_456
+```
+
+工具执行结果：
+
+```text
+武汉 28°C
+```
+
+重新回传：
+
+```json
+{
+  "type": "function_call_output",
+  "call_id": "call_456",
+  "output": "武汉当前温度 28°C"
+}
+```
+
+因此：
+
+```text
+function_call.call_id
+        │
+        ▼
+function_call_output.call_id
+```
+
+和 Anthropic 的：
+
+```text
+tool_use.id
+        │
+        ▼
+tool_result.tool_use_id
+```
+
+实际上是同一个设计思想。
+
+---
+
+# 十三、为什么工具名称一出现就是完整的？
+
+无论 Anthropic：
+
+```json
+"name": "get_weather"
+```
+
+还是 OpenAI：
+
+```json
+"name": "get_weather"
+```
+
+通常第一次暴露给 API 时就是完整名称。
+
+这不意味着：
+
+```text
+get_weather
+```
+
+在模型内部一定只有一个 Token。
+
+模型完全可能实际生成：
+
+```text
+get
+_weather
+```
+
+甚至更多 token。
+
+只是中间还有一层：
+
+```text
+Model Token Stream
+        ↓
+Tool Parser
+        ↓
+确认完整 Tool Name
+        ↓
+Structured Tool Call Start
+```
+
+因此 API 没有必要把：
+
+```text
+get
+_get_wea
+get_weather
+```
+
+这些半成品暴露给客户端。
+
+Name 属于结构元数据，需要先确认完整；Arguments 通常可能很大，所以才真正进行增量流式传输。
+
+这也是为什么两个现代 API 都重点设计了：
+
+```text
+arguments delta
+```
+
+而不是：
+
+```text
+tool_name_delta
+```
+
+---
+
+# 十四、真正的 Harness 流水线
+
+到这里，就可以理解 Claude Code、Codex 这类 Agent Harness 的优化目标了。
+
+传统执行：
+
+```text
+                    时间 →
+
+Model
+████████████████████████
+
+Tool A                       ████
+Tool B                           ████
+
+Model #2                             █████████
+```
+
+Streaming Tool Execution：
+
+```text
+                    时间 →
+
+Model
+████████████████████████
+
+Tool A        ████
+
+Tool B                 ████
+
+Model #2                     █████████
+```
+
+过去：
+
+```text
+总延迟
+≈
+模型生成时间
++
+工具执行时间
+```
+
+优化后：
+
+```text
+总延迟
+≈
+max(
+    模型剩余生成时间,
+    工具执行时间
+)
+```
+
+如果：
+
+```text
+模型整轮 Streaming = 15 秒
+Tool A = 1 秒
+Tool B = 2 秒
+```
+
+而 Tool A 在第 4 秒已经完整、Tool B 在第 8 秒已经完整：
+
+```text
+4s  Tool A 开始
+5s  Tool A 完成
+
+8s  Tool B 开始
+10s Tool B 完成
+
+15s Model 完成
+```
+
+那么工具执行的两秒延迟几乎完全被模型本身的 Streaming 时间“隐藏”了。
+
+这就是 Streaming Tool Execution 的价值。
+
+---
+
+# 十五、一个简单 Harness 应该怎么写
+
+核心根本不复杂：
+
+```python
+async def run_agent():
+
+    tools = {}
+
+    async for event in call_model_stream():
+
+        # Anthropic
+        if event.type == "content_block_start":
+
+            if event.content_block.type == "tool_use":
+
+                tools[event.index] = {
+                    "id": event.content_block.id,
+                    "name": event.content_block.name,
+                    "args": "",
+                }
+
+
+        elif event.type == "content_block_delta":
+
+            if event.delta.type == "input_json_delta":
+
+                tools[event.index]["args"] += \
+                    event.delta.partial_json
+
+
+        elif event.type == "content_block_stop":
+
+            if event.index in tools:
+
+                tool = tools[event.index]
+
+                args = json.loads(tool["args"])
+
+                # 不等 message_stop
+                tool["task"] = asyncio.create_task(
+                    execute_tool(
+                        tool["name"],
+                        args
+                    )
+                )
+
+
+    # 当前 LLM response 已经结束
+    # 等仍未完成的工具收口
+
+    results = []
+
+    for tool in tools.values():
+
+        result = await tool["task"]
+
+        results.append({
+            "tool_use_id": tool["id"],
+            "result": result
+        })
+
+
+    # 收齐当前 turn 的 Tool Results 后
+    # 再进入下一次 LLM 请求
+
+    return await next_model_turn(results)
+```
+
+如果换 OpenAI Responses，结构基本不用变，只需要把事件映射改成：
+
+```text
+response.output_item.added
+→ 创建 Tool State
+
+response.function_call_arguments.delta
+→ 拼参数
+
+response.function_call_arguments.done
+→ 启动 Tool
+```
+
+真正优秀的 Harness 会在此基础上继续增加：
+
+```text
+并发安全判断
+依赖关系
+AbortController
+Permission Gate
+Tool Progress
+错误传播
+结果截断
+Context Management
+```
+
+但最核心的 Streaming Tool Execution 其实就是这么回事。
+
+---
+
+# 十六、最终理解：API Streaming 和 Tool Streaming 是两个不同概念
+
+很多人会认为：
+
+```text
+stream=true
+=
+流式显示文字
+```
+
+实际上现代 Agent API 的 Streaming 更重要的意义是：
+
+```text
+模型的“行为”本身也可以被流式观察。
+```
+
+例如：
+
+```text
+Text 开始
+Text 完成
+
+Tool A 开始
+Tool A 参数生成中
+Tool A 参数完成
+
+Tool B 开始
+Tool B 参数生成中
+Tool B 参数完成
+
+Message 完成
+```
+
+于是 Harness 不再必须：
+
+```text
+等待完整 Assistant Response
+        ↓
+一次性解析全部 Tool Calls
+        ↓
+开始执行
+```
+
+而可以：
+
+```text
+模型仍在 Decode
+        │
+        ├─ Tool A 完整 → Execute A
+        │
+        ├─ Tool B 完整 → Execute B
+        │
+        └─ 继续 Decode
+```
+
+这是一种非常典型的 Pipeline 思维。
+
+---
+
+# 结语
+
+Anthropic 和 OpenAI 表面上的消息格式差异很大：
+
+```text
+Anthropic
+content_block_start
+input_json_delta
+content_block_stop
+```
+
+对比：
+
+```text
+OpenAI Responses
+output_item.added
+function_call_arguments.delta
+function_call_arguments.done
+```
+
+但底层设计思想其实已经趋同：
+
+```text
+              Model Token Stream
+                     │
+                     ▼
+               Tool Parser
+                     │
+                     ▼
+          Structured Tool Call
+                     │
+          ┌──────────┴──────────┐
+          ▼                     ▼
+      Tool Name              Arguments
+      完整暴露               增量 Streaming
+          │                     │
+          └──────────┬──────────┘
+                     ▼
+              Tool Call Complete
+                     │
+                     ▼
+                Execute Tool
+                     │
+                     ▼
+                 Tool Result
+                     │
+                     ▼
+                Next LLM Turn
+```
+
+所以 Claude Code 这类 Harness 所谓的“流式工具调用优化”，本质并不是发明了一套新的 Tool Calling 协议，而是**充分利用模型 API 已经提供的结构化输出边界，将 Tool Execution 从“Response 完成之后”提前到“单个 Tool Call 完成之后”**。
+
+这一个看起来很小的调度变化，会把原本串行的：
+
+```text
+LLM → Tool → LLM
+```
+
+变成部分重叠的：
+
+```text
+LLM ──────────────────────>
+
+        Tool A ────>
+              Tool B ────>
+
+                         LLM →
+```
+
+对于一次模型输出需要 5～30 秒、而普通 Read/Grep/Search 工具可能只执行几百毫秒到几秒的 Coding Agent 来说，这种优化能够大量隐藏工具执行延迟。
+
+这也是为什么真正成熟的 Agent Harness，不只是“能够调用工具”，而是在研究：
+
+**什么时候知道一个 Action 已经足够完整，什么时候可以提前执行，以及怎样在不破坏 Conversation Turn 一致性的前提下，把推理和执行做成流水线。**

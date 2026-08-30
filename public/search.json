@@ -1,5 +1,15 @@
 [
   {
+    "title": "Agent执行单次任务的单位 - Turn",
+    "description": "",
+    "date": "2026-08-25T00:00:00.000Z",
+    "slug": "agent-turn-explained",
+    "type": "blog",
+    "categories": [
+      "前沿实践"
+    ]
+  },
+  {
     "title": "AI 编程工具时代的 Skills 实践指南",
     "description": "在 Claude Code、Codex 等 AI 编程工具兴起的时代，如何通过 Skills 最大化发挥个人能力，建立可复用、可分享的标准化工作流程。",
     "date": "2026-03-26T00:00:00.000Z",
@@ -10,16 +20,6 @@
     ]
   },
   {
-    "title": "入职四个月，我开始不再只用“研发工程师”定义自己",
-    "description": "从写代码、部署系统到制作PPT、剪辑视频，一名研发新人重新理解岗位边界与个人价值的四个月。",
-    "date": "2026-07-19T00:00:00.000Z",
-    "slug": "beyond-the-role-of-software-engineer",
-    "type": "blog",
-    "categories": [
-      "个人心法"
-    ]
-  },
-  {
     "title": "Clash 服务器中转代理：从配置到分流的全流程指南",
     "description": "通过 SSH 端口转发 + 服务器 Clash 中转，实现外网访问加速与智能分流的全流程指南，含端口冲突排查、yacd 面板配置、浏览器分流插件设置等排坑经验",
     "date": "2026-05-13T00:00:00.000Z",
@@ -27,16 +27,6 @@
     "type": "blog",
     "categories": [
       "前沿实践"
-    ]
-  },
-  {
-    "title": "CliProxyAPI Codex 认证与额度查询失败解决方案",
-    "description": "解决 CliProxyAPI 在 Windows 下 Codex 认证地区不支持、认证成功后额度获取失败等代理问题。",
-    "date": "2026-07-12T00:00:00.000Z",
-    "slug": "cli-proxy-api",
-    "type": "blog",
-    "categories": [
-      "个人心法"
     ]
   },
   {
@@ -60,20 +50,30 @@
     ]
   },
   {
+    "title": "CliProxyAPI Codex 认证与额度查询失败解决方案",
+    "description": "解决 CliProxyAPI 在 Windows 下 Codex 认证地区不支持、认证成功后额度获取失败等代理问题。",
+    "date": "2026-07-12T00:00:00.000Z",
+    "slug": "cli-proxy-api",
+    "type": "blog",
+    "categories": [
+      "个人心法"
+    ]
+  },
+  {
+    "title": "入职四个月，我开始不再只用“研发工程师”定义自己",
+    "description": "从写代码、部署系统到制作PPT、剪辑视频，一名研发新人重新理解岗位边界与个人价值的四个月。",
+    "date": "2026-07-19T00:00:00.000Z",
+    "slug": "beyond-the-role-of-software-engineer",
+    "type": "blog",
+    "categories": [
+      "个人心法"
+    ]
+  },
+  {
     "title": "GraphRAG 中文实战指南：使用国内大模型构建知识图谱",
     "description": "本文将详细介绍如何在 GraphRAG 中使用国内大模型（如阿里百炼），并通过中文提示词优化实体关系抽取效果，最终实现知识图谱的可视化展示。",
     "date": "2025-12-14T00:00:00.000Z",
     "slug": "graphrag_qwen",
-    "type": "blog",
-    "categories": [
-      "前沿实践"
-    ]
-  },
-  {
-    "title": "从原理到实战的 JWT 鉴权指南",
-    "description": "从原理到实战的 JWT 鉴权指南",
-    "date": "2025-12-27T00:00:00.000Z",
-    "slug": "jwt",
     "type": "blog",
     "categories": [
       "前沿实践"
@@ -100,6 +100,16 @@
     ]
   },
   {
+    "title": "从原理到实战的 JWT 鉴权指南",
+    "description": "从原理到实战的 JWT 鉴权指南",
+    "date": "2025-12-27T00:00:00.000Z",
+    "slug": "jwt",
+    "type": "blog",
+    "categories": [
+      "前沿实践"
+    ]
+  },
+  {
     "title": "第二个开源项目复盘 - ViewRAG",
     "description": "记录第二个开源项目 ViewRAG 的开发历程，探索 AI 编程时代的架构设计、需求表达与验收实践",
     "date": "2026-04-10T00:00:00.000Z",
@@ -117,6 +127,16 @@
     "type": "blog",
     "categories": [
       "个人心法"
+    ]
+  },
+  {
+    "title": "Claude Code 是如何把工具调用做到极致的？",
+    "description": "",
+    "date": "2026-08-30T00:00:00.000Z",
+    "slug": "streaming-tool-calling-anthropic-openai-claude-code-harness",
+    "type": "blog",
+    "categories": [
+      "前沿实践"
     ]
   },
   {
@@ -140,22 +160,9 @@
     ]
   },
   {
-    "title": "TinyAISearch",
-    "description": "TinyAISearch 是一个轻量但强大的 AI 搜索项目，为你完整揭示从智能搜索规划、网页爬取、内容召回到流式问答的 RAG 全链路。",
-    "date": "2026-07-20T02:50:43.958Z",
-    "slug": "tiny-ai-search",
-    "type": "project",
-    "tags": [
-      "Python",
-      "LangChain",
-      "FastAPI",
-      "AI"
-    ]
-  },
-  {
     "title": "ViewRAG",
     "description": "基于 RAG 的 PDF 智能解析系统，支持图片和表格精准召回、引用溯源、图文并茂问答",
-    "date": "2026-07-20T02:50:43.958Z",
+    "date": "2026-08-30T14:00:57.160Z",
     "slug": "viewrag-pdf-rag",
     "type": "project",
     "tags": [
@@ -165,6 +172,19 @@
       "FastAPI",
       "pgvector",
       "LLM"
+    ]
+  },
+  {
+    "title": "TinyAISearch",
+    "description": "TinyAISearch 是一个轻量但强大的 AI 搜索项目，为你完整揭示从智能搜索规划、网页爬取、内容召回到流式问答的 RAG 全链路。",
+    "date": "2026-08-30T14:00:57.160Z",
+    "slug": "tiny-ai-search",
+    "type": "project",
+    "tags": [
+      "Python",
+      "LangChain",
+      "FastAPI",
+      "AI"
     ]
   }
 ]
