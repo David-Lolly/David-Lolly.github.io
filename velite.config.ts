@@ -120,7 +120,8 @@ const basic = defineCollection({
       // About 字段
       title: s.string().optional(),
       slug: s.string().optional(),
-      body: s.mdx(),
+      // 个人资料仅由 frontmatter 组成，无需强制提供 Markdown 正文。
+      body: s.mdx().optional(),
       content: s.raw(), // 原始 Markdown 内容
     })
     .transform((data) => {
