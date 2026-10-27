@@ -1,5 +1,15 @@
 [
   {
+    "title": "深度拆解 DeepSeek 在线推理系统的 PD 分离架构",
+    "description": "从单机混合部署的卡顿根源出发，拆解 DeepSeek 生产级在线推理系统如何用 PD 分离、3FS 全局 KV Cache、逐层异步传输与异构并行拓扑，同时守住首字延迟与生成流畅度。",
+    "date": "2026-10-27T00:00:00.000Z",
+    "slug": "deepseek-pd-disaggregation-inference-architecture",
+    "type": "blog",
+    "categories": [
+      "前沿实践"
+    ]
+  },
+  {
     "title": "26届毕业生半年网络安全入行的复盘",
     "description": "从几乎不懂网络安全，到半年后逐渐摸到门槛。回头复盘这段经历，我总结了几条快速进入陌生领域的模式",
     "date": "2026-09-13T00:00:00.000Z",
