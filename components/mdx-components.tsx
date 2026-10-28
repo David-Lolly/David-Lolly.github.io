@@ -123,7 +123,6 @@ const components = {
     <blockquote
       className="my-6 pl-5 font-serif italic"
       style={{
-        borderLeft: '4px solid rgb(var(--color-primary))',
         backgroundColor: 'rgb(var(--color-muted) / 0.5)',
         padding: '1rem 1.25rem',
         borderRadius: '0 var(--radius-button) var(--radius-button) 0',
