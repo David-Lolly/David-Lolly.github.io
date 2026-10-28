@@ -1,4 +1,4 @@
-﻿---
+---
 title: 深度拆解 DeepSeek 在线推理系统的 PD 分离架构
 slug: deepseek-pd-disaggregation-inference-architecture
 date: 2026-10-27
@@ -43,7 +43,7 @@ PD 分离（Prefill 和 Decode 两阶段拆开，分别部署在不同的机器�
 
 ```mermaid
 flowchart LR
-    subgraph MIX["单机混合部署<br/>共用同一组 GPU"]
+    subgraph MIX["单机混合部署 ｜ 共用同一组 GPU"]
         direction TB
         M1["Step 1：Decode A<br/>15 ms：生成流畅"]
         M2["Step 2：混入 Prefill B 分块<br/>120 ms：输出卡顿"]
@@ -51,7 +51,7 @@ flowchart LR
         M1 --> M2 --> M3
     end
 
-    subgraph PD["PD 分离部署<br/>两组集群独立运行"]
+    subgraph PD["PD 分离部署 ｜ 两组集群独立运行"]
         direction TB
         P1["Prefill 集群<br/>处理 B 的 32K 输入"]
         D1["Decode 集群<br/>持续生成 A，间隔 15 ms"]
@@ -186,20 +186,24 @@ flowchart LR
 在 DeepSeek 的生产系统中，KV Cache 的流转被明确划分为**两条完全独立的路径**：一条服务于当前请求的低延迟在线交接，另一条服务于跨请求的持久化前缀复用。
 
 ```mermaid
+%%{init: {"flowchart": {"rankSpacing": 52}}}%%
 flowchart TB
     Req["新请求进入 Entrypoint"]
     Check["CHECK：按哈希链<br/>检索前缀缓存元数据"]
     PLB["Prefill 负载均衡器<br/>按剩余计算量派发"]
 
     subgraph PPool["Prefill 集群"]
+        direction TB
         PInst["Prefill 实例<br/>换入命中前缀 KV<br/>计算未命中后缀"]
     end
 
     subgraph DPool["Decode 集群"]
+        direction TB
         DInst["Decode 实例<br/>接收完整 Prompt KV<br/>逐 Token 生成回答"]
     end
 
     subgraph StoragePool["3FS 存储集群"]
+        direction TB
         FS["持久化 Block KV Cache<br/>Agent：3 天／Chatbot：7 天"]
     end
 
