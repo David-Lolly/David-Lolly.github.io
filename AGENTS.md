@@ -1,5 +1,13 @@
 # Repository Guidelines
 
+## 博客与项目发布流程
+
+整理、预览、发布博客或项目内容时，必须先读取并遵循 [.agents/skills/blog-poster/SKILL.md](.agents/skills/blog-poster/SKILL.md)。发布 skill 仅维护在 `.agents/skills/`，不维护 `.opencode/` 副本。
+
+文章语法（尤其 Mermaid）及保持原意的排版问题直接修复；需要改站点源码时，先向用户说明问题、拟修复方案和影响范围，确认后再修改。含 Mermaid 的文章必须在预览阶段由 agent 使用浏览器逐图验收，语法检查与构建不能代替实际渲染检查。
+
+仅在用户要求推送时，于最后运行生产构建，成功后再推送；构建后无需再次打开浏览器。仅要求本地提交时不提前构建。预览完成后停止 agent 本次启动的本地服务，除非用户明确要求保留；不得擅自停止其他服务。
+
 ## Git 提交规范
 
 本仓库使用 Conventional Commits。提交记录必须让维护者仅通过提交信息就能理解修改目的、具体影响和验证方式。
