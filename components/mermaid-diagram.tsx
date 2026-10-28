@@ -73,6 +73,7 @@ export function MermaidDiagram({ chart }: MermaidDiagramProps) {
   const dragStartRef = React.useRef<Position | null>(null)
   const positionStartRef = React.useRef<Position>({ x: 0, y: 0 })
   const bindFunctionsRef = React.useRef<((element: Element) => void) | null>(null)
+  const renderSequenceRef = React.useRef(0)
   const renderId = React.useId().replace(/[^a-zA-Z0-9_-]/g, "")
   const [svg, setSvg] = React.useState("")
   const [error, setError] = React.useState<string | null>(null)
@@ -108,10 +109,10 @@ export function MermaidDiagram({ chart }: MermaidDiagramProps) {
 
   React.useEffect(() => {
     let cancelled = false
+    const renderSequence = ++renderSequenceRef.current
 
     const renderDiagram = async () => {
       setError(null)
-      setSvg("")
       bindFunctionsRef.current = null
 
       try {
@@ -131,7 +132,7 @@ export function MermaidDiagram({ chart }: MermaidDiagramProps) {
           },
         })
 
-        const result = await mermaid.render(`mermaid-${renderId}`, chart)
+        const result = await mermaid.render(`mermaid-${renderId}-${renderSequence}`, chart)
         if (cancelled) return
 
         bindFunctionsRef.current = result.bindFunctions ?? null
@@ -149,7 +150,7 @@ export function MermaidDiagram({ chart }: MermaidDiagramProps) {
     }
   }, [chart, isDark, renderId])
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (!svg || !diagramRef.current) return
 
     const svgElement = diagramRef.current.querySelector("svg")
