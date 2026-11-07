@@ -2,6 +2,8 @@
 
 ## 博客与项目发布流程
 
+同步微信公众号文章（`mp.weixin.qq.com`）到博客时，先读取 [.agents/skills/wechat-blog-sync/SKILL.md](.agents/skills/wechat-blog-sync/SKILL.md)，完成原文提取、本地资源保存与完整性核对，再衔接发布流程。
+
 整理、预览、发布博客或项目内容时，必须先读取并遵循 [.agents/skills/blog-poster/SKILL.md](.agents/skills/blog-poster/SKILL.md)。发布 skill 仅维护在 `.agents/skills/`，不维护 `.opencode/` 副本。
 
 文章语法（尤其 Mermaid）及保持原意的排版问题直接修复；需要改站点源码时，先向用户说明问题、拟修复方案和影响范围，确认后再修改。含 Mermaid 的文章必须在预览阶段由 agent 使用浏览器逐图验收，语法检查与构建不能代替实际渲染检查。
