@@ -188,7 +188,7 @@ export default function BlogPage() {
                   <img
                     src={article.image || "/placeholder.svg"}
                     alt={article.title}
-                    className="w-full h-full object-cover transition-transform duration-300 motion-safe:md:group-hover:scale-105"
+                    className={`w-full h-full ${article.imageFit === "contain" ? "object-contain" : "object-cover transition-transform duration-300 motion-safe:md:group-hover:scale-105"}`}
                   />
                 </div>
 

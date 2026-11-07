@@ -1,5 +1,15 @@
 [
   {
+    "title": "梁子Or梁圣：看懂DeepSeek开源背后的布局",
+    "description": "DeepSeek开源并非慈善，而是算力受限下的精算：以开放权重和生态换取全球推广、行业标准与信任，用“空间换时间”缓解算力与巨头围剿；同时锁住缓存调度等核心成本引擎，守住商业护城河",
+    "date": "2026-11-05T00:00:00.000Z",
+    "slug": "deepseek-open-source-strategy",
+    "type": "blog",
+    "categories": [
+      "行业洞察"
+    ]
+  },
+  {
     "title": "深度拆解 DeepSeek 在线推理系统的 PD 分离架构",
     "description": "从单机混合部署的卡顿根源出发，拆解 DeepSeek 生产级在线推理系统如何用 PD 分离、3FS 全局 KV Cache、逐层异步传输与异构并行拓扑，同时守住首字延迟与生成流畅度。",
     "date": "2026-10-27T00:00:00.000Z",
@@ -7,6 +17,56 @@
     "type": "blog",
     "categories": [
       "前沿实践"
+    ]
+  },
+  {
+    "title": "Codex 沙箱核心机制：Agent 安全的最后一道防线",
+    "description": "Codex沙箱的两大核心 - 文件权限和网络权限，一个把Agent的文件权限操作权限牢牢限制住，一个把网络请求把控住，从系统底层避免了Agent做出预期之外的操作，而不是通过提示词的方式让Agent乖乖遵守。",
+    "date": "2026-10-07T00:00:00.000Z",
+    "slug": "codex-sandbox-security-mechanism",
+    "type": "blog",
+    "categories": [
+      "AI实践"
+    ]
+  },
+  {
+    "title": "我们不可能准备好再开始",
+    "description": "我们不可能等到一切都准备好了再去做某件事，因为这一天可能永远都不会到来。反过来说就是，你现在已经准备好了，你已经可以开始去做了，并且你做成什么样，我都不会惊讶。",
+    "date": "2026-10-03T00:00:00.000Z",
+    "slug": "start-before-you-are-ready",
+    "type": "blog",
+    "categories": [
+      "个人心法"
+    ]
+  },
+  {
+    "title": "两行代码的bug，让SGLang在两天崩溃了13次",
+    "description": "两行代码的bug，让SGLang两天崩溃13次，我把整个整个排查、分析、解决过程记录了下来",
+    "date": "2026-09-23T00:00:00.000Z",
+    "slug": "sglang-mixed-logprob-batch-crash",
+    "type": "blog",
+    "categories": [
+      "技术分享"
+    ]
+  },
+  {
+    "title": "从部署 SemIf （OpenJev）开始，我为什么又做了一个 Jev的开源复刻项目",
+    "description": "今天早上领导给我发了一个开源项目 SemIf，让我部署起来看看。我一开始其实并不是特别了解 Jev，也不是因为对这个方向感兴趣才主动研究。",
+    "date": "2026-09-21T00:00:00.000Z",
+    "slug": "jev-compatible-gateway-from-semif",
+    "type": "blog",
+    "categories": [
+      "AI实践"
+    ]
+  },
+  {
+    "title": "AI时代，简历应该怎么写",
+    "description": "记录了近期帮老同学改简历的过程和我对写简历这件事情的思考，把陪伴我三次找工作经历的简历模板放在后面，并且附上使用教程，希望对现在或者未来找工作的同学有所帮助。本文很多内容是通用的，不仅仅是针对计算机专业的同学。",
+    "date": "2026-09-19T00:00:00.000Z",
+    "slug": "writing-a-resume-in-the-ai-era",
+    "type": "blog",
+    "categories": [
+      "个人心法"
     ]
   },
   {

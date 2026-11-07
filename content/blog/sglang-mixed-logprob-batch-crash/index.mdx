@@ -1,0 +1,197 @@
+---
+title: "两行代码的bug，让SGLang在两天崩溃了13次"
+slug: sglang-mixed-logprob-batch-crash
+date: 2026-09-23
+image: ./images/cover.jpg
+imageFit: contain
+description: "两行代码的bug，让SGLang两天崩溃13次，我把整个整个排查、分析、解决过程记录了下来"
+categories: [技术分享]
+featured: false
+---
+
+前天（9月21号）做了个jev-compatible网关，当天就部署使用了，昨天早上10点多，我的领导诚哥跟我反馈网关没法使用了，日志显示的是SGlang后端服务故障，我直接让AI帮我去分析了一下，下图是它给出的结论，加上SGlang已经被supervisord拉起了了，我就没太在意，看到SIGKILL就主观的认为是不是这段时间有其他同事改了SGlang配置并重启了服务，在晚上快下班的时候诚哥又反馈网关没法用，下班后一起去健身房的路上，诚哥跟我说：你有点缺乏问题排查的直觉。这句话击中了我，这也是为什么要写这篇文章的原因。
+
+经过今天的排查和复盘，我认为这个问题可以进一步的思考，我缺少的可能不仅仅是问题排查的直觉，这个我准备放在后半部分展开，先从解决SGLang频繁崩溃说起。
+
+01
+
+SGLang频繁崩溃问题排查
+
+## 真实触发情况（线上时间线）
+
+看了崩溃日志才发现这段时间内崩溃了13次（来源 `/var/log/sglang-qwen38.err.log`，grep `Scheduler hit an exception`）：
+
+| 日期 | 崩溃时刻 | 崩溃阶段 |
+| --- | --- | --- |
+| 09-21 | 16:10:20<br />16:38:14<br />17:32:01<br />17:46:01 | decode |
+| 09-22 | 10:13:23<br />11:06:04<br />11:09:21<br />11:11:13<br />11:13:04 | decode |
+| 09-22 | 11:15:11 | prefill |
+| 09-22 | 18:02:55<br />19:05:38 | decode |
+| 09-23 | 09:59:37 | decode |
+
+问题出现之后，排查了sglang的日志
+
+```text
+[2026-09-22 18:02:55 TP2] Scheduler hit an exception: Traceback (most recent call last):
+  File ".../sglang/srt/managers/scheduler.py", line 5159, in run_scheduler_process
+    scheduler.run_event_loop()
+  File ".../sglang/srt/managers/scheduler.py", line 1727, in run_event_loop
+    dispatch_event_loop(self)
+  File ".../sglang/srt/managers/scheduler.py", line 5008, in dispatch_event_loop
+    scheduler.event_loop_overlap()
+  File ".../torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+  File ".../sglang/srt/managers/scheduler.py", line 1836, in event_loop_overlap
+    pop_and_process()
+  File ".../sglang/srt/managers/scheduler.py", line 1787, in pop_and_process
+    self.process_batch_result(tmp_batch, tmp_result)
+  File ".../sglang/srt/utils/nvtx_utils.py", line 109, in wrapper
+    return func(*args, **kwargs)
+  File ".../sglang/srt/managers/scheduler.py", line 4002, in process_batch_result
+    self.batch_result_processor.process_batch_result_decode(batch, result)
+  File ".../sglang/srt/managers/scheduler_components/batch_result_processor.py", line 825, in process_batch_result_decode
+    next_token_ids, next_token_logprobs = self._normalize_decode_outputs(
+  File ".../sglang/srt/managers/scheduler_components/batch_result_processor.py", line 952, in _normalize_decode_outputs
+    v.tolist() for v in logits_output.next_token_token_ids_logprobs_val
+    ^^^^^^^^
+AttributeError: 'list' object has no attribute 'tolist'
+```
+
+```text
+发现报错都是和上面一样的内容，跟着报错日志排查找到对应的代码位置
+```
+
+<strong>问题机制</strong>（两段代码配合出错）：
+
+<strong>(a) 上游按请求类型写入不同类型元素</strong> `
+`
+
+`python/sglang/srt/layers/logprob_processor.py`，`
+`
+
+```python
+get_token_ids_logprobs_raw()：
+if stage == LogprobStage.DECODE:
+    for i, token_ids in enumerate(token_ids_logprobs_list):
+        if token_ids is None:            # 普通对话调用/chat/completions的接口
+            vals.append([])              # 当 batch 中某个请求没有申请 token_ids_logprob 时，SGLang 仍会为它保留一个空列表占位。这样 next_token_token_ids_logprobs_val[i] 始终对应 batch.reqs[i]，不会因为某个请求不需要该结果而破坏批次内的位置关系。
+            idxs.append([])
+        else:                            # jev-compatible网关需要对应token的lgoprb调用/generate接口，批次中带 token_ids_logprob 的请求
+            token_ids_tensor = torch.tensor(token_ids, ...).to(logprobs.device, ...)
+            row = logprobs[i, token_ids_tensor]
+            vals.append(row if no_copy_to_cpu else row.tolist())  # 放入 torch.Tensor
+```
+
+`sglang为了更高的推理效率，整个过程是批处理，当一个批次`<strong>同时包含</strong>两类请求时，tensor（sglang把需要返回概率的请求的对应位置logprob封装为tensor格式） 与 空\[ \]（普通对话请求不需要对应位置token的概率，使用空列表进行占位） 混装。
+
+<strong>(b)下游无差别 <strong>`.tolist()`</strong>`
+`</strong>`python/sglang/srt/managers/scheduler_components/batch_result_processor.py`：
+
+```python
+if logits_output.next_token_token_ids_logprobs_val:
+    logits_output.next_token_token_ids_logprobs_val = [
+        v.tolist() for v in logits_output.next_token_token_ids_logprobs_val  # v 为 [] 时崩溃
+    ]
+```
+
+导致sglang的scheduler直接崩溃，整个服务退出，supervisord继续拉取，然后陷入不断重复的崩溃循环中，持续了两天。
+
+直观一些来看就是
+
+```text
+1：普通请求
+2：Jev-compatible request
+3：普通请求
+4：Jev-compatible request
+```
+
+上游得到：
+
+```text
+[
+    [],
+    Tensor(...),
+    [],
+    Tensor(...)
+]
+```
+
+```text
+然后进入 scheduler：[  v.tolist() for v in next_token_token_ids_logprobs_val]
+执行过程：v = []↓[].tolist()↓AttributeError
+```
+
+定位到问题之后进行复现，先发送几个对话请求，中间穿插来自jev-compatible网关的请求，果然复现了观察到的现象
+
+```bash
+# 1) 4 个长生成（return_logprob，无 token_ids_logprob）
+for i in 1 2 3 4; do
+  curl -s <http://127.0.0.1:30000/generate> -H 'Content-Type: application/json' \
+    -d '{"text":"write a very long detailed story about dragons",
+         "sampling_params":{"temperature":0,"max_new_tokens":256},
+         "return_logprob":true}' &
+done
+# 2) 等 3 秒（长请求进入 decode/verify 批次），中途插入打分型请求
+sleep 3
+for i in 1 2 3 4; do
+  curl -s <http://127.0.0.1:30000/generate> -H 'Content-Type: application/json' \
+    -d '{"input_ids":[9707,11,1879,374,420,7071],
+         "sampling_params":{"temperature":0,"max_new_tokens":1},
+         "return_logprob":true,
+         "token_ids_logprob":[100,200,300],
+         "return_text_in_logprobs":true}' &
+done
+wait
+# 3) 期望：打分请求正常返回；实际（修复前）：数秒内 4 个 scheduler 全部
+#    抛 AttributeError，engine 退出（supervisord/进程管理器自动重启）。
+```
+
+<strong>对照实验</strong>（证明混批是必要条件）：
+
+- 仅发普通对话请求（一批全是 tensor）→ 正常；
+
+- 仅发来自jev-compatible网关的请求（不进 token\_ids logprob 逻辑）→ 正常；
+
+- 长生成跑动中插入打分请求 → 必现崩溃。
+
+### 怎么修改：
+
+修改起来非常简单，最小修复：加类型守卫，对 list 元素跳过`.tolist()`。共<strong>2 处</strong>，均在`
+`
+
+`python/sglang/srt/managers/scheduler_components/batch_result_processor.py`：
+
+```diff
+# prefill 路径 move_logprobs_to_cpu()
+ if logits_output.next_token_token_ids_logprobs_val:
+     logits_output.next_token_token_ids_logprobs_val = [
+-        v.tolist() for v in logits_output.next_token_token_ids_logprobs_val
++        v if isinstance(v, list) else v.tolist()
++        for v in logits_output.next_token_token_ids_logprobs_val
+     ]
+ # decode 路径 _normalize_decode_outputs()
+ if logits_output.next_token_token_ids_logprobs_val:
+     logits_output.next_token_token_ids_logprobs_val = [
+-        v.tolist() for v in logits_output.next_token_token_ids_logprobs_val
++        v if isinstance(v, list) else v.tolist()
++        for v in logits_output.next_token_token_ids_logprobs_val
+     ]
+```
+
+至此，SGLang的混合推理问题就已经彻底解决了，复测和今天实际使用没有再出现类似的状况。
+
+02
+
+### 缺乏直觉
+
+那么我到底是不是缺乏问题排查的直觉呢，我觉得是也不是，我在排查的时候是真的没有考虑的可能是jev-compatible网关导致的本次频繁崩溃，因为它也只是调用SGLang提供的/generate接口，我开始压根没有往这上面考虑，考虑的是SGLang推理压力太大导致崩掉或者其他同事修改了配置重启服务导致的，在这之前服务都是正常的，突然引入的唯一变量间接导致了这次故障，我从头到尾都没有考虑这个因素，这就是缺乏问题排查直觉的体现。虽然这不是导致问题发生的根本原因，jev-compitable网关逻辑没有问题，根本原因是SGLang在处理/generate接口 取对应Token的logprob的请求和/chat/completions接口 普通请求的混合推理的极端情况下的代码bug。
+
+更深一层来看，我可能还缺乏做产品的严谨和长远的考虑，缺乏做产品的直觉。领导考虑的是如果后续真的接入了jev-compatible网关到产品中，三天两头的出故障，这样的产品没有人愿意购买，这也是我没有考虑到的地方，我考虑的只有现在，我不清楚这个东西会不会真的进入产品，当前崩了，我修一下，维持正常使用即可。按照我对自己的了解来看，很有可能是别人反馈两三次后我才可能去深究问题到底在哪，哈哈哈。
+
+GitHub上最新的SGLang代码还存在这个bug，在修复bug之后，我准备去提PR，在提之前，我让GPT帮我查看了Issue和现有的PR有没有类似的问题有人已经提了PR，果然不出所料，社区已经有人发现并解决了这个问题，我看了提交，解决思路一模一样。从这里做一个复盘就是，后续在大热的开源项目使用过程中发现了问题，定位到了原因，先不要急着自己修复，不光要看最新代码，也可以顺带去Issue和PR中找找，是不是别人已经解决好了，只是没有合并到主分支。这次还好，需要改动的地方只有两处，如果是个大问题，需要大量改动，这时直接把别人的解决思路下载下来去验证就是最快的、也可能是比较可靠的方式。你所遇到的问题，有99%的可能别人已经遇到了，并且很好的解决了，你要做的就是把它找出来。
+
+眼睛长在前面，我们更习惯于审视别人，很多时候忽略了对自身的审视，就算有这个主观意识去审视自身，这件事也是相当的困难，受限于个人经历、习惯、思维定势、经验主义等等原因，我们还是很难发现自己身上那些难以注意的、自己已经习惯了的待人处事方式。别人对我们的的观察就是一个很好的机会帮我们发现自己身上那些“问题”，我们需要做的就是摆正自己的心态，开放的听取别人宝贵的观察，可以很好的帮我们突破枷锁，对自己有更多认识。这里也需要辩证的来看，分辨什么是真正有用的、好的观察。
+
+---
+
+原文发布于微信公众号：[两行代码的bug，让SGLang在两天崩溃了13次](https://mp.weixin.qq.com/s/kq4Jw3obyKZCcftAHi134A)

@@ -66,6 +66,7 @@ const posts = defineCollection({
       slug: s.slug('post'),
       date: s.isodate(),
       image: s.string().optional(),
+      imageFit: s.enum(['cover', 'contain']).optional(),
       description: s.string().max(999).optional(),
       categories: s.array(s.string()).default([]),
       featured: s.boolean().default(false),

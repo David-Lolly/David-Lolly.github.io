@@ -1,0 +1,256 @@
+---
+title: "从部署 SemIf （OpenJev）开始，我为什么又做了一个 Jev的开源复刻项目"
+slug: jev-compatible-gateway-from-semif
+date: 2026-09-21
+image: ./images/cover.jpg
+imageFit: contain
+description: "今天早上领导给我发了一个开源项目 SemIf，让我部署起来看看。我一开始其实并不是特别了解 Jev，也不是因为对这个方向感兴趣才主动研究。"
+categories: [AI实践]
+featured: false
+---
+
+今天早上领导给我发了一个开源项目 SemIf，让我部署起来看看。
+
+我一开始其实并不是特别了解 Jev，也不是因为对这个方向感兴趣才主动研究。就是在部署、看代码、理解它到底在做什么，以及最终的实现过程中，才慢慢把 Jev、System One 和整个 Decision Model 的思路搞清楚。
+
+然后我发现，SemIf 虽然很好地验证了核心思路，但如果真的想接进我们现在的大模型部署环境里，还有两个比较现实的问题。从原本只是部署一下看看，最后变成了我自己重新做了一个项目。技术含量不高，加上是来自于开源项目，索性也就直接开源了。
+
+项目地址：
+
+https://github.com/David-Lolly/Jev-Compatible
+
+01
+
+## Jev 到底在解决什么问题
+
+我觉得理解 Jev 最简单的方式，是区分两种需求：
+
+```text
+Generation：让模型生成内容 
+Decision：让模型做一个有限范围内的决策
+```
+
+比如：
+
+> 帮我写一段代码。 或者帮我写一篇文章。
+
+这是 Generation。
+
+但下面这些：
+
+> 是否需要人工介入？
+> 
+> 
+> 
+> 应该交给哪个 Agent？
+> 
+> 
+> 
+> 风险等级是低、中还是高？
+
+本质上都是判断，都是 Decision。
+
+答案在模型运行之前就已经确定在一个有限集合里。传统做法还是让模型生成 JSON：
+
+```text
+{  
+  ”department”: ”technical” 
+}
+```
+
+程序再解析 JSON，最终只是为了拿到一个 technical。Jev / System One 比较有意思的地方，就是把这类 Decision 从普通 Chat Completion 里面单独抽了出来。
+
+## SemIf 给了一个很直接的实现思路
+
+假设现在有三个候选：
+
+```text
+A → billing
+B → technical
+C → sales
+```
+
+普通模型会继续生成 A/B/C 或者一段 JSON。但实际上，在模型准备生成下一个 Token 时，它已经计算出了 next-token distribution。那我们只需要知道这三个Token（A/B/C）的概率：
+
+```text
+A 的 logprob
+B 的 logprob
+C 的 logprob
+```
+
+再对这几个logprob做一次 Softmax归一化，就可以直接得到百分比：
+
+```text
+billing    0.02
+technical  0.95
+sales      0.03
+```
+
+到这里 Decision 已经完成了。如果答案本来就在有限集合里，其实没有必要再让模型继续生成。
+
+这就是 SemIf 给我的启发：普通生成式大模型本身已经具备这种有限候选的判断能力，不一定非要重新训练一个 Decision Model也可以实现类似的效果。
+
+02
+
+## 但真正准备使用时，我发现了两个问题
+
+第一个是推理后端。
+
+SemIf 更偏向直接通过 Transformers库 加载模型做推理。做 Demo 没问题，但我们真实部署模型的时候，本来就已经在使用 SGLang、vLLM。模型加载、显存管理、KV Cache、Continuous Batching、并发调度，这些事情推理框架都已经解决了。而且经过长期的发展和更多人的使用更加稳定可靠。如果为了试试Jev，再重新维护一套 Transformers 推理，我觉得根本没有必要。
+
+我真正想要的是直接复用已经跑起来的推理服务，依赖这些完成度更高、性能更强的推理引擎：
+
+```text
+Qwen模型   
+   ↓   
+SGLang / vLLM 推理后端  
+   ↓
+Jev-Compatible Gateway
+```
+
+第二个问题是 HTTP 服务。
+
+我希望它不是只能在某个 Python 程序里一次性调用，而是真正提供对外的服务，能够在任意系统中调用：
+
+```text
+POST /v1/systemone
+```
+
+这样我们的产品可以直接接入适配好的模型，上层也不用关心底层到底是什么模型、什么推理框架。这两个问题最终决定了我重新实现一遍。
+
+03
+
+## 实现过程中，我也改过一次思路
+
+最开始接 SGLang 的时候，我本来准备在 Gateway 里面自己加载 tokenizer。因为要做候选打分，就需要知道选项A,B,C分别对应什么 Token ID。这样我才能取到对应的logprob，计算后面的概率值。
+
+后来继续看 SGLang 的接口，才发现它已经提供了 tokenizer 和 detokenizer 相关能力。再看 vLLM，也一样。这时候我意识到一个问题：
+
+既然真正运行模型的是 SGLang / vLLM，为什么 Gateway 还要自己维护一份 tokenizer？
+
+所以 Gateway 自己不需要：
+
+```text
+PyTorch 
+Transformers   
+模型权重
+本地 Tokenizer  
+GPU
+```
+
+只通过 HTTP 和推理服务通信就能够完成所有计算。
+
+04
+
+## 最后的链路变得很简单
+
+现在整个流程大概是：
+
+```text
+业务请求  
+  ↓  
+/v1/systemone
+  ↓ 
+Noul / Choice / Score 三种类型都支持
+  ↓
+把选项转换成 A / B / C ...候选
+  ↓
+调用 SGLang / vLLM
+  ↓
+获取候选 Token logprob
+  ↓
+Softmax 
+  ↓
+还原成业务结果
+```
+
+比如：
+
+```text
+billing   → A
+technical → B  
+sales     → C
+```
+
+后端只负责告诉我 A、B、C 的 logprob。Gateway 再把概率还原成：
+
+```text
+billing    0.02
+technical  0.95 
+sales      0.03
+```
+
+最后返回标准的 System One 风格响应。目前和官方支持的类型一致：
+
+```text
+noul    二元判断  
+choice  多选一   
+score   有序等级评分
+```
+
+SGLang 和 vLLM 只是不同的 推理引擎，上层逻辑完全一致。
+
+05
+
+## 顺手做了一个简单测试
+
+我用现有的环境测了一下，用的是我们已经部署好的Qwen3.8-27B模型，环境信息如下：
+
+```text
+4 × NVIDIA L20
+Qwen3.8-27B
+SGLang
+```
+
+同一个任务同时判断三个问题，普通 Chat Completion 开启 thinking，和 Jev-Compatible 网关各测试 3 次。结果两边都是 3/3 正确。
+
+但平均耗时：
+
+```text
+Chat Completion    1282.3 ms
+Jev-Compatible Gateway    232.1 ms
+```
+
+输出 Token：
+
+```text
+Chat Completion    212
+其中 reasoning     185
+Jev-Compatible Gateway   3
+```
+
+这个结果不能简单理解成任何场景都快 5.5 倍。Gateway 的三个问题实际上是三个独立的 scoring task，没法一次性完成，需要分为三次请求，得到结果之后再完成转换返回给客户端，所以输入 Token 可能更多。但是它只需要生成一个Token，它真正省掉的是 reasoning 和后续文本生成所需要的时间和计算。
+
+06
+
+## 最后
+
+今天早上开始的时候，我只是想把领导发来的项目部署起来。一路看下来，整个设计其实一直在做减法，提高系统的可用性和稳定性，多谢GPT，让我可以在一天之内搞定这件事情：
+
+```text
+模型 → 交给 SGLang / vLLM 
+Tokenizer → 交给 SGLang / vLLM
+推理调度 → 交给 SGLang / vLLM
+Gateway 只保留 适配请求、Prompt转换和计算最终的概率本身
+```
+
+我现在对这件事情最大的理解是：
+
+Generation 和 Decision 可以当做两种不同的需求来处理。需要写代码、写文章、分析问题的时候，就让模型生成。但如果答案本来就是对应的决策：
+
+```text
+是 / 否
+A / B / C
+低 / 中 / 高
+继续 / 重试 / 停止
+```
+
+那也许没有必要先生成一段文本，再让程序把它重新解析成一个决定。直接给候选项打分，可能反而更自然，更符合第一性原理。这次Jev的发布对整个模型圈来说都是一次重新思考模型推理成本、响应速度的机会，大家可能真的受够了等待模型思考半天才给出答案的焦灼时刻。
+
+项目已经开源，地址如下，感兴趣的朋友可以去试试，无缝衔接到已有的SGLang或者vLLM：
+
+https://github.com/David-Lolly/Jev-Compatible
+
+---
+
+原文发布于微信公众号：[从部署 SemIf （OpenJev）开始，我为什么又做了一个 Jev的开源复刻项目](https://mp.weixin.qq.com/s/o53TbUTHyWLlD4zaqHDQhg)
